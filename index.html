@@ -314,6 +314,76 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
 
+        /* Meal day tabs */
+        .meal-day-tabs {
+            display: flex;
+            gap: 4px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            padding-bottom: 2px;
+        }
+        .meal-day-tabs::-webkit-scrollbar { display: none; }
+        .meal-day-btn {
+            flex-shrink: 0;
+            padding: 5px 11px;
+            border-radius: 9px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--surface2);
+            color: var(--text2);
+            transition: all 0.18s;
+        }
+        .meal-day-btn:hover { border-color: var(--sage); color: var(--sage); }
+        .meal-day-btn.active {
+            background: var(--sage);
+            color: white;
+            border-color: transparent;
+        }
+        .meal-day-btn.today-marker {
+            position: relative;
+        }
+        .meal-day-btn.today-marker::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px; height: 4px;
+            border-radius: 50%;
+            background: var(--terracotta);
+        }
+
+        /* Substitute toggle */
+        .sub-toggle {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            color: var(--text3);
+            border: none;
+            background: none;
+            padding: 0;
+            margin-top: 6px;
+            transition: color 0.15s;
+        }
+        .sub-toggle:hover { color: var(--terracotta); }
+        .sub-panel {
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.35s cubic-bezier(.4,0,.2,1), opacity 0.25s;
+            opacity: 0;
+        }
+        .sub-panel.open {
+            max-height: 120px;
+            opacity: 1;
+        }
+
         /* Glossary cards */
         .glossary-card {
             background: var(--surface2);
@@ -606,11 +676,25 @@
 
                 <!-- Meal plan card -->
                 <div class="card p-6">
-                    <h4 class="font-bold text-base flex items-center gap-2 mb-1" style="color:var(--text)">
-                        🥗 <span id="meal-goal-title">BMI Optimization Mode</span>
-                    </h4>
-                    <p class="text-xs mb-4 leading-relaxed" style="color:var(--text3)" id="meal-goal-desc">Low systemic inflammation, high satiety fibers, customized for fat loss without muscle loss.</p>
-                    <div class="space-y-3" id="meal-list-container"></div>
+                    <div class="flex items-start justify-between gap-2 mb-1">
+                        <h4 class="font-bold text-base flex items-center gap-2" style="color:var(--text)">
+                            🥗 <span id="meal-goal-title">BMI Optimization Mode</span>
+                        </h4>
+                        <span class="pill pill-sage" id="meal-today-badge" style="flex-shrink:0">Today</span>
+                    </div>
+                    <p class="text-xs mb-3 leading-relaxed" style="color:var(--text3)" id="meal-goal-desc">Low systemic inflammation, high satiety fibers, customized for fat loss without muscle loss.</p>
+
+                    <!-- Day selector -->
+                    <div class="meal-day-tabs mb-4" id="meal-day-tabs"></div>
+
+                    <!-- Meals -->
+                    <div class="space-y-2.5" id="meal-list-container"></div>
+
+                    <!-- Sub legend -->
+                    <div class="mt-3 pt-3 flex items-center gap-1.5" style="border-top:1px solid var(--border)">
+                        <span style="font-size:11px">🔄</span>
+                        <span class="text-[10px] font-semibold" style="color:var(--text3)">Tap <strong>Substitute</strong> on any meal for an alternative option</span>
+                    </div>
                 </div>
 
                 <!-- Platform allocation chart -->
@@ -862,25 +946,131 @@
         }
     };
 
+    // 7-day variety meal plans — each day has 4 meals, each meal has a substitute
+    const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
     const mealPlanDatabase = {
-        bmi:{
-            title:"BMI Optimization Mode",
-            desc:"High protein, high vegetable fiber, healthy omega-3 fatty acids, and lower total starch carbs to stimulate visceral fat loss while maintaining skeletal muscle integrity.",
-            meals:[
-                {name:"🍳 Breakfast",dish:"Mediterranean Egg Scramble",desc:"3 egg whites + 1 whole egg scrambled with spinach, cherry tomatoes, red onions in 1 tsp olive oil. Served with ½ avocado."},
-                {name:"🥗 Lunch",dish:"Zesty Greek Quinoa Salmon Bowl",desc:"150g grilled salmon on ½ cup cooked quinoa, cucumbers, Kalamata olives, parsley, lemon vinaigrette."},
-                {name:"🍎 Snack",dish:"Protein Berry Parfait",desc:"1 cup non-fat Greek yogurt topped with raw pumpkin seeds and fresh wild blueberries."},
-                {name:"🐟 Dinner",dish:"Baked Mediterranean Cod & Asparagus",desc:"180g Atlantic cod baked with garlic and fresh oregano, paired with 1 cup steamed asparagus in extra virgin olive oil."}
+        bmi: {
+            title: 'BMI Optimization Mode',
+            desc: 'High protein, high vegetable fiber, healthy omega-3 fatty acids, and lower total starch carbs to stimulate visceral fat loss while maintaining skeletal muscle integrity.',
+            days: [
+                { // Monday
+                    meals: [
+                        { icon:'🍳', slot:'Breakfast', dish:'Mediterranean Egg Scramble', desc:'3 egg whites + 1 whole egg scrambled with spinach, cherry tomatoes, and red onions in 1 tsp olive oil. Served with ½ sliced avocado.', sub:'Greek yogurt bowl topped with pumpkin seeds, cucumber ribbons, and a drizzle of lemon.' },
+                        { icon:'🥗', slot:'Lunch', dish:'Grilled Salmon Quinoa Bowl', desc:'150g wild-caught grilled salmon on ½ cup cooked quinoa, cucumbers, Kalamata olives, parsley, and lemon vinaigrette.', sub:'Tuna tataki over mixed greens with sesame-citrus dressing.' },
+                        { icon:'🥒', slot:'Snack', dish:'Hummus & Veggie Sticks', desc:'3 tbsp organic hummus with cucumber spears, celery sticks, and bell pepper strips.', sub:'Celery with 1 tbsp almond butter and a small apple.' },
+                        { icon:'🐟', slot:'Dinner', dish:'Baked Cod with Asparagus', desc:'180g Atlantic cod baked with garlic and fresh oregano, paired with 1 cup asparagus roasted in extra virgin olive oil.', sub:'Lemon-herb tilapia with steamed zucchini and cherry tomatoes.' }
+                    ]
+                },
+                { // Tuesday
+                    meals: [
+                        { icon:'🥑', slot:'Breakfast', dish:'Avocado Poached Egg Toast', desc:'2 slices whole-grain toast topped with smashed avocado, 1 poached egg, chili flakes, and a squeeze of lemon.', sub:'Smashed chickpea toast with lemon zest and everything bagel seasoning.' },
+                        { icon:'🥙', slot:'Lunch', dish:'Greek Chicken Salad Wrap', desc:'150g grilled chicken, romaine, feta, Kalamata olives, cucumber, and tzatziki in a whole-wheat tortilla.', sub:'Falafel lettuce cups with pickled red onions and tahini drizzle.' },
+                        { icon:'🍎', slot:'Snack', dish:'Apple & Walnut Butter', desc:'1 medium apple sliced with 1 tbsp natural walnut butter.', sub:'Pear slices with 2 tbsp low-fat cottage cheese and a pinch of cinnamon.' },
+                        { icon:'🍗', slot:'Dinner', dish:'Turkey Meatballs & Zucchini Noodles', desc:'5 lean turkey meatballs in a light tomato-basil sauce served over spiralized zucchini noodles.', sub:'Lean beef meatballs with roasted spaghetti squash and marinara.' }
+                    ]
+                },
+                { // Wednesday
+                    meals: [
+                        { icon:'🥣', slot:'Breakfast', dish:'Steel-Cut Oats with Berries', desc:'1 cup steel-cut oats cooked in water, topped with mixed fresh berries and 1 tbsp ground flaxseed.', sub:'Overnight oats with chia seeds, unsweetened almond milk, and sliced banana.' },
+                        { icon:'🍲', slot:'Lunch', dish:'Lentil Soup & Whole Grain Pita', desc:'1.5 cups warm red lentil soup with cumin, turmeric, and spinach. 1 small whole-grain pita on the side.', sub:'White bean and vegetable minestrone with a slice of sourdough.' },
+                        { icon:'🌰', slot:'Snack', dish:'Mixed Nuts & Dried Figs', desc:'A 30g mix of almonds, walnuts, and 2 dried figs.', sub:'Roasted chickpeas with sea salt and smoked paprika.' },
+                        { icon:'🐠', slot:'Dinner', dish:'Grilled Swordfish with Roasted Veg', desc:'170g swordfish steak grilled with lemon and capers, with roasted bell peppers, zucchini, and cherry tomatoes.', sub:'Mahi-mahi with steamed broccoli and garlic-olive oil drizzle.' }
+                    ]
+                },
+                { // Thursday
+                    meals: [
+                        { icon:'🍅', slot:'Breakfast', dish:'Shakshuka', desc:'2 eggs poached in a spiced tomato-pepper sauce with cumin, paprika, and fresh parsley. Served with 1 slice whole-grain bread.', sub:'Veggie omelette with feta, spinach, and sun-dried tomatoes.' },
+                        { icon:'🫙', slot:'Lunch', dish:'Chicken Hummus Lettuce Cups', desc:'150g diced grilled chicken with 2 tbsp hummus, diced cucumber, and pomegranate seeds in butter lettuce cups.', sub:'Turkey and tzatziki wrap with shredded carrots and arugula.' },
+                        { icon:'🍯', slot:'Snack', dish:'Greek Yogurt with Honey & Walnuts', desc:'¾ cup non-fat Greek yogurt with 1 tsp raw honey and 1 tbsp crushed walnuts.', sub:'Kefir smoothie with ½ banana, blueberries, and a pinch of cinnamon.' },
+                        { icon:'🌶️', slot:'Dinner', dish:'Stuffed Bell Peppers', desc:'2 bell peppers filled with 120g lean ground turkey, ⅓ cup brown rice, tomatoes, and herbs. Baked at 375°F.', sub:'Stuffed portobello mushrooms with quinoa, spinach, and goat cheese.' }
+                    ]
+                },
+                { // Friday
+                    meals: [
+                        { icon:'🐟', slot:'Breakfast', dish:'Smoked Salmon Crispbread', desc:'3 whole-grain crispbreads topped with 60g smoked salmon, light cream cheese, capers, and dill.', sub:'Sardines on toasted sourdough with lemon and sliced red onions.' },
+                        { icon:'🌿', slot:'Lunch', dish:'Tabbouleh with Grilled Shrimp', desc:'1 cup bulgur wheat tabbouleh (parsley, mint, tomato, lemon) with 120g grilled shrimp on top.', sub:'Bulgur wheat salad with chickpeas, roasted red peppers, and feta.' },
+                        { icon:'🫘', slot:'Snack', dish:'Edamame with Sea Salt', desc:'1 cup steamed edamame in pods, lightly salted.', sub:'Snap peas with 2 tbsp light tzatziki for dipping.' },
+                        { icon:'🍢', slot:'Dinner', dish:'Chicken Souvlaki & Cucumber Salad', desc:'150g grilled chicken souvlaki skewers with tzatziki, and a crisp cucumber-tomato-olive salad.', sub:'Pork tenderloin with Greek herbs, roasted potatoes, and a side salad.' }
+                    ]
+                },
+                { // Saturday
+                    meals: [
+                        { icon:'🥞', slot:'Breakfast', dish:'Whole-Grain Berry Pancakes', desc:'3 whole-wheat pancakes (no syrup) topped with fresh strawberries, blueberries, and 1 tsp nut butter.', sub:'Buckwheat crepes filled with part-skim ricotta and fresh strawberries.' },
+                        { icon:'🥗', slot:'Lunch', dish:'Grilled Octopus Salad', desc:'120g grilled octopus over arugula, capers, lemon vinaigrette, and cherry tomatoes.', sub:'Calamari and arugula salad with lemon-herb dressing and Kalamata olives.' },
+                        { icon:'🍉', slot:'Snack', dish:'Watermelon & Feta Cubes', desc:'1 cup cubed watermelon with ¼ cup crumbled feta and fresh mint leaves.', sub:'Cantaloupe cubes with a few slices of prosciutto di Parma.' },
+                        { icon:'🐡', slot:'Dinner', dish:'Baked Sea Bass with Olives & Capers', desc:'160g sea bass fillet baked over a bed of cherry tomatoes, Kalamata olives, capers, and fresh basil.', sub:'Whole roasted branzino with lemon, rosemary, and garlic.' }
+                    ]
+                },
+                { // Sunday
+                    meals: [
+                        { icon:'🫒', slot:'Breakfast', dish:'Mediterranean Mezze Spread', desc:'Labneh, Kalamata olives, sliced cucumber, cherry tomatoes, and 2 hard-boiled eggs with whole-grain pita triangles.', sub:'Low-fat cottage cheese bowl with sliced vegetables, olive oil, and za\'atar.' },
+                        { icon:'🍗', slot:'Lunch', dish:'Slow-Roasted Chicken & Root Vegetables', desc:'150g slow-roasted chicken breast with roasted carrots, parsnips, and onions in herb jus.', sub:'Rotisserie turkey breast with roasted sweet potatoes and steamed green beans.' },
+                        { icon:'🍫', slot:'Snack', dish:'Wellness Trail Mix', desc:'30g mix of almonds, pumpkin seeds, sunflower seeds, and a few dark chocolate chips (70%+).', sub:'1 homemade oat-and-nut energy bar (no refined sugar).' },
+                        { icon:'🥩', slot:'Dinner', dish:'Grilled Lamb Chops & Tabbouleh', desc:'2 lean lamb chops grilled with rosemary and garlic, alongside 1 cup fresh tabbouleh salad.', sub:'Lamb kofta skewers with cucumber-yogurt dipping sauce and a side of fattoush.' }
+                    ]
+                }
             ]
         },
-        muscle:{
-            title:"Clean Muscle Build Mode",
-            desc:"Increased complex carbohydrate portions to fuel heavy compound lifts, with a high-protein muscle repair pipeline.",
-            meals:[
-                {name:"🥣 Breakfast",dish:"Power Mediterranean Oatmeal",desc:"1 cup steel-cut oats with 1 scoop whey protein, 1 tbsp almond butter, and sliced figs."},
-                {name:"🥙 Lunch",dish:"Chicken & Hummus Whole Wheat Wrap",desc:"180g grilled chicken breast, 2 tbsp hummus, spinach, and roasted red peppers in a sprouted whole-wheat tortilla."},
-                {name:"🍌 Snack",dish:"Post-Workout Nutrient Shake",desc:"1.5 scoops whey, 1 cup almond milk, 1 ripe banana, 1 tbsp ground flaxseeds — blended."},
-                {name:"🥩 Dinner",dish:"Grilled Sirloin with Sweet Potato",desc:"170g lean grass-fed beef tenderloin, 1 large baked sweet potato with olive oil, and steamed broccoli."}
+        muscle: {
+            title: 'Clean Muscle Build Mode',
+            desc: 'Increased complex carbohydrate portions to fuel heavy compound lifts, with a high-protein muscle repair pipeline.',
+            days: [
+                { // Monday
+                    meals: [
+                        { icon:'🥣', slot:'Breakfast', dish:'Power Protein Oatmeal', desc:'1 cup steel-cut oats cooked in almond milk, mixed with 1 scoop whey protein isolate, 1 tbsp almond butter, and sliced banana.', sub:'Quinoa porridge with vanilla protein powder, chopped almonds, and raw honey.' },
+                        { icon:'🥙', slot:'Lunch', dish:'Chicken & Hummus Whole Wheat Wrap', desc:'180g grilled chicken breast, 2 tbsp hummus, baby spinach, and roasted red peppers in a sprouted whole-wheat tortilla. Side of raw almonds.', sub:'Turkey and avocado whole-grain wrap with sweet potato chips on the side.' },
+                        { icon:'🍌', slot:'Snack', dish:'Post-Workout Nutrient Shake', desc:'1.5 scoops whey protein, 1 cup almond milk, 1 ripe banana, and 1 tbsp ground flaxseeds — blended smooth.', sub:'Chocolate milk (16oz) with 2 rice cakes topped with natural peanut butter.' },
+                        { icon:'🥩', slot:'Dinner', dish:'Grilled Sirloin & Sweet Potato', desc:'170g lean grass-fed sirloin, 1 large baked sweet potato brushed with olive oil, and steamed broccoli.', sub:'Lean bison burger on a whole-wheat bun with avocado and a side salad.' }
+                    ]
+                },
+                { // Tuesday
+                    meals: [
+                        { icon:'🍳', slot:'Breakfast', dish:'5-Egg White Power Omelette', desc:'5 egg whites + 1 whole egg, loaded with sautéed bell peppers, spinach, mushrooms, and feta. 2 slices whole-grain toast.', sub:'Cottage cheese scramble with diced bell peppers, onions, and whole-grain toast.' },
+                        { icon:'🍚', slot:'Lunch', dish:'Beef & Black Bean Burrito Bowl', desc:'120g lean ground beef, ½ cup black beans, ½ cup brown rice, salsa, Greek yogurt (instead of sour cream), and avocado.', sub:'Chicken tikka with ½ cup brown rice and a side of raita.' },
+                        { icon:'🫐', slot:'Snack', dish:'High-Protein Yogurt Bowl', desc:'1 cup full-fat Greek yogurt mixed with 1 scoop unflavored protein powder, topped with granola and mixed berries.', sub:'Skyr with sliced mango, hemp seeds, and a drizzle of honey.' },
+                        { icon:'🐟', slot:'Dinner', dish:'Salmon with Roasted Sweet Potato', desc:'170g Atlantic salmon fillet with roasted sweet potato wedges and steamed green beans.', sub:'Mackerel with mashed chickpeas, sautéed spinach, and a lemon-garlic dressing.' }
+                    ]
+                },
+                { // Wednesday
+                    meals: [
+                        { icon:'🍞', slot:'Breakfast', dish:'Protein French Toast', desc:'3 slices whole-grain bread dipped in a mix of 3 egg whites, 1 tbsp cinnamon, and almond milk — pan-fried. Topped with fresh berries.', sub:'Banana protein pancakes: blend 1 banana + 2 eggs + ¼ cup rolled oats. Cook and top with almond butter.' },
+                        { icon:'🍝', slot:'Lunch', dish:'Tuna Whole Wheat Pasta Salad', desc:'120g canned wild tuna in olive oil mixed with 1 cup cooked whole-wheat fusilli, cherry tomatoes, olives, and parsley.', sub:'Chicken orzo soup with carrots, celery, spinach, and lemon.' },
+                        { icon:'🥚', slot:'Snack', dish:'Hard-Boiled Eggs & Crackers', desc:'3 hard-boiled eggs with a sprinkle of sea salt and 6 whole-grain crackers.', sub:'2 string cheese sticks with a sliced apple.' },
+                        { icon:'🥦', slot:'Dinner', dish:'Pork Tenderloin & Roasted Squash', desc:'170g herb-seasoned pork tenderloin with roasted butternut squash cubes and sautéed kale in garlic oil.', sub:'Chicken thighs with wild rice pilaf and roasted red peppers.' }
+                    ]
+                },
+                { // Thursday
+                    meals: [
+                        { icon:'🍇', slot:'Breakfast', dish:'Protein Smoothie Bowl', desc:'Blend 1.5 scoops whey, 1 cup frozen mixed berries, and ½ cup almond milk into a thick smoothie. Top with granola, sliced banana, and hemp seeds.', sub:'Açaí bowl with protein powder, mixed seeds, sliced kiwi, and shredded coconut.' },
+                        { icon:'🍅', slot:'Lunch', dish:'Chicken Caprese with Mozzarella', desc:'150g grilled chicken breast topped with fresh mozzarella, sliced tomatoes, fresh basil, and balsamic glaze. Served with whole-grain bread.', sub:'Turkey meatball sub on a whole-grain hoagie with marinara and melted part-skim mozzarella.' },
+                        { icon:'🥜', slot:'Snack', dish:'Peanut Butter Banana Rice Cakes', desc:'2 plain rice cakes topped with 1.5 tbsp natural peanut butter and ½ banana (sliced).', sub:'Cashew butter on 1 slice whole-grain toast with a thin drizzle of raw honey.' },
+                        { icon:'🥡', slot:'Dinner', dish:'Beef & Veggie Stir-Fry', desc:'150g lean beef strips stir-fried with broccoli, bell peppers, snap peas, and served over 1 cup brown rice with low-sodium soy sauce.', sub:'Firm tofu stir-fry with edamame, bok choy, and sesame-ginger sauce over brown rice.' }
+                    ]
+                },
+                { // Friday
+                    meals: [
+                        { icon:'🫐', slot:'Breakfast', dish:'Overnight Protein Oats', desc:'½ cup rolled oats + 1 scoop vanilla protein powder + 1 tbsp chia seeds + ¾ cup almond milk. Refrigerate overnight. Top with blueberries.', sub:'High-protein chia pudding: 3 tbsp chia + 1 cup coconut milk + protein powder. Top with mango cubes.' },
+                        { icon:'🍠', slot:'Lunch', dish:'Loaded Protein Sweet Potato', desc:'1 large baked sweet potato topped with ½ cup black beans, 2 tbsp Greek yogurt, salsa, and shredded chicken (100g).', sub:'Baked russet potato with cottage cheese, mixed beans, chives, and hot sauce.' },
+                        { icon:'🥩', slot:'Snack', dish:'Beef Jerky & Mixed Nuts', desc:'40g low-sodium beef jerky with a 30g handful of mixed nuts (almonds, cashews, pecans).', sub:'1 high-protein bar (20g+ protein, <5g sugar) with 10 almonds.' },
+                        { icon:'🍝', slot:'Dinner', dish:'Baked Chicken Parmesan', desc:'160g chicken breast breaded with almond flour, baked, topped with light marinara and part-skim mozzarella. Served with 1 cup whole-wheat spaghetti.', sub:'Turkey bolognese with whole-wheat spaghetti and a sprinkle of Parmigiano-Reggiano.' }
+                    ]
+                },
+                { // Saturday
+                    meals: [
+                        { icon:'🥯', slot:'Breakfast', dish:'Smoked Salmon Power Bagel', desc:'1 whole-grain bagel with 2 tbsp light cream cheese, 80g smoked salmon, capers, red onion, and dill.', sub:'Lox and smashed avocado on 2 slices Ezekiel bread with a sprinkle of everything bagel seasoning.' },
+                        { icon:'🥙', slot:'Lunch', dish:'Lamb Gyro with Tzatziki', desc:'150g grilled ground lamb in a whole-wheat pita with tzatziki, diced tomatoes, onion, and parsley.', sub:'Chicken souvlaki wrap with hummus, roasted vegetables, and baby spinach.' },
+                        { icon:'🍍', slot:'Snack', dish:'Cottage Cheese with Pineapple', desc:'¾ cup full-fat cottage cheese mixed with ½ cup fresh pineapple chunks and 1 tbsp walnuts.', sub:'Skyr with diced mango and 2 tbsp hemp seeds.' },
+                        { icon:'🦐', slot:'Dinner', dish:'Surf & Turf — Shrimp & Lean Beef', desc:'120g grilled shrimp + 100g lean sirloin with roasted asparagus, cherry tomatoes, and garlic herb butter.', sub:'Pan-seared scallops and grilled chicken thigh with roasted root vegetables.' }
+                    ]
+                },
+                { // Sunday
+                    meals: [
+                        { icon:'🍳', slot:'Breakfast', dish:'Big Weekend Muscle Scramble', desc:'3 whole eggs + 2 egg whites scrambled with sautéed bell peppers, mushrooms, and spinach. Served with 2 slices whole-grain toast and ½ avocado.', sub:'Loaded vegetable frittata with whatever fresh vegetables are available — baked in a cast-iron skillet.' },
+                        { icon:'🍗', slot:'Lunch', dish:'Slow-Cooked Pulled Chicken Bowl', desc:'150g slow-cooked pulled chicken over 1 cup brown rice, with roasted sweet corn, avocado, and a squeeze of lime.', sub:'Slow-cooked beef ragu served over 1 cup whole-grain pappardelle pasta with fresh basil.' },
+                        { icon:'🥤', slot:'Snack', dish:'Mass Builder Shake', desc:'Blend 1.5 scoops whey + ½ cup dry oats + 1 tbsp natural peanut butter + 1 banana + 1 cup whole milk.', sub:'Smoothie: 1 cup Greek yogurt + ¼ cup oats + 1 tbsp honey + 1 cup milk + 1 tbsp peanut butter.' },
+                        { icon:'🍖', slot:'Dinner', dish:'Sunday Herb-Crusted Chicken Roast', desc:'175g herb-crusted chicken breast with roasted baby potatoes, carrots, and a light pan gravy.', sub:'Roasted turkey breast with classic stuffing, roasted root vegetables, and light gravy.' }
+                    ]
+                }
             ]
         }
     };
@@ -889,6 +1079,7 @@
     let currentPhase = 1;
     let activeWeek = 1;
     let activeDietGoal = 'bmi';
+    let activeMealDay = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1; // 0=Mon … 6=Sun
     let macroChart = null;
     let platformChart = null;
     let completedSessions = JSON.parse(localStorage.getItem('jfit_completed') || '{}');
@@ -1138,23 +1329,78 @@
         updateCharts();
     }
 
+    function renderMealDayTabs() {
+        const todayIdx = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
+        const tabsEl = document.getElementById('meal-day-tabs');
+        tabsEl.innerHTML = '';
+        DAYS.forEach((dayName, i) => {
+            const btn = document.createElement('button');
+            const short = dayName.slice(0, 3);
+            const isToday = i === todayIdx;
+            const isActive = i === activeMealDay;
+            btn.className = `meal-day-btn${isActive ? ' active' : ''}${isToday ? ' today-marker' : ''}`;
+            btn.textContent = short;
+            btn.title = isToday ? `${dayName} (Today)` : dayName;
+            btn.onclick = () => { activeMealDay = i; renderMeals(); };
+            tabsEl.appendChild(btn);
+        });
+
+        // Update today badge visibility
+        const todayBadge = document.getElementById('meal-today-badge');
+        const todayName = DAYS[todayIdx];
+        todayBadge.textContent = activeMealDay === todayIdx ? `${todayName} · Today` : DAYS[activeMealDay];
+        todayBadge.style.background = activeMealDay === todayIdx
+            ? 'rgba(108,142,117,0.12)' : 'rgba(184,148,63,0.1)';
+        todayBadge.style.color = activeMealDay === todayIdx ? 'var(--sage)' : '#8A6020';
+    }
+
     function renderMeals() {
-        const data = mealPlanDatabase[activeDietGoal];
-        document.getElementById('meal-goal-title').textContent = data.title;
-        document.getElementById('meal-goal-desc').textContent = data.desc;
+        const plan = mealPlanDatabase[activeDietGoal];
+        document.getElementById('meal-goal-title').textContent = plan.title;
+        document.getElementById('meal-goal-desc').textContent = plan.desc;
+
+        renderMealDayTabs();
+
+        const dayMeals = plan.days[activeMealDay].meals;
         const container = document.getElementById('meal-list-container');
         container.innerHTML = '';
-        data.meals.forEach((meal, i) => {
+
+        dayMeals.forEach((meal, i) => {
+            const uid = `sub-${i}`;
             const div = document.createElement('div');
             div.className = 'session-block fade-up';
-            div.style.animationDelay = `${i * 60}ms`;
+            div.style.animationDelay = `${i * 55}ms`;
             div.innerHTML = `
-                <div class="text-[10px] uppercase tracking-wider font-bold mb-0.5" style="color:var(--text3)">${meal.name}</div>
+                <div class="flex items-center gap-1.5 mb-1">
+                    <span style="font-size:15px">${meal.icon}</span>
+                    <span class="text-[10px] uppercase tracking-wider font-bold" style="color:var(--text3)">${meal.slot}</span>
+                </div>
                 <div class="font-semibold text-sm" style="color:var(--text)">${meal.dish}</div>
                 <p class="text-[11px] leading-relaxed mt-1" style="color:var(--text2)">${meal.desc}</p>
+                <button class="sub-toggle" onclick="toggleSub('${uid}', this)" aria-expanded="false">
+                    <span style="font-size:12px">🔄</span>
+                    <span>Substitute</span>
+                    <span style="font-size:9px;margin-left:1px">▼</span>
+                </button>
+                <div class="sub-panel" id="${uid}">
+                    <div class="mt-2 pt-2" style="border-top:1px dashed var(--border)">
+                        <div class="text-[10px] uppercase tracking-wider font-bold mb-0.5" style="color:var(--terracotta)">🔄 Alternative Option</div>
+                        <p class="text-[11px] leading-relaxed" style="color:var(--text2)">${meal.sub}</p>
+                    </div>
+                </div>
             `;
             container.appendChild(div);
         });
+    }
+
+    function toggleSub(uid, btn) {
+        const panel = document.getElementById(uid);
+        const isOpen = panel.classList.toggle('open');
+        btn.setAttribute('aria-expanded', isOpen);
+        // Rotate arrow
+        const arrow = btn.querySelector('span:last-child');
+        arrow.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+        arrow.style.transition = 'transform 0.25s';
     }
 
     // ─── CHARTS ─────────────────────────────────────────────────────────────
