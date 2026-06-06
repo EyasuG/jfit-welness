@@ -1,104 +1,425 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>10-Week Hybrid Fitness & Mediterranean Nutrition Master Planner</title>
-    <!-- Tailwind CSS CDN -->
+    <title>JFit Wellness — 10-Week Hybrid Master Plan</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Premium Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;1,500&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg: #F6F4EF;
+            --surface: #FFFFFF;
+            --surface2: #F0EDE6;
+            --border: rgba(108,142,117,0.12);
+            --text: #1C1F1D;
+            --text2: #4A5450;
+            --text3: #8A9490;
+            --terracotta: #C96F53;
+            --sage: #6C8E75;
+            --sand: #D4B896;
+            --gold: #B8943F;
+            --shadow: 0 2px 16px -4px rgba(44,60,50,0.10);
+            --shadow-lg: 0 8px 40px -12px rgba(44,60,50,0.16);
+            --radius: 20px;
+        }
+        [data-theme="dark"] {
+            --bg: #141917;
+            --surface: #1E2420;
+            --surface2: #252C28;
+            --border: rgba(108,142,117,0.14);
+            --text: #E8EDE9;
+            --text2: #9BAFA3;
+            --text3: #6B8078;
+            --shadow: 0 2px 16px -4px rgba(0,0,0,0.4);
+            --shadow-lg: 0 8px 40px -12px rgba(0,0,0,0.5);
+        }
+
+        * { box-sizing: border-box; }
+
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #FAF8F5;
-            color: #2D312E;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            transition: background 0.3s, color 0.3s;
         }
-        h1, h2, h3, .serif-font {
-            font-family: 'Playfair Display', serif;
+
+        .serif { font-family: 'Playfair Display', serif; }
+
+        /* Glassmorphism panels */
+        .glass {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
         }
-        /* Custom styled chart container to respect constraints */
-        .chart-container {
+        .glass-strong {
+            background: rgba(255,255,255,0.72);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(108,142,117,0.18);
+        }
+        [data-theme="dark"] .glass-strong {
+            background: rgba(20,25,23,0.8);
+        }
+
+        /* Gradient accents */
+        .grad-terracotta { background: linear-gradient(135deg, #C96F53 0%, #E0956F 100%); }
+        .grad-sage { background: linear-gradient(135deg, #5A7D64 0%, #6C8E75 100%); }
+        .grad-dark { background: linear-gradient(135deg, #1C1F1D 0%, #2D312E 100%); }
+        .grad-hero { background: linear-gradient(135deg, #1C1F1D 0%, #2A3330 50%, #1C2820 100%); }
+
+        /* Cards */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            transition: transform 0.25s cubic-bezier(.4,0,.2,1), box-shadow 0.25s cubic-bezier(.4,0,.2,1);
+        }
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+        .day-card {
             position: relative;
-            width: 100%;
-            max-width: 100%;
-            height: 280px;
-            max-height: 280px;
+            overflow: hidden;
         }
-        /* Interactive Card Hover Effects */
-        .interactive-card {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        .day-card::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 4px;
+            border-radius: 4px 0 0 4px;
         }
-        .interactive-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 20px -8px rgba(108, 142, 117, 0.15);
+        .day-card.push::before { background: linear-gradient(180deg, #C96F53, #E0956F); }
+        .day-card.pull::before { background: linear-gradient(180deg, #6C8E75, #8BB09A); }
+        .day-card.run::before  { background: linear-gradient(180deg, #F59E0B, #FBBF24); }
+        .day-card.legs::before { background: linear-gradient(180deg, #10B981, #34D399); }
+        .day-card.endurance::before { background: linear-gradient(180deg, #3B82F6, #60A5FA); }
+        .day-card.recovery::before { background: linear-gradient(180deg, #8B5CF6, #A78BFA); }
+
+        /* Pill badges */
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
         }
-        /* Smooth transitions for tabs */
-        .tab-transition {
-            transition: all 0.2s ease-in-out;
+        .pill-terracotta { background: rgba(201,111,83,0.12); color: #C96F53; }
+        .pill-sage { background: rgba(108,142,117,0.12); color: #5A7D64; }
+        .pill-indigo { background: rgba(139,92,246,0.12); color: #7C3AED; }
+        .pill-amber { background: rgba(245,158,11,0.12); color: #B45309; }
+
+        /* Tabs */
+        .tab-btn {
+            padding: 8px 18px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text2);
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
         }
-        /* Printable layout configurations */
+        .tab-btn:hover { border-color: var(--sage); color: var(--sage); }
+        .tab-btn.active {
+            background: var(--text);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: scale(1.04);
+        }
+
+        /* Phase buttons */
+        .phase-btn {
+            flex: 1;
+            padding: 16px 24px;
+            border-radius: 16px;
+            font-weight: 700;
+            font-size: 15px;
+            text-align: center;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s cubic-bezier(.4,0,.2,1);
+        }
+        .phase-btn.active { background: var(--terracotta); color: white; box-shadow: 0 6px 20px rgba(201,111,83,0.35); }
+        .phase-btn.inactive { background: var(--surface); color: var(--text2); border-color: var(--border); }
+        .phase-btn.inactive:hover { border-color: var(--sage); color: var(--sage); }
+
+        /* Stat cards */
+        .stat-card {
+            background: var(--surface2);
+            border-radius: 14px;
+            padding: 14px 16px;
+            text-align: center;
+        }
+
+        /* Session blocks inside day cards */
+        .session-block {
+            background: var(--surface2);
+            border-radius: 12px;
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            transition: background 0.2s;
+        }
+
+        /* Completion checkbox */
+        .check-btn {
+            width: 28px; height: 28px;
+            border-radius: 8px;
+            border: 2px solid var(--border);
+            background: var(--surface);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+        .check-btn.done {
+            background: var(--sage);
+            border-color: var(--sage);
+            color: white;
+            box-shadow: 0 2px 8px rgba(108,142,117,0.35);
+        }
+
+        /* Progress ring */
+        .progress-ring { transform: rotate(-90deg); }
+        .ring-track { fill: none; stroke: var(--border); stroke-width: 5; }
+        .ring-fill { fill: none; stroke-width: 5; stroke-linecap: round; transition: stroke-dashoffset 0.8s cubic-bezier(.4,0,.2,1); }
+
+        /* Streak display */
+        .streak-badge {
+            background: linear-gradient(135deg, #F59E0B, #EF4444);
+            color: white;
+            padding: 2px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        /* Glossary toast */
+        .toast {
+            position: fixed;
+            bottom: 24px; right: 24px;
+            max-width: 340px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            box-shadow: var(--shadow-lg);
+            padding: 18px 20px;
+            z-index: 100;
+            transform: translateY(120%) scale(0.95);
+            opacity: 0;
+            transition: transform 0.4s cubic-bezier(.4,0,.2,1), opacity 0.3s;
+        }
+        .toast.show {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+
+        /* Nutrition chart */
+        .chart-container { position: relative; width: 100%; height: 240px; }
+
+        /* Scroll snap for week tabs */
+        .week-tabs-scroll {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+            scrollbar-width: none;
+        }
+        .week-tabs-scroll::-webkit-scrollbar { display: none; }
+
+        /* Smooth fade-in for cards */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-up { animation: fadeUp 0.35s ease both; }
+
+        @keyframes pop {
+            0% { transform: scale(1); }
+            40% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+        .pop { animation: pop 0.3s ease; }
+
+        /* Number counter animation */
+        @keyframes countUp {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Toggle switch */
+        .toggle {
+            position: relative;
+            width: 44px; height: 24px;
+            display: inline-block;
+        }
+        .toggle input { opacity: 0; width: 0; height: 0; }
+        .toggle-track {
+            position: absolute; inset: 0;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .toggle input:checked + .toggle-track { background: var(--sage); border-color: var(--sage); }
+        .toggle-track::after {
+            content: '';
+            position: absolute;
+            width: 18px; height: 18px;
+            left: 2px; top: 2px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.2s;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+        }
+        .toggle input:checked + .toggle-track::after { transform: translateX(20px); }
+
+        /* Diet toggle */
+        .diet-pill-container {
+            background: var(--surface2);
+            border-radius: 12px;
+            padding: 4px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px;
+        }
+        .diet-pill {
+            padding: 8px;
+            border-radius: 9px;
+            font-size: 11px;
+            font-weight: 700;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text2);
+        }
+        .diet-pill.active {
+            background: var(--surface);
+            color: var(--terracotta);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        /* Glossary cards */
+        .glossary-card {
+            background: var(--surface2);
+            border-radius: 14px;
+            padding: 18px;
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+        .glossary-card:hover { border-color: var(--sage); transform: translateY(-2px); }
+
+        /* Header */
+        header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            backdrop-filter: blur(12px);
+        }
+
+        /* Scrollbar global */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 999px; }
+
+        /* Hero section */
+        .hero-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            pointer-events: none;
+        }
+
         @media print {
-            .no-print {
-                display: none !important;
-            }
-            body {
-                background: white !important;
-                color: black !important;
-                font-size: 11px !important;
-            }
-            .print-grid {
-                display: grid !important;
-                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-                gap: 12px !important;
-            }
-            .print-card {
-                border: 1px solid #E2E8F0 !important;
-                box-shadow: none !important;
-                page-break-inside: avoid !important;
-                break-inside: avoid !important;
-                padding: 12px !important;
-            }
-            .print-full {
-                grid-column: span 2 / span 2 !important;
-            }
+            .no-print { display: none !important; }
+            body { background: white !important; font-size: 11px !important; }
+            .card { box-shadow: none !important; border: 1px solid #e2e8f0 !important; break-inside: avoid; }
+            #days-container { grid-template-columns: repeat(2, 1fr) !important; }
+        }
+
+        /* Tooltip */
+        [data-tip] { position: relative; cursor: help; }
+        [data-tip]:hover::after {
+            content: attr(data-tip);
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text);
+            color: var(--bg);
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-size: 11px;
+            white-space: nowrap;
+            z-index: 99;
+            pointer-events: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col selection:bg-[#C96F53]/20">
+<body>
 
-    <!-- Chosen Palette: Earthy Mediterranean Wellness (Warm Sand #FAF8F5, Terracotta Clay #C96F53, Sage Green #6C8E75, Deep Charcoal #2D312E, Clean Pearl #FFFFFF) -->
-    
-    <!-- Application Structure Plan: 
-         The app uses a 10-week layout split into two macro-phases: Weeks 1-5 (Alpha focus) and Weeks 6-10 (Beta/Gamma transition). 
-         The user can toggle between these two blocks easily. An interactive side-by-side view couples the selected week's daily 6-day calendar grid (plus 1 active recovery day) 
-         with a dynamic Mediterranean nutrition breakdown dashboard. An integrated, interactive fitness/nutrition glossary updates automatically or shows on-hover tooltips 
-         to teach the end user the research findings behind their routines (e.g. Zone 2 Cardio, Progressive Overload, EPOC). 
-         A quick-print engine reformats the schedule into a clean, physical copy.
-    -->
-
-    <!-- Visualization & Content Choices:
-         - Macro Distribution -> Goal: Show balanced eating -> Viz: Doughnut Chart (Chart.js) -> Interaction: Hover tooltips & interactive Goal Selector -> Justification: Allows the user to toggle between "Muscle Mass focus" and "BMI Optimization" to watch the target calorie and macro ratios change -> Library: Chart.js
-         - Weekly Effort Load -> Goal: Show relative workout intensity across days -> Viz: Stacked Bar Chart (Chart.js) -> Interaction: Live updates as weeks are clicked -> Justification: Helps the user visualize muscle groups and aerobic vs anaerobic cardiovascular stressors mapped throughout the week -> Library: Chart.js
-    -->
-
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. All visuals rely on HTML/CSS, Tailwind, Canvas, and Unicode symbols. -->
-
-    <!-- Top Banner: App Header & Master Overview -->
-    <header class="bg-white border-b border-[#6C8E75]/10 sticky top-0 z-50 no-print shadow-sm">
+    <!-- ═══════════════════════ HEADER ═══════════════════════ -->
+    <header class="no-print">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row justify-between items-center py-4 space-y-4 md:space-y-0">
-                <div class="text-center md:text-left">
-                    <span class="text-xs uppercase tracking-widest font-bold text-[#6C8E75]">Professional Research-Backed Architecture</span>
-                    <h1 class="text-2xl md:text-3xl font-bold text-[#2D312E] tracking-tight mt-0.5">The Hybrid Strength &amp; Cardio Master Plan</h1>
+            <div class="flex items-center justify-between h-16 gap-4">
+
+                <!-- Logo -->
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 grad-sage rounded-xl flex items-center justify-center text-white font-black text-sm shadow-sm">JF</div>
+                    <div class="hidden sm:block">
+                        <div class="text-[10px] uppercase tracking-widest font-bold" style="color:var(--text3)">Hybrid Elite Program</div>
+                        <div class="font-bold text-sm leading-tight" style="color:var(--text)">JFit Wellness</div>
+                    </div>
                 </div>
-                <div class="flex items-center space-x-3">
-                    <button onclick="window.print()" class="bg-[#6C8E75] hover:bg-[#587560] text-white px-5 py-2.5 rounded-xl font-medium text-sm shadow-sm transition-all flex items-center gap-2">
-                        <span>🖨️</span> Print Printable Board
+
+                <!-- Streak & progress -->
+                <div class="flex items-center gap-3">
+                    <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl" style="background:var(--surface2)">
+                        <span class="text-base">🔥</span>
+                        <div>
+                            <div class="text-[9px] uppercase tracking-wider font-bold" style="color:var(--text3)">Streak</div>
+                            <div class="font-black text-sm leading-none" style="color:var(--text)" id="header-streak">0 days</div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2 px-3 py-1.5 rounded-xl" style="background:var(--surface2)">
+                        <span class="text-base">✅</span>
+                        <div>
+                            <div class="text-[9px] uppercase tracking-wider font-bold" style="color:var(--text3)">Completed</div>
+                            <div class="font-black text-sm leading-none" style="color:var(--text)" id="header-completed">0 / 70</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex items-center gap-2">
+                    <!-- Dark mode toggle -->
+                    <label class="toggle no-print" data-tip="Toggle dark mode">
+                        <input type="checkbox" id="dark-toggle" onchange="toggleDark(this)">
+                        <span class="toggle-track"></span>
+                    </label>
+                    <button onclick="window.print()" class="pill pill-sage hidden sm:flex no-print" style="padding:8px 14px;font-size:12px;cursor:pointer;border:none">
+                        🖨️ Print
                     </button>
-                    <a href="#glossary-section" class="border border-[#6C8E75]/30 hover:border-[#6C8E75] text-[#6C8E75] px-4 py-2.5 rounded-xl text-sm font-semibold transition-all">
+                    <a href="#glossary-section" class="pill pill-indigo" style="padding:8px 14px;font-size:12px;text-decoration:none;cursor:pointer">
                         📚 Glossary
                     </a>
                 </div>
@@ -106,881 +427,914 @@
         </div>
     </header>
 
-    <!-- Main Dynamic Application Grid -->
-    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
-        
-        <!-- Interactive Dashboard Introduction -->
-        <section class="bg-white border border-[#6C8E75]/10 rounded-2xl p-6 md:p-8 mb-8 shadow-sm">
-            <h2 class="text-xl md:text-2xl font-bold text-[#2D312E] mb-3">Understanding Your Hybrid Program Design</h2>
-            <p class="text-[#2D312E]/80 text-sm md:text-base leading-relaxed">
-                Welcome to your expert-crafted elite wellness blueprint. This interactive platform hosts a synergistic 
-                combination of high-intensity functional cardio (<span class="font-semibold text-[#C96F53] underline decoration-dotted cursor-help" title="Focuses on raw bodyweight cardio, core stability, and fast pacing without weights to build a cardiovascular base.">T25 Alpha</span>, 
-                <span class="font-semibold text-[#C96F53] underline decoration-dotted cursor-help" title="Introduces light weights, vertical core work, and high-intensity agility to challenge upper/lower coordination.">Beta</span>, and 
-                <span class="font-semibold text-[#C96F53] underline decoration-dotted cursor-help" title="An intense strength-focused progression using dumbbells to push speed, athletic power, and lean definition.">Gamma</span>), guided outdoor pacing (<span class="font-semibold text-[#6C8E75] underline decoration-dotted cursor-help" title="Nike Running Club: provides structured distance runs, tempo sessions, and recovery pacing.">NRC</span>), 
-                and targeted gym strength work (<span class="font-semibold text-gray-700 underline decoration-dotted cursor-help" title="Nike Training Club & tailored progressive-overload upper body work.">NTC &amp; Gym Upper Body</span>). 
-                Each day is structurally designed to optimize your <span class="font-semibold text-emerald-800 underline decoration-dotted cursor-help" title="A metric of body fatness based on height and weight. Building muscle mass improves metabolic rate, improving your systemic composition.">Body Mass Index (BMI)</span>, building lean contractile tissue while fueling fat loss with specialized Mediterranean meal plans.
-            </p>
-            
-            <!-- Overall Program Progress Tracker -->
-            <div class="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-4 pt-6 border-t border-gray-100">
-                <div class="p-3 bg-[#FAF8F5] rounded-xl text-center">
-                    <span class="block text-xs uppercase tracking-wider text-gray-500 font-bold">Total Duration</span>
-                    <span class="text-lg md:text-xl font-bold text-[#2D312E]">10 Weeks</span>
+    <!-- ═══════════════════════ HERO ═══════════════════════ -->
+    <section class="relative overflow-hidden no-print" style="background: var(--surface); border-bottom: 1px solid var(--border);">
+        <!-- Orbs -->
+        <div class="hero-orb" style="width:400px;height:400px;background:rgba(108,142,117,0.08);top:-120px;right:-80px;"></div>
+        <div class="hero-orb" style="width:300px;height:300px;background:rgba(201,111,83,0.06);bottom:-100px;left:10%;"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-14 relative">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+
+                <!-- Left -->
+                <div class="max-w-xl">
+                    <span class="pill pill-sage mb-3 inline-flex">Professional Research-Backed Architecture</span>
+                    <h1 class="serif text-3xl md:text-4xl font-bold leading-tight mb-3" style="color:var(--text)">
+                        Hybrid Strength &<br>Cardio Master Plan
+                    </h1>
+                    <p class="text-sm leading-relaxed mb-6" style="color:var(--text2)">
+                        Your 10-week synergistic blueprint combining
+                        <span class="font-semibold" style="color:var(--terracotta)" data-tip="BODi T25 — 25-min daily cardio program by Shaun T">T25 Alpha → Gamma</span>,
+                        <span class="font-semibold" style="color:var(--sage)" data-tip="Nike Running Club — structured outdoor run training">NRC guided runs</span>, and
+                        <span class="font-semibold" style="color:var(--text)">gym progressive overload</span> paired
+                        with <span class="font-semibold" style="color:var(--gold)">Mediterranean macros</span>.
+                    </p>
+
+                    <!-- 4 stats row -->
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        <div class="stat-card">
+                            <div class="text-xl font-black" style="color:var(--text)">10</div>
+                            <div class="text-[10px] uppercase tracking-wider font-bold mt-0.5" style="color:var(--text3)">Total Weeks</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="text-xl font-black" style="color:var(--terracotta)">6</div>
+                            <div class="text-[10px] uppercase tracking-wider font-bold mt-0.5" style="color:var(--text3)">Days On / Week</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="text-xl font-black" style="color:var(--sage)">3×</div>
+                            <div class="text-[10px] uppercase tracking-wider font-bold mt-0.5" style="color:var(--text3)">Upper Gym / Wk</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="text-xl font-black" style="color:var(--gold)">Med</div>
+                            <div class="text-[10px] uppercase tracking-wider font-bold mt-0.5" style="color:var(--text3)">Primary Fuel</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="p-3 bg-[#FAF8F5] rounded-xl text-center">
-                    <span class="block text-xs uppercase tracking-wider text-gray-500 font-bold">Weekly Workload</span>
-                    <span class="text-lg md:text-xl font-bold text-[#C96F53]">6 Days On, 1 Rest</span>
+
+                <!-- Right: overall progress ring -->
+                <div class="flex flex-col items-center gap-3 mx-auto md:mx-0">
+                    <div class="relative w-36 h-36">
+                        <svg class="progress-ring w-full h-full" viewBox="0 0 80 80">
+                            <circle class="ring-track" cx="40" cy="40" r="32"></circle>
+                            <circle class="ring-fill" id="overall-ring" cx="40" cy="40" r="32"
+                                stroke="url(#ringGrad)"
+                                stroke-dasharray="201.06"
+                                stroke-dashoffset="201.06">
+                            </circle>
+                            <defs>
+                                <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#C96F53"/>
+                                    <stop offset="100%" stop-color="#6C8E75"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center">
+                            <div class="font-black text-2xl leading-none" style="color:var(--text)" id="ring-pct">0%</div>
+                            <div class="text-[10px] uppercase tracking-wider font-bold mt-1" style="color:var(--text3)">Program</div>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <div class="font-semibold text-sm" style="color:var(--text)">Overall Progress</div>
+                        <div class="text-xs" style="color:var(--text3)" id="ring-sub">0 of 70 sessions done</div>
+                    </div>
+                    <button onclick="resetProgress()" class="text-xs font-medium px-3 py-1.5 rounded-lg border" style="border-color:var(--border);color:var(--text3);background:var(--surface);cursor:pointer">
+                        Reset Progress
+                    </button>
                 </div>
-                <div class="p-3 bg-[#FAF8F5] rounded-xl text-center">
-                    <span class="block text-xs uppercase tracking-wider text-gray-500 font-bold">Gym Focus</span>
-                    <span class="text-lg md:text-xl font-bold text-[#6C8E75]">3x Upper Body / Wk</span>
-                </div>
-                <div class="p-3 bg-[#FAF8F5] rounded-xl text-center">
-                    <span class="block text-xs uppercase tracking-wider text-gray-500 font-bold">Primary Fuel</span>
-                    <span class="text-lg md:text-xl font-bold text-amber-800">Mediterranean Lean</span>
-                </div>
+
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Phase Navigation Toggles -->
-        <div class="mb-6 flex flex-col sm:flex-row gap-3 no-print">
-            <button onclick="switchPhase(1)" id="phase-btn-1" class="flex-1 py-4 px-6 rounded-2xl font-bold text-base md:text-lg text-center shadow-sm border transition-all duration-300 bg-[#C96F53] text-white border-[#C96F53]">
-                🎯 Phase 1: Weeks 1 - 5 (Alpha Base Build)
+    <!-- ═══════════════════════ MAIN ═══════════════════════ -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+
+        <!-- Phase toggle -->
+        <div class="flex gap-3 mb-6 no-print">
+            <button onclick="switchPhase(1)" id="phase-btn-1" class="phase-btn active">
+                🎯 Phase 1 — Weeks 1–5 (Alpha Base)
             </button>
-            <button onclick="switchPhase(2)" id="phase-btn-2" class="flex-1 py-4 px-6 rounded-2xl font-bold text-base md:text-lg text-center shadow-sm border transition-all duration-300 bg-white text-gray-600 border-gray-200 hover:border-[#6C8E75]/30">
-                ⚡ Phase 2: Weeks 6 - 10 (Beta &amp; Gamma Peak)
+            <button onclick="switchPhase(2)" id="phase-btn-2" class="phase-btn inactive">
+                ⚡ Phase 2 — Weeks 6–10 (Beta & Gamma Peak)
             </button>
         </div>
 
-        <!-- Dynamic Week Tabs -->
-        <div class="mb-8 flex flex-wrap gap-2 justify-center no-print" id="week-tabs-container">
-            <!-- Populated via JavaScript dynamically -->
-        </div>
+        <!-- Week tabs -->
+        <div class="week-tabs-scroll mb-8 no-print" id="week-tabs-container"></div>
 
-        <!-- Core Workout Calendar & Meal Sync Grid -->
+        <!-- Main grid -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            
-            <!-- Left Side: Interactive 7-Day Planner (takes 8 cols) -->
-            <div class="lg:col-span-8 space-y-6">
-                <div class="bg-[#6C8E75]/5 border border-[#6C8E75]/20 rounded-2xl p-5 no-print flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+
+            <!-- ── Left: Schedule ── -->
+            <div class="lg:col-span-8 space-y-5">
+
+                <!-- Week header bar -->
+                <div class="card p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 no-print">
                     <div>
-                        <span class="text-xs uppercase tracking-wider font-bold text-[#6C8E75]" id="phase-badge-text">Phase 1 Integration</span>
-                        <h3 class="text-xl font-bold text-[#2D312E]" id="active-week-display-title">Active Schedule: Week 1</h3>
+                        <span class="pill pill-sage mb-1.5" id="phase-badge-text">Phase 1 Integration</span>
+                        <h2 class="font-bold text-lg leading-tight" style="color:var(--text)" id="active-week-display-title">Active Schedule: Week 1</h2>
+                        <p class="text-xs mt-0.5" style="color:var(--text3)" id="week-focus-text">Cardiovascular foundations & baseline muscle cell recruitment.</p>
                     </div>
-                    <div class="text-xs text-[#2D312E]/70 max-w-sm">
-                        💡 Hover or tap highlighted fitness terms to access the embedded glossary definitions instantly.
+                    <div class="flex items-center gap-2">
+                        <div class="text-right">
+                            <div class="text-[10px] uppercase tracking-wider font-bold" style="color:var(--text3)">Week Progress</div>
+                            <div class="font-black text-sm" style="color:var(--text)" id="week-progress-text">0 / 7</div>
+                        </div>
+                        <div class="relative w-12 h-12">
+                            <svg class="progress-ring w-full h-full" viewBox="0 0 40 40">
+                                <circle class="ring-track" cx="20" cy="20" r="16" stroke-width="4"></circle>
+                                <circle class="ring-fill" id="week-ring" cx="20" cy="20" r="16"
+                                    stroke="#6C8E75" stroke-width="4"
+                                    stroke-dasharray="100.53"
+                                    stroke-dashoffset="100.53">
+                                </circle>
+                            </svg>
+                            <div class="absolute inset-0 flex items-center justify-center text-[10px] font-black" style="color:var(--text)" id="week-ring-pct">0%</div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- 7 Day Cards Container -->
-                <div id="days-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 print-grid">
-                    <!-- Cards will be dynamically injected by JS based on selected week -->
-                </div>
+                <!-- 7-day cards -->
+                <div id="days-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
             </div>
 
-            <!-- Right Side: Dynamic Mediterranean Nutrition & Analytics Dashboard (takes 4 cols) -->
-            <div class="lg:col-span-4 space-y-6">
-                
-                <!-- Nutrition Plan card -->
-                <div class="bg-white border border-[#6C8E75]/10 rounded-2xl p-6 shadow-sm">
-                    <div class="border-b border-gray-100 pb-4 mb-4">
-                        <span class="text-xs uppercase tracking-wider font-bold text-amber-800">Lean Muscle Building Foods</span>
-                        <h3 class="text-xl font-bold text-gray-900 mt-0.5">Mediterranean Macro Mix</h3>
-                        <p class="text-xs text-gray-500 mt-1">High lean-protein, healthy polyunsaturated fats, and non-refined complex carbs.</p>
+            <!-- ── Right: Nutrition & Analytics ── -->
+            <div class="lg:col-span-4 space-y-5">
+
+                <!-- Macro chart card -->
+                <div class="card p-6">
+                    <div style="border-bottom:1px solid var(--border)" class="pb-4 mb-4">
+                        <span class="pill pill-amber mb-1.5 inline-flex" style="background:rgba(184,148,63,0.1);color:#8A6020">Lean Muscle Building Foods</span>
+                        <h3 class="font-bold text-lg" style="color:var(--text)">Mediterranean Macro Mix</h3>
+                        <p class="text-xs mt-0.5" style="color:var(--text3)">High lean-protein, healthy polyunsaturated fats, and non-refined complex carbs.</p>
                     </div>
 
-                    <!-- Diet State Toggle (BMI focus vs Bulking/Muscle Build) -->
+                    <!-- Diet toggle -->
                     <div class="mb-5 no-print">
-                        <span class="block text-xs font-bold text-gray-600 uppercase mb-2">Adjust Diet Focus Tool</span>
-                        <div class="grid grid-cols-2 gap-2 bg-gray-100 p-1 rounded-xl">
-                            <button onclick="setDietGoal('bmi')" id="diet-btn-bmi" class="py-2 text-xs font-semibold rounded-lg text-center transition-all bg-white text-[#C96F53] shadow-sm">
-                                BMI Optimization
-                            </button>
-                            <button onclick="setDietGoal('muscle')" id="diet-btn-muscle" class="py-2 text-xs font-semibold rounded-lg text-center transition-all text-gray-600 hover:text-[#2D312E]">
-                                Clean Muscle Gain
-                            </button>
+                        <div class="text-[10px] uppercase tracking-wider font-bold mb-2" style="color:var(--text3)">Adjust Diet Focus</div>
+                        <div class="diet-pill-container">
+                            <div class="diet-pill active" id="diet-btn-bmi" onclick="setDietGoal('bmi')">⚖️ BMI Optimize</div>
+                            <div class="diet-pill" id="diet-btn-muscle" onclick="setDietGoal('muscle')">💪 Muscle Gain</div>
                         </div>
                     </div>
 
-                    <!-- Chart JS Canvas Wrapper -->
                     <div class="chart-container mb-4">
                         <canvas id="macroDoughnutChart"></canvas>
                     </div>
 
-                    <!-- Macro Values List -->
-                    <div class="space-y-3 pt-3 border-t border-gray-100 text-sm">
+                    <div class="space-y-2.5 pt-4" style="border-top:1px solid var(--border)">
                         <div class="flex justify-between items-center">
-                            <span class="flex items-center gap-2 font-medium text-gray-700">
-                                <span class="w-3 h-3 rounded-full bg-[#6C8E75]"></span> Protein
+                            <span class="flex items-center gap-2 text-sm font-medium" style="color:var(--text2)">
+                                <span class="w-3 h-3 rounded-full inline-block" style="background:#6C8E75"></span> Protein
                             </span>
-                            <span class="font-bold text-gray-900" id="macro-val-protein">35% (175g)</span>
+                            <span class="font-bold text-sm" style="color:var(--text)" id="macro-val-protein">35% (175g)</span>
                         </div>
                         <div class="flex justify-between items-center">
-                            <span class="flex items-center gap-2 font-medium text-gray-700">
-                                <span class="w-3 h-3 rounded-full bg-[#C96F53]"></span> Complex Carbs
+                            <span class="flex items-center gap-2 text-sm font-medium" style="color:var(--text2)">
+                                <span class="w-3 h-3 rounded-full inline-block" style="background:#C96F53"></span> Complex Carbs
                             </span>
-                            <span class="font-bold text-gray-900" id="macro-val-carbs">40% (200g)</span>
+                            <span class="font-bold text-sm" style="color:var(--text)" id="macro-val-carbs">40% (200g)</span>
                         </div>
                         <div class="flex justify-between items-center">
-                            <span class="flex items-center gap-2 font-medium text-gray-700">
-                                <span class="w-3 h-3 rounded-full bg-amber-500"></span> Healthy Fats
+                            <span class="flex items-center gap-2 text-sm font-medium" style="color:var(--text2)">
+                                <span class="w-3 h-3 rounded-full inline-block" style="background:#F59E0B"></span> Healthy Fats
                             </span>
-                            <span class="font-bold text-gray-900" id="macro-val-fats">25% (55g)</span>
+                            <span class="font-bold text-sm" style="color:var(--text)" id="macro-val-fats">25% (55g)</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Custom Meal Suggestion Generator based on Diet Focus -->
-                <div class="bg-white border border-[#6C8E75]/10 rounded-2xl p-6 shadow-sm">
-                    <h4 class="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
-                        <span>🥗</span> <span id="meal-goal-title">BMI Optimize Meal Sync</span>
+                <!-- Meal plan card -->
+                <div class="card p-6">
+                    <h4 class="font-bold text-base flex items-center gap-2 mb-1" style="color:var(--text)">
+                        🥗 <span id="meal-goal-title">BMI Optimization Mode</span>
                     </h4>
-                    <p class="text-xs text-gray-600 mb-4" id="meal-goal-desc">Low systemic inflammation, high satiety fibers, customized specifically for muscle growth without excess calorie accumulation.</p>
-                    
-                    <div class="space-y-4" id="meal-list-container">
-                        <!-- Content dynamically changes depending on Diet Goal selected -->
-                    </div>
+                    <p class="text-xs mb-4 leading-relaxed" style="color:var(--text3)" id="meal-goal-desc">Low systemic inflammation, high satiety fibers, customized for fat loss without muscle loss.</p>
+                    <div class="space-y-3" id="meal-list-container"></div>
                 </div>
 
-                <!-- App Distribution Load Chart (Interactive Visual Metric) -->
-                <div class="bg-white border border-[#6C8E75]/10 rounded-2xl p-6 shadow-sm no-print">
-                    <h4 class="text-lg font-bold text-gray-900 mb-2">Weekly Platform Allocation</h4>
-                    <p class="text-xs text-gray-500 mb-4">Calculated workout share in percentage based on weekly minutes completed.</p>
+                <!-- Platform allocation chart -->
+                <div class="card p-6 no-print">
+                    <h4 class="font-bold text-base mb-1" style="color:var(--text)">Weekly Platform Allocation</h4>
+                    <p class="text-xs mb-4" style="color:var(--text3)">Workout share based on weekly minutes per platform.</p>
                     <div class="chart-container">
                         <canvas id="platformLoadChart"></canvas>
                     </div>
                 </div>
 
-            </div>
+                <!-- Tech stack quick guide -->
+                <div class="card p-5 no-print">
+                    <h4 class="font-bold text-sm mb-3 flex items-center gap-2" style="color:var(--text)">
+                        📱 App Integration Guide
+                    </h4>
+                    <div class="space-y-2.5">
+                        <div class="flex items-start gap-3 p-3 rounded-xl" style="background:rgba(249,115,22,0.07);border:1px solid rgba(249,115,22,0.12)">
+                            <span class="text-xl">🏃‍♂️</span>
+                            <div>
+                                <div class="font-bold text-xs" style="color:var(--text)">Nike Run Club</div>
+                                <div class="text-[11px] leading-relaxed mt-0.5" style="color:var(--text2)">Saturdays: Zone 2 Guided Runs. Tuesdays: Speed/Fartlek intervals.</div>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3 p-3 rounded-xl" style="background:rgba(59,130,246,0.07);border:1px solid rgba(59,130,246,0.12)">
+                            <span class="text-xl">🏋️</span>
+                            <div>
+                                <div class="font-bold text-xs" style="color:var(--text)">Gym Upper Body</div>
+                                <div class="text-[11px] leading-relaxed mt-0.5" style="color:var(--text2)">Mon Push · Wed Pull · Fri Accessory. Track weights for progressive overload.</div>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3 p-3 rounded-xl" style="background:rgba(139,92,246,0.07);border:1px solid rgba(139,92,246,0.12)">
+                            <span class="text-xl">🧘</span>
+                            <div>
+                                <div class="font-bold text-xs" style="color:var(--text)">FitOn Pro</div>
+                                <div class="text-[11px] leading-relaxed mt-0.5" style="color:var(--text2)">Post-workout mobility & 10-15 min deep stretch to flush lactic acid.</div>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3 p-3 rounded-xl" style="background:rgba(16,185,129,0.07);border:1px solid rgba(16,185,129,0.12)">
+                            <span class="text-xl">⏱️</span>
+                            <div>
+                                <div class="font-bold text-xs" style="color:var(--text)">BODi / T25</div>
+                                <div class="text-[11px] leading-relaxed mt-0.5" style="color:var(--text2)">Wks 1-5: Alpha. Wks 6-8: Beta. Wks 9-10: Gamma. Keep transitions tight.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
+            </div>
         </div>
 
-        <!-- ================= APP INTEGRATION INSTRUCTION GUIDE ================= -->
-        <section class="mt-12 bg-white border border-[#6C8E75]/10 rounded-2xl p-6 md:p-8 shadow-sm no-print">
-            <div class="border-b border-gray-100 pb-4 mb-6">
-                <span class="text-xs uppercase tracking-wider font-bold text-[#6C8E75]">User Integration Strategies</span>
-                <h2 class="text-2xl font-bold text-[#2D312E] mt-0.5">How to Setup Your Tech Stack</h2>
-                <p class="text-sm text-gray-600 mt-1">Combine NRC, NTC, FitOn Pro, and Beachbody/BODi to run seamlessly concurrently.</p>
+        <!-- ═══════════════════════ GLOSSARY ═══════════════════════ -->
+        <section id="glossary-section" class="mt-14">
+            <div style="border-bottom:1px solid var(--border)" class="pb-4 mb-6">
+                <span class="pill pill-indigo mb-2 inline-flex">Learn the Science</span>
+                <h2 class="serif text-2xl font-bold" style="color:var(--text)">Scientific Explanations & Glossary</h2>
+                <p class="text-sm mt-1" style="color:var(--text2)">Understand the biology driving your hypertrophy and fat loss.</p>
             </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="p-5 rounded-xl bg-orange-50 border border-orange-100">
-                    <div class="text-3xl mb-3">🏃‍♂️</div>
-                    <h4 class="font-bold text-gray-900 mb-1">Nike Run Club</h4>
-                    <p class="text-xs text-gray-600 leading-relaxed">
-                        Open NRC before heading out. For Saturday runs, select "Guided Runs" > "Time-Based" or "Easy Runs". This promotes <span class="font-semibold text-[#6C8E75] underline decoration-dotted cursor-help" title="Zone 2 training triggers mitochondrial development, lowering systemic fat while safeguarding your muscle tissue from cannibalization.">Zone 2 recovery</span>. For Tuesdays, select "Speed Run" (Fartleks or Intervals).
-                    </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="glossary-card">
+                    <h4 class="font-bold text-sm flex items-center gap-2 mb-2" style="color:var(--terracotta)">🧬 Progressive Hypertrophy</h4>
+                    <p class="text-xs leading-relaxed" style="color:var(--text2)">To build muscle while losing fat, gym lifts must push fibers near failure. Over 10 weeks, aim to add reps or weight every session.</p>
                 </div>
-                <div class="p-5 rounded-xl bg-blue-50 border border-blue-100">
-                    <div class="text-3xl mb-3">🏋️‍♀️</div>
-                    <h4 class="font-bold text-gray-900 mb-1">Gym Upper Body</h4>
-                    <p class="text-xs text-gray-600 leading-relaxed">
-                        To construct a premium look, target major muscle hubs. Apply <span class="font-semibold text-[#C96F53] underline decoration-dotted cursor-help" title="Gradually increasing load, reps, or sets across weeks to continuously challenge muscle fibers.">Progressive Overload</span>: Track your weights in notes. Focus on Upper Push (chest/shoulders) Mon, Upper Pull (back/biceps) Wed, and Core/Arms Fri.
-                    </p>
+                <div class="glossary-card">
+                    <h4 class="font-bold text-sm flex items-center gap-2 mb-2" style="color:var(--sage)">🔥 EPOC — Afterburn Effect</h4>
+                    <p class="text-xs leading-relaxed" style="color:var(--text2)">Excess Post-Exercise Oxygen Consumption. High-intensity training (T25) keeps metabolic rate elevated up to 24h post-workout, maximizing fat oxidation.</p>
                 </div>
-                <div class="p-5 rounded-xl bg-purple-50 border border-purple-100">
-                    <div class="text-3xl mb-3">🧘</div>
-                    <h4 class="font-bold text-gray-900 mb-1">FitOn Pro</h4>
-                    <p class="text-xs text-gray-600 leading-relaxed">
-                        Your FitOn Pro plan focuses on mobility. After heavy running or heavy gym sessions, open FitOn and load a "10-15 Min Deep Stretch" or "Core Yoga Flow". Use this to rapidly flush lactic acid from muscle fibers.
-                    </p>
+                <div class="glossary-card">
+                    <h4 class="font-bold text-sm flex items-center gap-2 mb-2" style="color:var(--gold)">🫀 Zone 2 Aerobic Conditioning</h4>
+                    <p class="text-xs leading-relaxed" style="color:var(--text2)">Running at 60–70% max heart rate teaches mitochondria to burn fat as primary fuel. Improves stamina and recovery during heavy gym sessions.</p>
                 </div>
-                <div class="p-5 rounded-xl bg-emerald-50 border border-emerald-100">
-                    <div class="text-3xl mb-3">⏱️</div>
-                    <h4 class="font-bold text-gray-900 mb-1">BODi / T25</h4>
-                    <p class="text-xs text-gray-600 leading-relaxed">
-                        T25 is an athletic sprint. Keep transitions tight. Follow Shaun T's strict scheduling: Weeks 1-5 use Alpha (no equipment). Weeks 6-8 use Beta (light weights). Weeks 9-10 shift to Gamma (strength &amp; speed overload).
-                    </p>
+                <div class="glossary-card">
+                    <h4 class="font-bold text-sm flex items-center gap-2 mb-2" style="color:#0D9488">⚖️ BMI Composition Balance</h4>
+                    <p class="text-xs leading-relaxed" style="color:var(--text2)">This program lowers fat mass while building skeletal muscle, improving your BMI composition without sacrificing strength.</p>
                 </div>
-            </div>
-        </section>
-
-        <!-- ================= RESEARCH GLOSSARY & KNOWLEDGE BANK ================= -->
-        <section id="glossary-section" class="mt-12 bg-white border border-[#6C8E75]/10 rounded-2xl p-6 md:p-8 shadow-sm">
-            <div class="border-b border-gray-100 pb-4 mb-6">
-                <span class="text-xs uppercase tracking-wider font-bold text-indigo-800">Learn the Science of Your Body</span>
-                <h2 class="text-2xl font-bold text-gray-900 mt-0.5">Scientific Explanations &amp; Glossary</h2>
-                <p class="text-sm text-gray-600 mt-1">Understand the biological pathways driving your muscle hypertrophy and healthy BMI balance.</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-sm">
-                <div class="p-5 rounded-xl border border-gray-100 bg-[#FAF8F5]">
-                    <h4 class="font-bold text-[#C96F53] mb-2 flex items-center gap-1.5">
-                        <span>🧬</span> Progressive Hypertrophy
-                    </h4>
-                    <p class="text-xs text-gray-600 leading-relaxed">
-                        To stimulate muscle growth while losing fat, your gym lifts must force fibers near their threshold. Over the 10 weeks, aim to lift heavier or complete more clean repetitions on every single session.
-                    </p>
+                <div class="glossary-card">
+                    <h4 class="font-bold text-sm flex items-center gap-2 mb-2" style="color:#B45309">🌾 Mediterranean Glycemic Index</h4>
+                    <p class="text-xs leading-relaxed" style="color:var(--text2)">Complex carbs (quinoa, farro) provide slow glucose absorption, avoiding insulin spikes and directing nutrients to recovering muscle tissue.</p>
                 </div>
-                <div class="p-5 rounded-xl border border-gray-100 bg-[#FAF8F5]">
-                    <h4 class="font-bold text-[#6C8E75] mb-2 flex items-center gap-1.5">
-                        <span>🔥</span> EPOC (Afterburn Effect)
-                    </h4>
-                    <p class="text-xs text-gray-600 leading-relaxed">
-                        Excess Post-Exercise Oxygen Consumption. High-intensity cardiorespiratory training (like T25) keeps your metabolic resting rate raised for up to 24 hours post-workout, maximizing daily fat oxidation.
-                    </p>
-                </div>
-                <div class="p-5 rounded-xl border border-gray-100 bg-[#FAF8F5]">
-                    <h4 class="font-bold text-amber-700 mb-2 flex items-center gap-1.5">
-                        <span>🫀</span> Zone 2 Aerobic Conditioning
-                    </h4>
-                    <p class="text-xs text-gray-600 leading-relaxed">
-                        Running at 60-70% max heart rate teaches your mitochondria to utilize fat lipids as primary energy. This improves your systemic stamina, ensuring you recover fast during hard gym lifting.
-                    </p>
-                </div>
-                <div class="p-5 rounded-xl border border-gray-100 bg-[#FAF8F5]">
-                    <h4 class="font-bold text-teal-800 mb-2 flex items-center gap-1.5">
-                        <span>⚖️</span> BMI Composition Balance
-                    </h4>
-                    <p class="text-xs text-gray-600 leading-relaxed">
-                        Traditional BMI doesn't differentiate fat from muscle. This hybrid program optimizes your BMI by lowering body fat mass while building skeletal muscle structure, giving you a dense, athletic constitution.
-                    </p>
-                </div>
-                <div class="p-5 rounded-xl border border-gray-100 bg-[#FAF8F5]">
-                    <h4 class="font-bold text-orange-800 mb-2 flex items-center gap-1.5">
-                        <span>🌾</span> Mediterranean Glycemic Index
-                    </h4>
-                    <p class="text-xs text-gray-600 leading-relaxed">
-                        Consuming clean complex carbs (quinoa, farro) ensures slow glucose absorption. This avoids high insulin spikes, guiding nutrients directly to recovering muscles rather than storing them in adipocytes (fat cells).
-                    </p>
-                </div>
-                <div class="p-5 rounded-xl border border-gray-100 bg-[#FAF8F5]">
-                    <h4 class="font-bold text-blue-900 mb-2 flex items-center gap-1.5">
-                        <span>💧</span> Cellular Rehydration Ratio
-                    </h4>
-                    <p class="text-xs text-gray-600 leading-relaxed">
-                        Intense sweating under T25 and heavy lifting depletes glycogen and water storage. Electrolytes and water are mandatory to force nutrients into the cell walls, optimizing hypertrophy.
-                    </p>
+                <div class="glossary-card">
+                    <h4 class="font-bold text-sm flex items-center gap-2 mb-2" style="color:#1D4ED8">💧 Cellular Rehydration</h4>
+                    <p class="text-xs leading-relaxed" style="color:var(--text2)">T25 and heavy lifting deplete glycogen and water. Electrolytes force nutrients into cell walls, optimizing protein synthesis and hypertrophy.</p>
                 </div>
             </div>
         </section>
 
     </main>
 
-    <!-- Interactive Glossary Quick Popup Box -->
-    <div id="glossary-toast" class="fixed bottom-6 right-6 max-w-sm bg-white border-2 border-[#6C8E75] p-4 rounded-xl shadow-2xl hidden z-50 no-print">
-        <div class="flex justify-between items-start mb-2">
-            <h5 class="font-bold text-gray-900 text-sm flex items-center gap-1">
-                <span>💡</span> <span id="toast-title">Glossary Term</span>
-            </h5>
-            <button onclick="closeToast()" class="text-gray-400 hover:text-gray-600 text-lg leading-none">&times;</button>
-        </div>
-        <p class="text-xs text-gray-600 leading-relaxed" id="toast-body">Explanation goes here.</p>
-    </div>
-
-    <!-- Page Footer -->
-    <footer class="bg-white border-t border-gray-100 mt-16 py-8 text-center text-xs text-gray-500 no-print">
-        <p class="font-semibold text-gray-700">10-Week Hybrid Elite Master Plan v2.5</p>
-        <p class="mt-1">Combining specialized cardio algorithms with target strength building and Mediterranean nutritional principles.</p>
+    <!-- ═══════════════════════ FOOTER ═══════════════════════ -->
+    <footer class="no-print mt-16 py-8 text-center text-xs" style="border-top:1px solid var(--border);color:var(--text3)">
+        <div class="font-bold mb-1" style="color:var(--text2)">JFit Wellness — Hybrid Elite Master Plan v3.0</div>
+        <div>Combining specialized cardio algorithms with progressive strength and Mediterranean nutrition science.</div>
     </footer>
 
-    <!-- Complete JavaScript Database and Logic Structure -->
+    <!-- ═══════════════════════ GLOSSARY TOAST ═══════════════════════ -->
+    <div id="glossary-toast" class="toast no-print">
+        <div class="flex justify-between items-start mb-2">
+            <h5 class="font-bold text-sm flex items-center gap-1.5" style="color:var(--text)">
+                💡 <span id="toast-title">Glossary Term</span>
+            </h5>
+            <button onclick="closeToast()" style="color:var(--text3);background:none;border:none;cursor:pointer;font-size:18px;line-height:1">&times;</button>
+        </div>
+        <p class="text-xs leading-relaxed" style="color:var(--text2)" id="toast-body"></p>
+        <div class="mt-3 pt-3 flex items-center gap-1.5" style="border-top:1px solid var(--border)">
+            <span class="text-[10px] uppercase tracking-wider font-bold" style="color:var(--text3)">Tap any session name for definitions</span>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════ CONFETTI CANVAS ═══════════════════════ -->
+    <canvas id="confetti-canvas" style="position:fixed;inset:0;pointer-events:none;z-index:200;display:none"></canvas>
+
+    <!-- ═══════════════════════ JAVASCRIPT ═══════════════════════ -->
     <script>
-        // Database of all 10 Weeks with specific color-coded items, progressions, and details
-        const workoutDatabase = {
-            1: {
-                phase: "Phase 1: Alpha Base",
-                focus: "Cardiovascular foundations & baseline muscle cell recruitment.",
-                days: [
-                    { day: "Monday", type: "Strength & T25 Cardio", label: "Push Focus", color: "border-l-[#C96F53]", 
-                      gName: "Gym Upper Body (Push Focus)", gDesc: "Bench Press 4x8, Overhead DB Press 3x10, Incline DB Press 3x12, Tricep pushdowns 3x15.",
-                      tName: "T25 Alpha Cardio", tDesc: "25 mins of continuous metabolic bodyweight work. Fast speed, strict form." },
-                    { day: "Tuesday", type: "Run & Core Core", label: "Speed Pacing", color: "border-l-amber-500",
-                      gName: "Nike Running Club (Speed Run)", gDesc: "Warm-up + 8x 200m sprints with 1-min walking rests. (Total 25 mins)",
-                      tName: "FitOn Pro Core Crunch", tDesc: "15 min Pilates core dynamic flow with trainer-guided breathing." },
-                    { day: "Wednesday", type: "Strength & T25 Cardio", label: "Pull Focus", color: "border-l-[#C96F53]",
-                      gName: "Gym Upper Body (Pull Focus)", gDesc: "Pull-ups 4x Max, Lat Pulldown 3x10, Barbell Row 3x10, DB Bicep Curls 3x12.",
-                      tName: "T25 Alpha Lower Focus", tDesc: "Focuses on building localized muscular endurance in the calves, quads, and glutes." },
-                    { day: "Thursday", type: "Legs & Mobility Stretch", label: "Lower Body", color: "border-l-emerald-600",
-                      gName: "Nike Training Club (Lower Body Strength)", gDesc: "40 min functional weighted squats, lunges, and balance routines.",
-                      tName: "FitOn Pro Stretch", tDesc: "15 min deep hamstring and hip flexor release routine." },
-                    { day: "Friday", type: "Strength & T25 Cardio", label: "Hypertrophy Pump", color: "border-l-[#C96F53]",
-                      gName: "Gym Upper Body (Accessory Focus)", gDesc: "Dumbbell Lateral Raises 4x15, Face Pulls 3x15, Hammer Curls superset with Skull Crushers 3x12.",
-                      tName: "T25 Alpha Total Body Circuit", tDesc: "Focuses heavily on upper body pushing, core, and leg transitions." },
-                    { day: "Saturday", type: "Aerobic Long Run", label: "Endurance", color: "border-l-blue-600",
-                      gName: "Nike Running Club (Long Run)", gDesc: "3 Miles steady Zone 2 cardio pace. Maintain conversational breathing.",
-                      tName: "FitOn Pro Flow Yoga", tDesc: "20 min full-body mobility flow to relax joints." },
-                    { day: "Sunday", type: "Active Recovery", label: "Rebuild", color: "border-l-indigo-700",
-                      gName: "Foam Rolling Routine", gDesc: "15 mins rolling out lower limbs, thoracic spine, and shoulder girdles.",
-                      tName: "FitOn Pro Meditation & Rest", tDesc: "Focus on breath control, clean hydration, and planning the next week's meal prep." }
-                ]
-            },
-            2: {
-                phase: "Phase 1: Alpha Base",
-                focus: "Increasing running stamina & muscular threshold adaptation.",
-                days: [
-                    { day: "Monday", type: "Strength & T25 Cardio", label: "Push Focus", color: "border-l-[#C96F53]",
-                      gName: "Gym Upper Body (Push Focus)", gDesc: "Incline Bench Press 4x8, Arnold Press 3x10, Cable Flyes 3x12, Overhead DB Tricep Extension 3x12.",
-                      tName: "T25 Alpha Speed 1.0", tDesc: "Cardio focus with dynamic lateral speed drills to stimulate fast-twitch muscle fibers." },
-                    { day: "Tuesday", type: "Run & Core Core", label: "Aerobic Push", color: "border-l-amber-500",
-                      gName: "Nike Running Club (Tempo Run)", gDesc: "15 min warm-up, 10 mins steady hard effort, 5 mins cool-down.",
-                      tName: "FitOn Pro Deep Ab Lab", tDesc: "15 min Pilates focused on deep transverse abdominis activation." },
-                    { day: "Wednesday", type: "Strength & T25 Cardio", label: "Pull Focus", color: "border-l-[#C96F53]",
-                      gName: "Gym Upper Body (Pull Focus)", gDesc: "T-Bar Row 4x8, Single-Arm DB Row 3x10, Face Pulls 4x15, Incline Hammer Curls 3x12.",
-                      tName: "T25 Alpha Cardio", tDesc: "25 min athletic burn. Focus on keeping landing impact soft." },
-                    { day: "Thursday", type: "Legs & Mobility Stretch", label: "Lower Body", color: "border-l-emerald-600",
-                      gName: "Nike Training Club (Lower Body Power)", gDesc: "30 min plyometric-infused lower body sequence.",
-                      tName: "FitOn Pro Active Stretch", tDesc: "20 min foam rolling and lower-back focus yoga sequence." },
-                    { day: "Friday", type: "Strength & T25 Cardio", label: "Hypertrophy Pump", color: "border-l-[#C96F53]",
-                      gName: "Gym Upper Body (Accessory Focus)", gDesc: "Dumbbell Shrugs 3x12, Incline Curl 3x12, Close Grip Bench Press 3x10.",
-                      tName: "T25 Alpha Total Body Circuit", tDesc: "Focuses on consecutive upper/lower body transitions." },
-                    { day: "Saturday", type: "Aerobic Long Run", label: "Endurance", color: "border-l-blue-600",
-                      gName: "Nike Running Club (Long Run)", gDesc: "3.5 Miles easy pace. Keep a steady stride cadence.",
-                      tName: "FitOn Pro Restorative Stretch", tDesc: "20 min gentle full-body decompression session." },
-                    { day: "Sunday", type: "Active Recovery", label: "Rebuild", color: "border-l-indigo-700",
-                      gName: "Deep Joint Mobilization", gDesc: "15 mins of joint rotations (ankles, hips, neck) to offset impact fatigue.",
-                      tName: "Meal Prep & Recovery Meditation", tDesc: "Review protein targets, drink 4L of electrolyte water, rest deep." }
-                ]
-            },
-            3: {
-                phase: "Phase 1: Alpha Base",
-                focus: "Introduction of targeted core-to-cardio intervals for BMI control.",
-                days: [
-                    { day: "Monday", type: "Strength & T25 Cardio", label: "Push Focus", color: "border-l-[#C96F53]",
-                      gName: "Gym Upper Body (Push Focus)", gDesc: "Bench Press 4x6 (heavier), DB Overhead Press 3x8, Decline DB Press 3x10, DB Lateral Raise 4x12.",
-                      tName: "T25 Alpha Ab Intervals", tDesc: "Alternates dynamic cardio intervals with highly concentrated core exercises." },
-                    { day: "Tuesday", type: "Run & Core Core", label: "Tempo Pace", color: "border-l-amber-500",
-                      gName: "Nike Running Club (Intervals)", gDesc: "Warm-up + 5x 400m intervals at 5k target pace with 90s jog recoveries.",
-                      tName: "FitOn Pro Core Heat", tDesc: "15 min fast-paced abdominal dynamic endurance workout." },
-                    { day: "Wednesday", type: "Strength & T25 Cardio", label: "Pull Focus", color: "border-l-[#C96F53]",
-                      gName: "Gym Upper Body (Pull Focus)", gDesc: "Weighted Pull-ups 4x6, Cable Seated Row 3x10, DB Rear Delt Flyes 4x12, Ez-bar Curl 3x12.",
-                      tName: "T25 Alpha Total Body Circuit", tDesc: "Maximum intensity focusing on core control under localized muscle burnout." },
-                    { day: "Thursday", type: "Legs & Mobility Stretch", label: "Lower Body", color: "border-l-emerald-600",
-                      gName: "Nike Training Club (Lower Body Strength)", gDesc: "45 min heavy kettlebell squats, deadlifts, and weighted split squats.",
-                      tName: "FitOn Pro Hip Opener Flow", tDesc: "15 min deep hip rotation and hamstring stretches." },
-                    { day: "Friday", type: "Strength & T25 Cardio", label: "Hypertrophy Pump", color: "border-l-[#C96F53]",
-                      gName: "Gym Upper Body (Accessory Focus)", gDesc: "DB Lateral Raise 4x15, Overhead Tricep Extension 3x12, Bicep Concentrated Curls 3x12.",
-                      tName: "T25 Alpha Lower Focus", tDesc: "Isometric leg holds, speed power lunges, and calf builders." },
-                    { day: "Saturday", type: "Aerobic Long Run", label: "Endurance", color: "border-l-blue-600",
-                      gName: "Nike Running Club (Long Run)", gDesc: "4 Miles steady Zone 2 run. Track consistent lap times in app.",
-                      tName: "FitOn Pro Yoga Release", tDesc: "20 min restorative postures to soothe leg muscles." },
-                    { day: "Sunday", type: "Active Recovery", label: "Rebuild", color: "border-l-indigo-700",
-                      gName: "Full Body Mobility Decompress", gDesc: "Focused foam rolling on IT bands, glutes, and upper traps.",
-                      tName: "Clean Food Satiety Reset", tDesc: "Hydrate, focus meals on low GI carbs, and visualize upcoming Week 4 goals." }
-                ]
-            },
-            4: {
-                phase: "Phase 1: Alpha Base",
-                focus: "Volume peak. Extreme metabolic drive to optimize body composition.",
-                days: [
-                    { day: "Monday", type: "Strength & T25 Cardio", label: "Push Focus", color: "border-l-[#C96F53]",
-                      gName: "Gym Upper Body (Push Focus)", gDesc: "Incline DB Press 4x8, DB Arnold Press 3x10, Weighted Dips 3x8, Lateral Raises 4x15.",
-                      tName: "T25 Alpha Total Body Circuit", tDesc: "Challenging core-to-arm shifts with strict 25-minute timeline limits." },
-                    { day: "Tuesday", type: "Run & Core Core", label: "Speed Track", color: "border-l-amber-500",
-                      gName: "Nike Running Club (Fartlek)", gDesc: "Warm-up + 30 min unstructured play running. Alternate fast and slow pacing.",
-                      tName: "FitOn Pro HIIT Core", tDesc: "15 min fast core builder focusing on high-plank leg movements." },
-                    { day: "Wednesday", type: "Strength & T25 Cardio", label: "Pull Focus", color: "border-l-[#C96F53]",
-                      gName: "Gym Upper Body (Pull Focus)", gDesc: "Chest Supported Row 4x10, Lat Pulldowns 3x10, Barbell Shrugs 3x12, DB Hammer Curl 3x12.",
-                      tName: "T25 Alpha Lower Focus", tDesc: "Designed to build deep muscle fibers in the hamstrings and calves." },
-                    { day: "Thursday", type: "Legs & Mobility Stretch", label: "Lower Body", color: "border-l-emerald-600",
-                      gName: "Nike Training Club (Glutes & Quads)", gDesc: "40 min intense lower body muscle builder.",
-                      tName: "FitOn Pro Deep Release Yoga", tDesc: "20 min deep restorative postures to counter compression stresses." },
-                    { day: "Friday", type: "Strength & T25 Cardio", label: "Hypertrophy Pump", color: "border-l-[#C96F53]",
-                      gName: "Gym Upper Body (Accessory Focus)", gDesc: "Upright Rows 3x12, Seated DB Incline Bicep Curls 3x12, Rope Tricep Pushdowns 3x15.",
-                      tName: "T25 Alpha Cardio", tDesc: "Keep your chest up and core engaged. Sprint through the intervals." },
-                    { day: "Saturday", type: "Aerobic Long Run", label: "Endurance", color: "border-l-blue-600",
-                      gName: "Nike Running Club (Long Run)", gDesc: "4.5 Miles easy Zone 2. Stride smoothly on asphalt/trail.",
-                      tName: "FitOn Pro Full-Body Decompress", tDesc: "20 min stretch focusing on lower limbs and hips." },
-                    { day: "Sunday", type: "Active Recovery", label: "Rebuild", color: "border-l-indigo-700",
-                      gName: "Foam Roll & Joint Traction", gDesc: "Thorough 15 min rolling routine focusing on calves and lats.",
-                      tName: "Optimal Macro Rehydration", tDesc: "Check BMI variables, measure muscular recovery indicators, rest." }
-                ]
-            },
-            5: {
-                phase: "Phase 1: Alpha Base",
-                focus: "De-load running / peak metabolic challenge to prepare for T25 Beta Phase.",
-                days: [
-                    { day: "Monday", type: "Strength & T25 Cardio", label: "Push Focus", color: "border-l-[#C96F53]",
-                      gName: "Gym Upper Body (Push Focus)", gDesc: "Incline Bench Press 4x8, DB Flat Bench 3x10, Seated DB shoulder Press 3x10, Tricep overhead extensions 3x12.",
-                      tName: "T25 Alpha Cardio", tDesc: "Focus on max speed and posture. Keep breathing rhythmic." },
-                    { day: "Tuesday", type: "Run & Core Core", label: "Active Stride", color: "border-l-amber-500",
-                      gName: "Nike Running Club (Steady Recovery)", gDesc: "Easy 20-min low heart-rate run to flush systemic leg lactic build-up.",
-                      tName: "FitOn Pro Dynamic Core Stability", tDesc: "15 min Pilates designed around core alignment and posture." },
-                    { day: "Wednesday", type: "Strength & T25 Cardio", label: "Pull Focus", color: "border-l-[#C96F53]",
-                      gName: "Gym Upper Body (Pull Focus)", gDesc: "Wide Grip Pull-ups 4x8, Barbell Rows 3x8, Incline Dumbbell Bicep Curls 3x12, Face Pulls 3x15.",
-                      tName: "T25 Alpha Ab Intervals", tDesc: "Direct core stimulation designed to enhance systemic fat oxidation." },
-                    { day: "Thursday", type: "Legs & Mobility Stretch", label: "Lower Body", color: "border-l-emerald-600",
-                      gName: "Nike Training Club (Lower Body Strength)", gDesc: "40 min deep hamstring, quadricep, and core kinetic line integration.",
-                      tName: "FitOn Pro Total Leg Release", tDesc: "15 min deep stretching of the IT band, piriformis, and glutes." },
-                    { day: "Friday", type: "Strength & T25 Cardio", label: "Hypertrophy Pump", color: "border-l-[#C96F53]",
-                      gName: "Gym Upper Body (Accessory Focus)", gDesc: "Incline DB Curls superset with Overhead Cable Extension 3x12, Lateral Raises 3x15.",
-                      tName: "T25 Alpha Total Body Circuit", tDesc: "Max effort final Alpha circuit. Test your cardiorespiratory stamina." },
-                    { day: "Saturday", type: "Aerobic Long Run", label: "Endurance", color: "border-l-blue-600",
-                      gName: "Nike Running Club (Long Run)", gDesc: "5 Miles comfortable aerobic Zone 2 pace. Target flat pathways.",
-                      tName: "FitOn Pro Vinyasa Yoga Stretch", tDesc: "20 min restorative postures designed to improve flexibility." },
-                    { day: "Sunday", type: "Active Recovery", label: "Rebuild", color: "border-l-indigo-700",
-                      gName: "Fascia Release Foam Rolling", gDesc: "15 mins deep release of calves, quads, IT bands, and lower back.",
-                      tName: "Block 1 Analysis & Meal Prep", tDesc: "Assess BMI markers, prepare high-protein Mediterranean dishes for Week 6." }
-                ]
-            },
-            6: {
-                phase: "Phase 2: Beta & Gamma Peak",
-                focus: "Introduction of T25 Beta. Shifting gym to heavy strength load.",
-                days: [
-                    { day: "Monday", type: "Heavy Strength & T25 Cardio", label: "Strength Push", color: "border-l-[#C96F53]",
-                      gName: "Gym Upper Body (Heavy Push Focus)", gDesc: "Barbell Bench Press 5x5, Heavy Arnold Press 3x8, Incline DB Press 3x8, Cable Woodchops 3x12.",
-                      tName: "T25 Beta Core Cardio", tDesc: "Vertical core exercises and highly dynamic multi-directional cardio." },
-                    { day: "Tuesday", type: "Run & Core Core", label: "Aerobic Capacity", color: "border-l-amber-500",
-                      gName: "Nike Running Club (Tempo Run)", gDesc: "30 mins total time. Keep heart rate high to burn liver glycogen.",
-                      tName: "FitOn Pro Pilates Ab Lab", tDesc: "20 mins core stability to improve stability during gym lifts." },
-                    { day: "Wednesday", type: "Heavy Strength & T25 Cardio", label: "Strength Pull", color: "border-l-[#C96F53]",
-                      gName: "Gym Upper Body (Heavy Pull Focus)", gDesc: "Weighted Pull-ups 4x6, Barbell Row 4x6, DB Pullover 3x10, Heavy Bicep Curls 3x10.",
-                      tName: "T25 Beta Speed 2.0", tDesc: "Insane speed drills to stimulate neurological adaptation." },
-                    { day: "Thursday", type: "Legs & Mobility Stretch", label: "Lower Body", color: "border-l-emerald-600",
-                      gName: "Nike Training Club (Lower Body Power)", gDesc: "45 min loaded goblet squats, lunges, and calf-raise jumps.",
-                      tName: "FitOn Pro Full Body Yoga Stretch", tDesc: "15 min deep restorative flow." },
-                    { day: "Friday", type: "Heavy Strength & T25 Cardio", label: "Hypertrophy Pump", color: "border-l-[#C96F53]",
-                      gName: "Gym Upper Body (Accessory Focus)", gDesc: "Arnold DB Press 3x10, DB Hammer Curls 3x12, Overhead Cable Tricep Extension 3x12.",
-                      tName: "T25 Beta Upper Focus", tDesc: "Targeted upper-body push and pull metabolic sequencing." },
-                    { day: "Saturday", type: "Aerobic Long Run", label: "Endurance", color: "border-l-blue-600",
-                      gName: "Nike Running Club (Long Run)", gDesc: "5 Miles comfortable aerobic Zone 2 pace. Target flat pathways.",
-                      tName: "FitOn Pro Deep Leg Recovery", tDesc: "20 min foam rolling and targeted hamstring lengthening." },
-                    { day: "Sunday", type: "Active Recovery", label: "Rebuild", color: "border-l-indigo-700",
-                      gName: "Fascial Release Foam Rolling", gDesc: "15 mins of foam rolling on calves, quads, IT bands, and lower back.",
-                      tName: "Block 1 Analysis & Meal Prep", tDesc: "Assess BMI markers, prepare high-protein Mediterranean dishes for Week 6." }
-                ]
-            },
-            7: {
-                phase: "Phase 2: Beta & Gamma Peak",
-                focus: "Intense core stabilization & progressive overload adaptation.",
-                days: [
-                    { day: "Monday", type: "Heavy Strength & T25 Cardio", label: "Strength Push", color: "border-l-[#C96F53]",
-                      gName: "Gym Upper Body (Heavy Push Focus)", gDesc: "Incline Bench Press 5x5, Dumbbell Flat Bench Press 4x8, Seated Shoulder DB Press 3x8, Decline Flyes 3x10.",
-                      tName: "T25 Beta Core Cardio", tDesc: "Focus on locking your hips and activating core fibers during moves." },
-                    { day: "Tuesday", type: "Run & Core Core", label: "Interval Run", color: "border-l-amber-500",
-                      gName: "Nike Running Club (Speed Run)", gDesc: "Warm-up + 10x 200m hard sprints with short 45s recovery walk intervals.",
-                      tName: "FitOn Pro Lower Abs Burn", tDesc: "15 min pilates core burner. Keep lower back glued to floor." },
-                    { day: "Wednesday", type: "Heavy Strength & T25 Cardio", label: "Strength Pull", color: "border-l-[#C96F53]",
-                      gName: "Gym Upper Body (Heavy Pull Focus)", gDesc: "Weighted Pull-ups 4x6, Barbell rows 4x6, Neutral DB Rows 3x8, Lat Pullover 3x10.",
-                      tName: "T25 Beta Rip't Up", tDesc: "Combines bodyweight and resistance to build lean definition." },
-                    { day: "Thursday", type: "Legs & Mobility Stretch", label: "Lower Body", color: "border-l-emerald-600",
-                      gName: "Nike Training Club (Leg Strength)", gDesc: "40 min targeted leg muscle builder using free weights.",
-                      tName: "FitOn Pro Flow Yoga Stretch", tDesc: "15 min active lower body stretch." },
-                    { day: "Friday", type: "Heavy Strength & T25 Cardio", label: "Hypertrophy Pump", color: "border-l-[#C96F53]",
-                      gName: "Gym Upper Body (Accessory Focus)", gDesc: "Barbell Curls superset with Skullcrushers 4x10, DB Lateral Raises 4x12.",
-                      tName: "T25 Beta Dynamic Core", tDesc: "Challenging floor plank sequences." },
-                    { day: "Saturday", type: "Aerobic Long Run", label: "Endurance", color: "border-l-blue-600",
-                      gName: "Nike Running Club (Long Run)", gDesc: "5.5 Miles easy Zone 2. Run at conversational speed.",
-                      tName: "FitOn Pro Decompress Yoga", tDesc: "20 min restorative full-body stretch." },
-                    { day: "Sunday", type: "Active Recovery", label: "Rebuild", color: "border-l-indigo-700",
-                      gName: "Joint Mobilization Exercises", gDesc: "Warm baths, joint rotations, foam rolling tight calves and quads.",
-                      tName: "Nutrition Optimization Check", tDesc: "Hydrate, balance meal macros, prepare upcoming week food supplies." }
-                ]
-            },
-            8: {
-                phase: "Phase 2: Beta & Gamma Peak",
-                focus: "Speed work peak and upper body progressive fatigue.",
-                days: [
-                    { day: "Monday", type: "Heavy Strength & T25 Cardio", label: "Strength Push", color: "border-l-[#C96F53]",
-                      gName: "Gym Upper Body (Heavy Push Focus)", gDesc: "Heavy DB Chest Press 5x5, Heavy Overhead DB Press 4x6, Incline Cable Flyes 3x10, Weighted Dips 3x10.",
-                      tName: "T25 Beta Speed 2.0", tDesc: "Maximum pacing cardio to supercharge lactic acid tolerance." },
-                    { day: "Tuesday", type: "Run & Core Core", label: "Tempo Pace", color: "border-l-amber-500",
-                      gName: "Nike Running Club (Tempo Run)", gDesc: "35 mins total. 10m warm-up, 20m high tempo, 5m cool-down.",
-                      tName: "FitOn Pro Core Heat", tDesc: "15 min dynamic plank and rotation flow." },
-                    { day: "Wednesday", type: "Heavy Strength & T25 Cardio", label: "Strength Pull", color: "border-l-[#C96F53]",
-                      gName: "Gym Upper Body (Heavy Pull Focus)", gDesc: "Wide grip Pull-ups 4x8, Single-arm Cable Rows 4x8, Dumbbell Pullover 3x10, Heavy DB Curls 3x10.",
-                      tName: "T25 Beta Upper Focus", tDesc: "Focuses on arms, chest, shoulders, and back burn." },
-                    { day: "Thursday", type: "Legs & Mobility Stretch", label: "Lower Body", color: "border-l-emerald-600",
-                      gName: "Nike Training Club (Lower Body Strength)", gDesc: "45 min heavy squats, glute bridges, and weighted lunges.",
-                      tName: "FitOn Pro Spinal Release Stretch", tDesc: "20 min targeted stretch for the back and hip flexors." },
-                    { day: "Friday", type: "Heavy Strength & T25 Cardio", label: "Hypertrophy Pump", color: "border-l-[#C96F53]",
-                      gName: "Gym Upper Body (Accessory Focus)", gDesc: "Seated DB shoulder lateral raise 4x15, Incline DB Curl 3x12, French Press 3x12.",
-                      tName: "T25 Beta Core Cardio", tDesc: "Cardio focus with dynamic vertical core transitions." },
-                    { day: "Saturday", type: "Aerobic Long Run", label: "Endurance", color: "border-l-blue-600",
-                      gName: "Nike Running Club (Long Run)", gDesc: "6 Miles steady Zone 2 cardio. Focus on foot striking form.",
-                      tName: "FitOn Pro Relax Yoga", tDesc: "20 min full body flexibility flow to release joint tension." },
-                    { day: "Sunday", type: "Active Recovery", label: "Rebuild", color: "border-l-indigo-700",
-                      gName: "Foam Roll Therapy", gDesc: "Thorough rolling out of the hamstrings, IT bands, and thoracic spine.",
-                      tName: "Meal Prep & System Rehydration", tDesc: "Plan clean high protein carbs, drink 4L of water, prepare for Gamma." }
-                ]
-            },
-            9: {
-                phase: "Phase 2: Beta & Gamma Peak",
-                focus: "T25 Gamma Phase transition. Peak power and athletic fat loss.",
-                days: [
-                    { day: "Monday", type: "Heavy Strength & T25 Cardio", label: "Strength Push", color: "border-l-[#C96F53]",
-                      gName: "Gym Upper Body (Heavy Push Focus)", gDesc: "Heavy Bench Press 5x5, Heavy Overhead DB Press 4x6, DB Incline Flyes 3x10, Skullcrushers 3x12.",
-                      tName: "T25 Gamma Extreme Circuit", tDesc: "Fast-paced strength-focused cardio. Uses light hand weights." },
-                    { day: "Tuesday", type: "Run & Core Core", label: "Interval Run", color: "border-l-amber-500",
-                      gName: "Nike Running Club (Interval Run)", gDesc: "Warm-up + 6x 400m intervals at 5k target pace, with 90s walk recoveries.",
-                      tName: "FitOn Pro Ab Target", tDesc: "15 min Pilates dynamic flow targeting obliques." },
-                    { day: "Wednesday", type: "Heavy Strength & T25 Cardio", label: "Strength Pull", color: "border-l-[#C96F53]",
-                      gName: "Gym Upper Body (Heavy Pull Focus)", gDesc: "Weighted Pull-ups 4x6, Barbell rows 4x6, Incline Dumbbell Bicep Curls 3x12, Face Pulls 3x15.",
-                      tName: "T25 Gamma Speed 3.0", tDesc: "Extremely fast-paced bodyweight and core agility sprint." },
-                    { day: "Thursday", type: "Legs & Mobility Stretch", label: "Lower Body", color: "border-l-emerald-600",
-                      gName: "Nike Training Club (Lower Body Strength)", gDesc: "40 min dynamic multi-joint lower body strength routine.",
-                      tName: "FitOn Pro Spinal Alignment Yoga", tDesc: "20 min active lower body stretch." },
-                    { day: "Friday", type: "Heavy Strength & T25 Cardio", label: "Hypertrophy Pump", color: "border-l-[#C96F53]",
-                      gName: "Gym Upper Body (Accessory Focus)", gDesc: "Seated DB lateral raise 4x15, Cable Bicep Curls 3x12, Close Grip Pushups 3x Max.",
-                      tName: "T25 Gamma Rip't Up", tDesc: "Combines bodyweight and resistance to build lean definition." },
-                    { day: "Saturday", type: "Aerobic Long Run", label: "Endurance", color: "border-l-blue-600",
-                      gName: "Nike Running Club (Long Run)", gDesc: "6.5 Miles easy pace. Keep a steady stride cadence.",
-                      tName: "FitOn Pro Deep Leg Stretch", tDesc: "20 min restorative foam rolling and hamstring lengthening." },
-                    { day: "Sunday", type: "Active Recovery", label: "Rebuild", color: "border-l-indigo-700",
-                      gName: "Joint Mobilization Exercises", gDesc: "Warm baths, joint rotations, foam rolling tight calves and quads.",
-                      tName: "Nutrition Optimization Check", tDesc: "Hydrate, balance meal macros, prepare upcoming week food supplies." }
-                ]
-            },
-            10: {
-                phase: "Phase 2: Beta & Gamma Peak",
-                focus: "Final peak week. Max strength test and peak metabolic conditioning.",
-                days: [
-                    { day: "Monday", type: "Heavy Strength & T25 Cardio", label: "Strength Push", color: "border-l-[#C96F53]",
-                      gName: "Gym Upper Body (Heavy Push Focus)", gDesc: "Bench Press 5x3 (Heavy), Heavy Arnold Press 3x6, DB Incline Flyes 3x10, Rope Tricep Pushdowns 3x15.",
-                      tName: "T25 Gamma Rip't Up", tDesc: "Combines bodyweight and resistance to build lean definition." },
-                    { day: "Tuesday", type: "Run & Core Core", label: "Speed Sprint", color: "border-l-amber-500",
-                      gName: "Nike Running Club (Speed Run)", gDesc: "Warm-up + 12x 100m hard sprints with short 45s recovery walk intervals.",
-                      tName: "FitOn Pro Pilates Ab Lab", tDesc: "15 min Pilates dynamic flow with trainer-guided breathing." },
-                    { day: "Wednesday", type: "Heavy Strength & T25 Cardio", label: "Strength Pull", color: "border-l-[#C96F53]",
-                      gName: "Gym Upper Body (Heavy Pull Focus)", gDesc: "Weighted Pull-ups 4x6, Barbell rows 4x6, Incline Dumbbell Bicep Curls 3x12, Face Pulls 3x15.",
-                      tName: "T25 Gamma Speed 3.0", tDesc: "Extremely fast-paced bodyweight and core agility sprint." },
-                    { day: "Thursday", type: "Legs & Mobility Stretch", label: "Lower Body", color: "border-l-emerald-600",
-                      gName: "Nike Training Club (Lower Body Strength)", gDesc: "40 min dynamic multi-joint lower body strength routine.",
-                      tName: "FitOn Pro Hip Opener Flow", tDesc: "15 min deep hip rotation and hamstring stretches." },
-                    { day: "Friday", type: "Heavy Strength & T25 Cardio", label: "Hypertrophy Pump", color: "border-l-[#C96F53]",
-                      gName: "Gym Upper Body (Accessory Focus)", gDesc: "DB Lateral Raise 4x15, Overhead Tricep Extension 3x12, Bicep Concentrated Curls 3x12.",
-                      tName: "T25 Gamma Extreme Circuit", tDesc: "Fast-paced strength-focused cardio. Uses light hand weights." },
-                    { day: "Saturday", type: "Aerobic Long Run", label: "Endurance", color: "border-l-blue-600",
-                      gName: "Nike Running Club (Long Run)", gDesc: "7 Miles comfortable aerobic Zone 2 pace. Target flat pathways.",
-                      tName: "FitOn Pro Vinyasa Yoga Stretch", tDesc: "20 min restorative postures designed to improve flexibility." },
-                    { day: "Sunday", type: "Active Recovery", label: "Rebuild", color: "border-l-indigo-700",
-                      gName: "Foam Rolling Routine", gDesc: "15 mins rolling out lower limbs, thoracic spine, and shoulder girdles.",
-                      tName: "FitOn Pro Meditation & Rest", tDesc: "Focus on breath control, clean hydration, and planning the next week's meal prep." }
-                ]
-            }
-        };
+    // ─── DATA ────────────────────────────────────────────────────────────────
+    const workoutDatabase = {
+        1: {
+            phase:"Phase 1: Alpha Base", focus:"Cardiovascular foundations & baseline muscle cell recruitment.",
+            days:[
+                {day:"Monday",type:"Strength & T25 Cardio",label:"Push Focus",cardClass:"push",
+                 gName:"Gym Upper Body (Push Focus)",gDesc:"Bench Press 4×8, Overhead DB Press 3×10, Incline DB Press 3×12, Tricep Pushdowns 3×15.",
+                 tName:"T25 Alpha Cardio",tDesc:"25 mins of continuous metabolic bodyweight work. Fast speed, strict form."},
+                {day:"Tuesday",type:"Run & Core",label:"Speed Pacing",cardClass:"run",
+                 gName:"Nike Running Club (Speed Run)",gDesc:"Warm-up + 8×200m sprints with 1-min walk rests. ~25 mins total.",
+                 tName:"FitOn Pro Core Crunch",tDesc:"15 min Pilates core dynamic flow with trainer-guided breathing."},
+                {day:"Wednesday",type:"Strength & T25 Cardio",label:"Pull Focus",cardClass:"pull",
+                 gName:"Gym Upper Body (Pull Focus)",gDesc:"Pull-ups 4×Max, Lat Pulldown 3×10, Barbell Row 3×10, DB Bicep Curls 3×12.",
+                 tName:"T25 Alpha Lower Focus",tDesc:"Builds localized muscular endurance in the calves, quads, and glutes."},
+                {day:"Thursday",type:"Legs & Mobility",label:"Lower Body",cardClass:"legs",
+                 gName:"Nike Training Club (Lower Body)",gDesc:"40 min functional weighted squats, lunges, and balance routines.",
+                 tName:"FitOn Pro Stretch",tDesc:"15 min deep hamstring and hip flexor release routine."},
+                {day:"Friday",type:"Strength & T25 Cardio",label:"Hypertrophy Pump",cardClass:"push",
+                 gName:"Gym Upper Body (Accessory Focus)",gDesc:"DB Lateral Raises 4×15, Face Pulls 3×15, Hammer Curls superset Skull Crushers 3×12.",
+                 tName:"T25 Alpha Total Body Circuit",tDesc:"Focuses on upper body pushing, core, and leg transitions."},
+                {day:"Saturday",type:"Aerobic Long Run",label:"Endurance",cardClass:"endurance",
+                 gName:"Nike Running Club (Long Run)",gDesc:"3 Miles steady Zone 2 cardio pace. Maintain conversational breathing.",
+                 tName:"FitOn Pro Flow Yoga",tDesc:"20 min full-body mobility flow to relax joints."},
+                {day:"Sunday",type:"Active Recovery",label:"Rebuild",cardClass:"recovery",
+                 gName:"Foam Rolling Routine",gDesc:"15 mins rolling out lower limbs, thoracic spine, and shoulder girdles.",
+                 tName:"FitOn Pro Meditation & Rest",tDesc:"Focus on breath control, clean hydration, and planning the next week."}
+            ]
+        },
+        2:{
+            phase:"Phase 1: Alpha Base",focus:"Increasing running stamina & muscular threshold adaptation.",
+            days:[
+                {day:"Monday",type:"Strength & T25 Cardio",label:"Push Focus",cardClass:"push",gName:"Gym Upper Body (Push Focus)",gDesc:"Incline Bench Press 4×8, Arnold Press 3×10, Cable Flyes 3×12, Overhead DB Tricep Extension 3×12.",tName:"T25 Alpha Speed 1.0",tDesc:"Cardio focus with dynamic lateral speed drills to stimulate fast-twitch fibers."},
+                {day:"Tuesday",type:"Run & Core",label:"Aerobic Push",cardClass:"run",gName:"Nike Running Club (Tempo Run)",gDesc:"15 min warm-up, 10 mins steady hard effort, 5 mins cool-down.",tName:"FitOn Pro Deep Ab Lab",tDesc:"15 min Pilates focused on transverse abdominis activation."},
+                {day:"Wednesday",type:"Strength & T25 Cardio",label:"Pull Focus",cardClass:"pull",gName:"Gym Upper Body (Pull Focus)",gDesc:"T-Bar Row 4×8, Single-Arm DB Row 3×10, Face Pulls 4×15, Incline Hammer Curls 3×12.",tName:"T25 Alpha Cardio",tDesc:"25 min athletic burn. Focus on keeping landing impact soft."},
+                {day:"Thursday",type:"Legs & Mobility",label:"Lower Body",cardClass:"legs",gName:"Nike Training Club (Lower Body Power)",gDesc:"30 min plyometric-infused lower body sequence.",tName:"FitOn Pro Active Stretch",tDesc:"20 min foam rolling and lower-back focus yoga sequence."},
+                {day:"Friday",type:"Strength & T25 Cardio",label:"Hypertrophy Pump",cardClass:"push",gName:"Gym Upper Body (Accessory Focus)",gDesc:"Dumbbell Shrugs 3×12, Incline Curl 3×12, Close Grip Bench Press 3×10.",tName:"T25 Alpha Total Body Circuit",tDesc:"Focuses on consecutive upper/lower body transitions."},
+                {day:"Saturday",type:"Aerobic Long Run",label:"Endurance",cardClass:"endurance",gName:"Nike Running Club (Long Run)",gDesc:"3.5 Miles easy pace. Keep a steady stride cadence.",tName:"FitOn Pro Restorative Stretch",tDesc:"20 min gentle full-body decompression session."},
+                {day:"Sunday",type:"Active Recovery",label:"Rebuild",cardClass:"recovery",gName:"Deep Joint Mobilization",gDesc:"15 mins of joint rotations (ankles, hips, neck) to offset impact fatigue.",tName:"Meal Prep & Recovery Meditation",tDesc:"Review protein targets, drink 4L of electrolyte water, rest deep."}
+            ]
+        },
+        3:{
+            phase:"Phase 1: Alpha Base",focus:"Introduction of targeted core-to-cardio intervals for BMI control.",
+            days:[
+                {day:"Monday",type:"Strength & T25 Cardio",label:"Push Focus",cardClass:"push",gName:"Gym Upper Body (Push Focus)",gDesc:"Bench Press 4×6 heavier, DB Overhead Press 3×8, Decline DB Press 3×10, DB Lateral Raise 4×12.",tName:"T25 Alpha Ab Intervals",tDesc:"Alternates dynamic cardio intervals with highly concentrated core exercises."},
+                {day:"Tuesday",type:"Run & Core",label:"Tempo Pace",cardClass:"run",gName:"Nike Running Club (Intervals)",gDesc:"Warm-up + 5×400m intervals at 5K target pace with 90s jog recoveries.",tName:"FitOn Pro Core Heat",tDesc:"15 min fast-paced abdominal dynamic endurance workout."},
+                {day:"Wednesday",type:"Strength & T25 Cardio",label:"Pull Focus",cardClass:"pull",gName:"Gym Upper Body (Pull Focus)",gDesc:"Weighted Pull-ups 4×6, Cable Seated Row 3×10, DB Rear Delt Flyes 4×12, Ez-Bar Curl 3×12.",tName:"T25 Alpha Total Body Circuit",tDesc:"Maximum intensity focusing on core control under localized muscle burnout."},
+                {day:"Thursday",type:"Legs & Mobility",label:"Lower Body",cardClass:"legs",gName:"Nike Training Club (Lower Body Strength)",gDesc:"45 min heavy kettlebell squats, deadlifts, and weighted split squats.",tName:"FitOn Pro Hip Opener Flow",tDesc:"15 min deep hip rotation and hamstring stretches."},
+                {day:"Friday",type:"Strength & T25 Cardio",label:"Hypertrophy Pump",cardClass:"push",gName:"Gym Upper Body (Accessory Focus)",gDesc:"DB Lateral Raise 4×15, Overhead Tricep Extension 3×12, Bicep Concentrated Curls 3×12.",tName:"T25 Alpha Lower Focus",tDesc:"Isometric leg holds, speed power lunges, and calf builders."},
+                {day:"Saturday",type:"Aerobic Long Run",label:"Endurance",cardClass:"endurance",gName:"Nike Running Club (Long Run)",gDesc:"4 Miles steady Zone 2 run. Track consistent lap times in app.",tName:"FitOn Pro Yoga Release",tDesc:"20 min restorative postures to soothe leg muscles."},
+                {day:"Sunday",type:"Active Recovery",label:"Rebuild",cardClass:"recovery",gName:"Full Body Mobility Decompress",gDesc:"Focused foam rolling on IT bands, glutes, and upper traps.",tName:"Clean Food Satiety Reset",tDesc:"Hydrate, focus meals on low GI carbs, and visualize upcoming Week 4 goals."}
+            ]
+        },
+        4:{
+            phase:"Phase 1: Alpha Base",focus:"Volume peak. Extreme metabolic drive to optimize body composition.",
+            days:[
+                {day:"Monday",type:"Strength & T25 Cardio",label:"Push Focus",cardClass:"push",gName:"Gym Upper Body (Push Focus)",gDesc:"Incline DB Press 4×8, DB Arnold Press 3×10, Weighted Dips 3×8, Lateral Raises 4×15.",tName:"T25 Alpha Total Body Circuit",tDesc:"Challenging core-to-arm shifts with strict 25-minute timeline limits."},
+                {day:"Tuesday",type:"Run & Core",label:"Speed Track",cardClass:"run",gName:"Nike Running Club (Fartlek)",gDesc:"Warm-up + 30 min unstructured play running. Alternate fast and slow pacing.",tName:"FitOn Pro HIIT Core",tDesc:"15 min fast core builder focusing on high-plank leg movements."},
+                {day:"Wednesday",type:"Strength & T25 Cardio",label:"Pull Focus",cardClass:"pull",gName:"Gym Upper Body (Pull Focus)",gDesc:"Chest Supported Row 4×10, Lat Pulldowns 3×10, Barbell Shrugs 3×12, DB Hammer Curl 3×12.",tName:"T25 Alpha Lower Focus",tDesc:"Designed to build deep muscle fibers in the hamstrings and calves."},
+                {day:"Thursday",type:"Legs & Mobility",label:"Lower Body",cardClass:"legs",gName:"Nike Training Club (Glutes & Quads)",gDesc:"40 min intense lower body muscle builder.",tName:"FitOn Pro Deep Release Yoga",tDesc:"20 min deep restorative postures to counter compression stresses."},
+                {day:"Friday",type:"Strength & T25 Cardio",label:"Hypertrophy Pump",cardClass:"push",gName:"Gym Upper Body (Accessory Focus)",gDesc:"Upright Rows 3×12, Seated DB Incline Bicep Curls 3×12, Rope Tricep Pushdowns 3×15.",tName:"T25 Alpha Cardio",tDesc:"Keep your chest up and core engaged. Sprint through the intervals."},
+                {day:"Saturday",type:"Aerobic Long Run",label:"Endurance",cardClass:"endurance",gName:"Nike Running Club (Long Run)",gDesc:"4.5 Miles easy Zone 2. Stride smoothly on asphalt/trail.",tName:"FitOn Pro Full-Body Decompress",tDesc:"20 min stretch focusing on lower limbs and hips."},
+                {day:"Sunday",type:"Active Recovery",label:"Rebuild",cardClass:"recovery",gName:"Foam Roll & Joint Traction",gDesc:"Thorough 15 min rolling routine focusing on calves and lats.",tName:"Optimal Macro Rehydration",tDesc:"Check BMI variables, measure muscular recovery indicators, rest."}
+            ]
+        },
+        5:{
+            phase:"Phase 1: Alpha Base",focus:"De-load running / peak metabolic challenge to prepare for T25 Beta Phase.",
+            days:[
+                {day:"Monday",type:"Strength & T25 Cardio",label:"Push Focus",cardClass:"push",gName:"Gym Upper Body (Push Focus)",gDesc:"Incline Bench Press 4×8, DB Flat Bench 3×10, Seated DB Shoulder Press 3×10, Tricep Overhead Extensions 3×12.",tName:"T25 Alpha Cardio",tDesc:"Focus on max speed and posture. Keep breathing rhythmic."},
+                {day:"Tuesday",type:"Run & Core",label:"Active Stride",cardClass:"run",gName:"Nike Running Club (Steady Recovery)",gDesc:"Easy 20-min low heart-rate run to flush systemic leg lactic build-up.",tName:"FitOn Pro Dynamic Core Stability",tDesc:"15 min Pilates designed around core alignment and posture."},
+                {day:"Wednesday",type:"Strength & T25 Cardio",label:"Pull Focus",cardClass:"pull",gName:"Gym Upper Body (Pull Focus)",gDesc:"Wide Grip Pull-ups 4×8, Barbell Rows 3×8, Incline Dumbbell Bicep Curls 3×12, Face Pulls 3×15.",tName:"T25 Alpha Ab Intervals",tDesc:"Direct core stimulation designed to enhance systemic fat oxidation."},
+                {day:"Thursday",type:"Legs & Mobility",label:"Lower Body",cardClass:"legs",gName:"Nike Training Club (Lower Body Strength)",gDesc:"40 min deep hamstring, quadricep, and core kinetic line integration.",tName:"FitOn Pro Total Leg Release",tDesc:"15 min deep stretching of the IT band, piriformis, and glutes."},
+                {day:"Friday",type:"Strength & T25 Cardio",label:"Hypertrophy Pump",cardClass:"push",gName:"Gym Upper Body (Accessory Focus)",gDesc:"Incline DB Curls superset with Overhead Cable Extension 3×12, Lateral Raises 3×15.",tName:"T25 Alpha Total Body Circuit",tDesc:"Max effort final Alpha circuit. Test your cardiorespiratory stamina."},
+                {day:"Saturday",type:"Aerobic Long Run",label:"Endurance",cardClass:"endurance",gName:"Nike Running Club (Long Run)",gDesc:"5 Miles comfortable aerobic Zone 2 pace. Target flat pathways.",tName:"FitOn Pro Vinyasa Yoga Stretch",tDesc:"20 min restorative postures designed to improve flexibility."},
+                {day:"Sunday",type:"Active Recovery",label:"Rebuild",cardClass:"recovery",gName:"Fascia Release Foam Rolling",gDesc:"15 mins deep release of calves, quads, IT bands, and lower back.",tName:"Block 1 Analysis & Meal Prep",tDesc:"Assess BMI markers, prepare high-protein Mediterranean dishes for Week 6."}
+            ]
+        },
+        6:{
+            phase:"Phase 2: Beta & Gamma Peak",focus:"Introduction of T25 Beta. Shifting gym to heavy strength load.",
+            days:[
+                {day:"Monday",type:"Heavy Strength & T25 Cardio",label:"Strength Push",cardClass:"push",gName:"Gym Upper Body (Heavy Push Focus)",gDesc:"Barbell Bench Press 5×5, Heavy Arnold Press 3×8, Incline DB Press 3×8, Cable Woodchops 3×12.",tName:"T25 Beta Core Cardio",tDesc:"Vertical core exercises and highly dynamic multi-directional cardio."},
+                {day:"Tuesday",type:"Run & Core",label:"Aerobic Capacity",cardClass:"run",gName:"Nike Running Club (Tempo Run)",gDesc:"30 mins total time. Keep heart rate high to burn liver glycogen.",tName:"FitOn Pro Pilates Ab Lab",tDesc:"20 mins core stability to improve stability during gym lifts."},
+                {day:"Wednesday",type:"Heavy Strength & T25 Cardio",label:"Strength Pull",cardClass:"pull",gName:"Gym Upper Body (Heavy Pull Focus)",gDesc:"Weighted Pull-ups 4×6, Barbell Row 4×6, DB Pullover 3×10, Heavy Bicep Curls 3×10.",tName:"T25 Beta Speed 2.0",tDesc:"Insane speed drills to stimulate neurological adaptation."},
+                {day:"Thursday",type:"Legs & Mobility",label:"Lower Body",cardClass:"legs",gName:"Nike Training Club (Lower Body Power)",gDesc:"45 min loaded goblet squats, lunges, and calf-raise jumps.",tName:"FitOn Pro Full Body Yoga Stretch",tDesc:"15 min deep restorative flow."},
+                {day:"Friday",type:"Heavy Strength & T25 Cardio",label:"Hypertrophy Pump",cardClass:"push",gName:"Gym Upper Body (Accessory Focus)",gDesc:"Arnold DB Press 3×10, DB Hammer Curls 3×12, Overhead Cable Tricep Extension 3×12.",tName:"T25 Beta Upper Focus",tDesc:"Targeted upper-body push and pull metabolic sequencing."},
+                {day:"Saturday",type:"Aerobic Long Run",label:"Endurance",cardClass:"endurance",gName:"Nike Running Club (Long Run)",gDesc:"5 Miles comfortable aerobic Zone 2 pace. Target flat pathways.",tName:"FitOn Pro Deep Leg Recovery",tDesc:"20 min foam rolling and targeted hamstring lengthening."},
+                {day:"Sunday",type:"Active Recovery",label:"Rebuild",cardClass:"recovery",gName:"Fascial Release Foam Rolling",gDesc:"15 mins of foam rolling on calves, quads, IT bands, and lower back.",tName:"Block Transition Meal Prep",tDesc:"Assess BMI markers, prepare high-protein Mediterranean dishes for Beta phase."}
+            ]
+        },
+        7:{
+            phase:"Phase 2: Beta & Gamma Peak",focus:"Intense core stabilization & progressive overload adaptation.",
+            days:[
+                {day:"Monday",type:"Heavy Strength & T25 Cardio",label:"Strength Push",cardClass:"push",gName:"Gym Upper Body (Heavy Push Focus)",gDesc:"Incline Bench Press 5×5, Dumbbell Flat Bench Press 4×8, Seated Shoulder DB Press 3×8, Decline Flyes 3×10.",tName:"T25 Beta Core Cardio",tDesc:"Focus on locking your hips and activating core fibers during moves."},
+                {day:"Tuesday",type:"Run & Core",label:"Interval Run",cardClass:"run",gName:"Nike Running Club (Speed Run)",gDesc:"Warm-up + 10×200m hard sprints with 45s recovery walk intervals.",tName:"FitOn Pro Lower Abs Burn",tDesc:"15 min Pilates core burner. Keep lower back glued to floor."},
+                {day:"Wednesday",type:"Heavy Strength & T25 Cardio",label:"Strength Pull",cardClass:"pull",gName:"Gym Upper Body (Heavy Pull Focus)",gDesc:"Weighted Pull-ups 4×6, Barbell Rows 4×6, Neutral DB Rows 3×8, Lat Pullover 3×10.",tName:"T25 Beta Rip't Up",tDesc:"Combines bodyweight and resistance to build lean definition."},
+                {day:"Thursday",type:"Legs & Mobility",label:"Lower Body",cardClass:"legs",gName:"Nike Training Club (Leg Strength)",gDesc:"40 min targeted leg muscle builder using free weights.",tName:"FitOn Pro Flow Yoga Stretch",tDesc:"15 min active lower body stretch."},
+                {day:"Friday",type:"Heavy Strength & T25 Cardio",label:"Hypertrophy Pump",cardClass:"push",gName:"Gym Upper Body (Accessory Focus)",gDesc:"Barbell Curls superset with Skullcrushers 4×10, DB Lateral Raises 4×12.",tName:"T25 Beta Dynamic Core",tDesc:"Challenging floor plank sequences."},
+                {day:"Saturday",type:"Aerobic Long Run",label:"Endurance",cardClass:"endurance",gName:"Nike Running Club (Long Run)",gDesc:"5.5 Miles easy Zone 2. Run at conversational speed.",tName:"FitOn Pro Decompress Yoga",tDesc:"20 min restorative full-body stretch."},
+                {day:"Sunday",type:"Active Recovery",label:"Rebuild",cardClass:"recovery",gName:"Joint Mobilization Exercises",gDesc:"Warm baths, joint rotations, foam rolling tight calves and quads.",tName:"Nutrition Optimization Check",tDesc:"Hydrate, balance meal macros, prepare upcoming week food supplies."}
+            ]
+        },
+        8:{
+            phase:"Phase 2: Beta & Gamma Peak",focus:"Speed work peak and upper body progressive fatigue.",
+            days:[
+                {day:"Monday",type:"Heavy Strength & T25 Cardio",label:"Strength Push",cardClass:"push",gName:"Gym Upper Body (Heavy Push Focus)",gDesc:"Heavy DB Chest Press 5×5, Heavy Overhead DB Press 4×6, Incline Cable Flyes 3×10, Weighted Dips 3×10.",tName:"T25 Beta Speed 2.0",tDesc:"Maximum pacing cardio to supercharge lactic acid tolerance."},
+                {day:"Tuesday",type:"Run & Core",label:"Tempo Pace",cardClass:"run",gName:"Nike Running Club (Tempo Run)",gDesc:"35 mins total. 10m warm-up, 20m high tempo, 5m cool-down.",tName:"FitOn Pro Core Heat",tDesc:"15 min dynamic plank and rotation flow."},
+                {day:"Wednesday",type:"Heavy Strength & T25 Cardio",label:"Strength Pull",cardClass:"pull",gName:"Gym Upper Body (Heavy Pull Focus)",gDesc:"Wide Grip Pull-ups 4×8, Single-Arm Cable Rows 4×8, Dumbbell Pullover 3×10, Heavy DB Curls 3×10.",tName:"T25 Beta Upper Focus",tDesc:"Focuses on arms, chest, shoulders, and back burn."},
+                {day:"Thursday",type:"Legs & Mobility",label:"Lower Body",cardClass:"legs",gName:"Nike Training Club (Lower Body Strength)",gDesc:"45 min heavy squats, glute bridges, and weighted lunges.",tName:"FitOn Pro Spinal Release Stretch",tDesc:"20 min targeted stretch for the back and hip flexors."},
+                {day:"Friday",type:"Heavy Strength & T25 Cardio",label:"Hypertrophy Pump",cardClass:"push",gName:"Gym Upper Body (Accessory Focus)",gDesc:"Seated DB Shoulder Lateral Raise 4×15, Incline DB Curl 3×12, French Press 3×12.",tName:"T25 Beta Core Cardio",tDesc:"Cardio focus with dynamic vertical core transitions."},
+                {day:"Saturday",type:"Aerobic Long Run",label:"Endurance",cardClass:"endurance",gName:"Nike Running Club (Long Run)",gDesc:"6 Miles steady Zone 2 cardio. Focus on foot striking form.",tName:"FitOn Pro Relax Yoga",tDesc:"20 min full body flexibility flow to release joint tension."},
+                {day:"Sunday",type:"Active Recovery",label:"Rebuild",cardClass:"recovery",gName:"Foam Roll Therapy",gDesc:"Thorough rolling of hamstrings, IT bands, and thoracic spine.",tName:"Meal Prep & System Rehydration",tDesc:"Plan clean high protein carbs, drink 4L of water, prepare for Gamma."}
+            ]
+        },
+        9:{
+            phase:"Phase 2: Beta & Gamma Peak",focus:"T25 Gamma Phase transition. Peak power and athletic fat loss.",
+            days:[
+                {day:"Monday",type:"Heavy Strength & T25 Cardio",label:"Strength Push",cardClass:"push",gName:"Gym Upper Body (Heavy Push Focus)",gDesc:"Heavy Bench Press 5×5, Heavy Overhead DB Press 4×6, DB Incline Flyes 3×10, Skullcrushers 3×12.",tName:"T25 Gamma Extreme Circuit",tDesc:"Fast-paced strength-focused cardio. Uses light hand weights."},
+                {day:"Tuesday",type:"Run & Core",label:"Interval Run",cardClass:"run",gName:"Nike Running Club (Interval Run)",gDesc:"Warm-up + 6×400m intervals at 5K target pace, with 90s walk recoveries.",tName:"FitOn Pro Ab Target",tDesc:"15 min Pilates dynamic flow targeting obliques."},
+                {day:"Wednesday",type:"Heavy Strength & T25 Cardio",label:"Strength Pull",cardClass:"pull",gName:"Gym Upper Body (Heavy Pull Focus)",gDesc:"Weighted Pull-ups 4×6, Barbell Rows 4×6, Incline DB Bicep Curls 3×12, Face Pulls 3×15.",tName:"T25 Gamma Speed 3.0",tDesc:"Extremely fast-paced bodyweight and core agility sprint."},
+                {day:"Thursday",type:"Legs & Mobility",label:"Lower Body",cardClass:"legs",gName:"Nike Training Club (Lower Body Strength)",gDesc:"40 min dynamic multi-joint lower body strength routine.",tName:"FitOn Pro Spinal Alignment Yoga",tDesc:"20 min active lower body stretch."},
+                {day:"Friday",type:"Heavy Strength & T25 Cardio",label:"Hypertrophy Pump",cardClass:"push",gName:"Gym Upper Body (Accessory Focus)",gDesc:"Seated DB Lateral Raise 4×15, Cable Bicep Curls 3×12, Close Grip Pushups 3×Max.",tName:"T25 Gamma Rip't Up",tDesc:"Combines bodyweight and resistance to build lean definition."},
+                {day:"Saturday",type:"Aerobic Long Run",label:"Endurance",cardClass:"endurance",gName:"Nike Running Club (Long Run)",gDesc:"6.5 Miles easy pace. Keep a steady stride cadence.",tName:"FitOn Pro Deep Leg Stretch",tDesc:"20 min restorative foam rolling and hamstring lengthening."},
+                {day:"Sunday",type:"Active Recovery",label:"Rebuild",cardClass:"recovery",gName:"Joint Mobilization Exercises",gDesc:"Warm baths, joint rotations, foam rolling tight calves and quads.",tName:"Nutrition Optimization Check",tDesc:"Hydrate, balance meal macros, prepare upcoming week food supplies."}
+            ]
+        },
+        10:{
+            phase:"Phase 2: Beta & Gamma Peak",focus:"Final peak week. Max strength test and peak metabolic conditioning.",
+            days:[
+                {day:"Monday",type:"Heavy Strength & T25 Cardio",label:"Strength Push",cardClass:"push",gName:"Gym Upper Body (Heavy Push Focus)",gDesc:"Bench Press 5×3 Heavy, Heavy Arnold Press 3×6, DB Incline Flyes 3×10, Rope Tricep Pushdowns 3×15.",tName:"T25 Gamma Rip't Up",tDesc:"Combines bodyweight and resistance to build lean definition."},
+                {day:"Tuesday",type:"Run & Core",label:"Speed Sprint",cardClass:"run",gName:"Nike Running Club (Speed Run)",gDesc:"Warm-up + 12×100m hard sprints with short 45s recovery walk intervals.",tName:"FitOn Pro Pilates Ab Lab",tDesc:"15 min Pilates dynamic flow with trainer-guided breathing."},
+                {day:"Wednesday",type:"Heavy Strength & T25 Cardio",label:"Strength Pull",cardClass:"pull",gName:"Gym Upper Body (Heavy Pull Focus)",gDesc:"Weighted Pull-ups 4×6, Barbell Rows 4×6, Incline DB Bicep Curls 3×12, Face Pulls 3×15.",tName:"T25 Gamma Speed 3.0",tDesc:"Extremely fast-paced bodyweight and core agility sprint."},
+                {day:"Thursday",type:"Legs & Mobility",label:"Lower Body",cardClass:"legs",gName:"Nike Training Club (Lower Body Strength)",gDesc:"40 min dynamic multi-joint lower body strength routine.",tName:"FitOn Pro Hip Opener Flow",tDesc:"15 min deep hip rotation and hamstring stretches."},
+                {day:"Friday",type:"Heavy Strength & T25 Cardio",label:"Hypertrophy Pump",cardClass:"push",gName:"Gym Upper Body (Accessory Focus)",gDesc:"DB Lateral Raise 4×15, Overhead Tricep Extension 3×12, Bicep Concentrated Curls 3×12.",tName:"T25 Gamma Extreme Circuit",tDesc:"Fast-paced strength-focused cardio. Uses light hand weights."},
+                {day:"Saturday",type:"Aerobic Long Run",label:"Endurance",cardClass:"endurance",gName:"Nike Running Club (Long Run)",gDesc:"7 Miles comfortable aerobic Zone 2 pace. Target flat pathways.",tName:"FitOn Pro Vinyasa Yoga Stretch",tDesc:"20 min restorative postures designed to improve flexibility."},
+                {day:"Sunday",type:"Active Recovery",label:"Rebuild",cardClass:"recovery",gName:"Foam Rolling Routine",gDesc:"15 mins rolling out lower limbs, thoracic spine, and shoulder girdles.",tName:"FitOn Pro Meditation & Rest",tDesc:"Focus on breath control, clean hydration, and planning ahead."}
+            ]
+        }
+    };
 
-        // Nutrition Meal Plan database based on active Diet Goal
-        const mealPlanDatabase = {
-            bmi: {
-                title: "BMI Optimization Mode",
-                desc: "Focused on high protein, high vegetable fiber volume, healthy omega-3 fatty acids, and lower total starch carbohydrates to stimulate visceral fat loss while maintaining skeletal muscle integrity.",
-                meals: [
-                    { name: "🍳 Breakfast: Mediterranean Egg Scramble", desc: "3 large cage-free egg whites + 1 whole egg scrambled in 1 tsp olive oil with organic spinach, cherry tomatoes, and red onions. Served with 1/2 sliced avocado." },
-                    { name: "🥗 Lunch: Zesty Greek Quinoa Salmon Bowl", desc: "150g wild-caught grilled salmon on a bed of 1/2 cup cooked quinoa, cucumbers, Kalamata olives, parsley, and a drizzle of lemon vinaigrette." },
-                    { name: "🍎 Snack: Protein Berry Parfait", desc: "1 cup non-fat unsweetened Greek yogurt topped with a handful of raw pumpkin seeds and fresh wild blueberries." },
-                    { name: "🐟 Dinner: Baked Mediterranean Cod & Asparagus", desc: "180g Atlantic cod baked with garlic and fresh oregano, paired with 1 cup steamed asparagus roasted in a light coating of extra virgin olive oil." }
-                ]
-            },
-            muscle: {
-                title: "Clean Muscle Build Mode",
-                desc: "Structured with increased complex carbohydrate portions to fuel heavy gym compound lifts and high-calorie workouts, while maintaining a healthy, high-protein muscle repair pipeline.",
-                meals: [
-                    { name: "🥣 Breakfast: Power Mediterranean Oatmeal", desc: "1 cup steel-cut oats cooked in unsweetened almond milk, mixed with 1 scoop of whey protein isolate, 1 tbsp almond butter, and sliced figs." },
-                    { name: "🥙 Lunch: Chicken & Hummus Whole Wheat Wrap", desc: "180g grilled chicken breast, 2 tbsp organic hummus, baby spinach, and roasted red peppers wrapped in a sprouted whole-wheat tortilla. Side of raw almonds." },
-                    { name: "🍌 Snack: Post-Workout Nutrient Shake", desc: "1 blended shake with 1 cup almond milk, 1 large ripe banana, 1.5 scoops whey protein, and 1 tbsp ground flaxseeds." },
-                    { name: "🥩 Dinner: Grilled Sirloin with Sweet Potato", desc: "170g lean grass-fed beef tenderloin grilled, served with 1 large baked sweet potato (brushed with olive oil) and a side of steamed broccoli." }
-                ]
-            }
-        };
+    const mealPlanDatabase = {
+        bmi:{
+            title:"BMI Optimization Mode",
+            desc:"High protein, high vegetable fiber, healthy omega-3 fatty acids, and lower total starch carbs to stimulate visceral fat loss while maintaining skeletal muscle integrity.",
+            meals:[
+                {name:"🍳 Breakfast",dish:"Mediterranean Egg Scramble",desc:"3 egg whites + 1 whole egg scrambled with spinach, cherry tomatoes, red onions in 1 tsp olive oil. Served with ½ avocado."},
+                {name:"🥗 Lunch",dish:"Zesty Greek Quinoa Salmon Bowl",desc:"150g grilled salmon on ½ cup cooked quinoa, cucumbers, Kalamata olives, parsley, lemon vinaigrette."},
+                {name:"🍎 Snack",dish:"Protein Berry Parfait",desc:"1 cup non-fat Greek yogurt topped with raw pumpkin seeds and fresh wild blueberries."},
+                {name:"🐟 Dinner",dish:"Baked Mediterranean Cod & Asparagus",desc:"180g Atlantic cod baked with garlic and fresh oregano, paired with 1 cup steamed asparagus in extra virgin olive oil."}
+            ]
+        },
+        muscle:{
+            title:"Clean Muscle Build Mode",
+            desc:"Increased complex carbohydrate portions to fuel heavy compound lifts, with a high-protein muscle repair pipeline.",
+            meals:[
+                {name:"🥣 Breakfast",dish:"Power Mediterranean Oatmeal",desc:"1 cup steel-cut oats with 1 scoop whey protein, 1 tbsp almond butter, and sliced figs."},
+                {name:"🥙 Lunch",dish:"Chicken & Hummus Whole Wheat Wrap",desc:"180g grilled chicken breast, 2 tbsp hummus, spinach, and roasted red peppers in a sprouted whole-wheat tortilla."},
+                {name:"🍌 Snack",dish:"Post-Workout Nutrient Shake",desc:"1.5 scoops whey, 1 cup almond milk, 1 ripe banana, 1 tbsp ground flaxseeds — blended."},
+                {name:"🥩 Dinner",dish:"Grilled Sirloin with Sweet Potato",desc:"170g lean grass-fed beef tenderloin, 1 large baked sweet potato with olive oil, and steamed broccoli."}
+            ]
+        }
+    };
 
-        // State variables
-        let currentPhase = 1;
-        let activeWeek = 1;
-        let activeDietGoal = 'bmi';
-        let macroChart = null;
-        let platformChart = null;
+    // ─── STATE ───────────────────────────────────────────────────────────────
+    let currentPhase = 1;
+    let activeWeek = 1;
+    let activeDietGoal = 'bmi';
+    let macroChart = null;
+    let platformChart = null;
+    let completedSessions = JSON.parse(localStorage.getItem('jfit_completed') || '{}');
 
-        // On document load initialization
-        window.onload = function() {
-            renderWeekTabs();
-            renderActiveWeekSchedule();
-            initCharts();
-            renderMeals();
-        };
+    const TOTAL_SESSIONS = 70; // 10 weeks × 7 days
 
-        // Render dynamic week selector tabs based on the active phase selected
-        function renderWeekTabs() {
-            const container = document.getElementById('week-tabs-container');
-            container.innerHTML = '';
-            
-            const startWeek = currentPhase === 1 ? 1 : 6;
-            const endWeek = currentPhase === 1 ? 5 : 10;
+    // ─── INIT ─────────────────────────────────────────────────────────────────
+    window.onload = () => {
+        const dark = localStorage.getItem('jfit_dark') === 'true';
+        if (dark) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.getElementById('dark-toggle').checked = true;
+        }
+        renderWeekTabs();
+        renderActiveWeekSchedule();
+        initCharts();
+        renderMeals();
+        updateProgressUI();
+    };
 
-            for (let i = startWeek; i <= endWeek; i++) {
-                const btn = document.createElement('button');
-                btn.id = `tab-week-${i}`;
-                btn.className = `py-2 px-5 rounded-xl font-semibold text-sm transition-all duration-200 tab-transition ${i === activeWeek ? 'bg-[#2D312E] text-white shadow-md scale-105' : 'bg-white border border-gray-200 text-gray-600 hover:border-[#6C8E75]'}`;
-                btn.innerText = `Week ${i}`;
-                btn.onclick = () => selectWeek(i);
-                container.appendChild(btn);
+    // ─── DARK MODE ───────────────────────────────────────────────────────────
+    function toggleDark(el) {
+        const dark = el.checked;
+        document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+        localStorage.setItem('jfit_dark', dark);
+        if (macroChart) macroChart.update();
+        if (platformChart) platformChart.update();
+    }
+
+    // ─── PHASE / WEEK ────────────────────────────────────────────────────────
+    function renderWeekTabs() {
+        const container = document.getElementById('week-tabs-container');
+        container.innerHTML = '';
+        const start = currentPhase === 1 ? 1 : 6;
+        const end = currentPhase === 1 ? 5 : 10;
+        for (let i = start; i <= end; i++) {
+            const btn = document.createElement('button');
+            btn.id = `tab-week-${i}`;
+            btn.className = `tab-btn${i === activeWeek ? ' active' : ''}`;
+            const done = weekCompletedCount(i);
+            btn.innerHTML = `Week ${i} <span style="opacity:0.6;font-weight:500;font-size:11px">${done}/7</span>`;
+            btn.onclick = () => selectWeek(i);
+            container.appendChild(btn);
+        }
+    }
+
+    function switchPhase(phaseNum) {
+        currentPhase = phaseNum;
+        activeWeek = phaseNum === 1 ? 1 : 6;
+        document.getElementById('phase-btn-1').className = `phase-btn ${phaseNum === 1 ? 'active' : 'inactive'}`;
+        document.getElementById('phase-btn-2').className = `phase-btn ${phaseNum === 2 ? 'active' : 'inactive'}`;
+        document.getElementById('phase-badge-text').textContent = `Phase ${phaseNum} Integration`;
+        renderWeekTabs();
+        renderActiveWeekSchedule();
+        updateCharts();
+    }
+
+    function selectWeek(weekNum) {
+        activeWeek = weekNum;
+        const start = currentPhase === 1 ? 1 : 6;
+        const end = currentPhase === 1 ? 5 : 10;
+        for (let i = start; i <= end; i++) {
+            const tab = document.getElementById(`tab-week-${i}`);
+            if (tab) {
+                tab.className = `tab-btn${i === weekNum ? ' active' : ''}`;
             }
         }
+        renderActiveWeekSchedule();
+        updateCharts();
+    }
 
-        // Switch Phase block (Weeks 1-5 vs Weeks 6-10)
-        function switchPhase(phaseNum) {
-            currentPhase = phaseNum;
-            activeWeek = phaseNum === 1 ? 1 : 6;
-            
-            // Adjust visual classes for phase navigation buttons
-            const pBtn1 = document.getElementById('phase-btn-1');
-            const pBtn2 = document.getElementById('phase-btn-2');
-            
-            if (phaseNum === 1) {
-                pBtn1.className = "flex-1 py-4 px-6 rounded-2xl font-bold text-base md:text-lg text-center shadow-sm border transition-all duration-300 bg-[#C96F53] text-white border-[#C96F53]";
-                pBtn2.className = "flex-1 py-4 px-6 rounded-2xl font-bold text-base md:text-lg text-center shadow-sm border transition-all duration-300 bg-white text-gray-600 border-gray-200 hover:border-[#6C8E75]/30";
-                document.getElementById('phase-badge-text').innerText = "Phase 1 Integration";
-            } else {
-                pBtn2.className = "flex-1 py-4 px-6 rounded-2xl font-bold text-base md:text-lg text-center shadow-sm border transition-all duration-300 bg-[#C96F53] text-white border-[#C96F53]";
-                pBtn1.className = "flex-1 py-4 px-6 rounded-2xl font-bold text-base md:text-lg text-center shadow-sm border transition-all duration-300 bg-white text-gray-600 border-gray-200 hover:border-[#6C8E75]/30";
-                document.getElementById('phase-badge-text').innerText = "Phase 2 Integration";
-            }
+    // ─── SCHEDULE RENDER ─────────────────────────────────────────────────────
+    function renderActiveWeekSchedule() {
+        const data = workoutDatabase[activeWeek];
+        document.getElementById('active-week-display-title').textContent = `Week ${activeWeek} — ${data.phase}`;
+        document.getElementById('week-focus-text').textContent = data.focus;
 
-            renderWeekTabs();
-            renderActiveWeekSchedule();
-            updateCharts();
-        }
+        const container = document.getElementById('days-container');
+        container.innerHTML = '';
 
-        // Action when an individual week tab is clicked
-        function selectWeek(weekNum) {
-            activeWeek = weekNum;
-            
-            // Adjust active tab state
-            const start = currentPhase === 1 ? 1 : 6;
-            const end = currentPhase === 1 ? 5 : 10;
-            for (let i = start; i <= end; i++) {
-                const tab = document.getElementById(`tab-week-${i}`);
-                if (tab) {
-                    if (i === weekNum) {
-                        tab.className = "py-2 px-5 rounded-xl font-semibold text-sm transition-all duration-200 tab-transition bg-[#2D312E] text-white shadow-md scale-105";
-                    } else {
-                        tab.className = "py-2 px-5 rounded-xl font-semibold text-sm transition-all duration-200 tab-transition bg-white border border-gray-200 text-gray-600 hover:border-[#6C8E75]";
-                    }
-                }
-            }
+        data.days.forEach((d, idx) => {
+            const sessionKey = `w${activeWeek}_d${idx}`;
+            const isDone = !!completedSessions[sessionKey];
 
-            renderActiveWeekSchedule();
-            updateCharts();
-        }
+            const card = document.createElement('div');
+            card.className = `card day-card ${d.cardClass} p-5 fade-up`;
+            card.style.animationDelay = `${idx * 40}ms`;
 
-        // Render the 7 schedule cards based on active week selection
-        function renderActiveWeekSchedule() {
-            const data = workoutDatabase[activeWeek];
-            document.getElementById('active-week-display-title').innerText = `Active Schedule: Week ${activeWeek} (${data.phase})`;
-            
-            const daysContainer = document.getElementById('days-container');
-            daysContainer.innerHTML = '';
+            const labelColor = {
+                push: 'pill-terracotta',
+                pull: 'pill-sage',
+                run: 'pill-amber',
+                legs: '',
+                endurance: '',
+                recovery: 'pill-indigo'
+            }[d.cardClass] || 'pill-sage';
 
-            data.days.forEach((dayData) => {
-                const card = document.createElement('div');
-                card.className = `bg-white rounded-2xl border border-gray-100 p-6 shadow-sm relative overflow-hidden interactive-card ${dayData.color} border-l-4 print-card`;
-                
-                let isRestDay = dayData.day === "Sunday";
+            const labelStyle = d.cardClass === 'legs'
+                ? 'background:rgba(16,185,129,0.1);color:#047857'
+                : d.cardClass === 'endurance'
+                    ? 'background:rgba(59,130,246,0.1);color:#1D4ED8'
+                    : '';
 
-                card.innerHTML = `
-                    <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <h4 class="text-xs uppercase tracking-widest font-bold text-gray-400">${dayData.day}</h4>
-                            <span class="text-sm font-bold text-gray-900">${dayData.type}</span>
-                        </div>
-                        <span class="text-[10px] font-bold uppercase ${isRestDay ? 'bg-indigo-50 text-indigo-700 border border-indigo-100' : 'bg-orange-50 text-[#C96F53] border border-orange-100'} px-2.5 py-1 rounded-full">
-                            ${dayData.label}
-                        </span>
+            card.innerHTML = `
+                <div class="flex justify-between items-start mb-4">
+                    <div class="flex-1 min-w-0 pr-2">
+                        <div class="text-[10px] uppercase tracking-widest font-bold mb-0.5" style="color:var(--text3)">${d.day}</div>
+                        <div class="font-bold text-sm leading-tight" style="color:var(--text)">${d.type}</div>
                     </div>
-                    <div class="space-y-4">
-                        <div class="p-3.5 rounded-xl bg-[#FAF8F5] border border-gray-100">
-                            <span class="block text-xs font-bold text-gray-500 uppercase flex items-center gap-1">
-                                <span>🏋️‍♀️</span> Session A
-                            </span>
-                            <span class="block text-sm font-bold text-gray-800 mt-1 cursor-pointer hover:text-[#6C8E75] transition-all" onclick="showGlossaryPopup('${dayData.gName}')">${dayData.gName}</span>
-                            <p class="text-xs text-gray-600 mt-1 leading-relaxed">${dayData.gDesc}</p>
-                        </div>
-                        <div class="p-3.5 rounded-xl bg-white border border-gray-100">
-                            <span class="block text-xs font-bold text-gray-500 uppercase flex items-center gap-1">
-                                <span>⚡</span> Session B
-                            </span>
-                            <span class="block text-sm font-bold text-gray-800 mt-1 cursor-pointer hover:text-[#6C8E75] transition-all" onclick="showGlossaryPopup('${dayData.tName}')">${dayData.tName}</span>
-                            <p class="text-xs text-gray-600 mt-1 leading-relaxed">${dayData.tDesc}</p>
-                        </div>
+                    <div class="flex items-center gap-2 flex-shrink-0">
+                        <span class="pill ${labelColor}" style="${labelStyle}">${d.label}</span>
+                        <button class="check-btn${isDone ? ' done' : ''}" id="check-${sessionKey}"
+                            onclick="toggleSession('${sessionKey}', event)"
+                            title="${isDone ? 'Mark incomplete' : 'Mark complete'}">
+                            ${isDone ? '✓' : ''}
+                        </button>
                     </div>
-                `;
-                daysContainer.appendChild(card);
-            });
+                </div>
+
+                <div class="space-y-2.5">
+                    <div class="session-block">
+                        <div class="flex items-center gap-1 mb-1.5">
+                            <span class="text-xs">🏋️</span>
+                            <span class="text-[10px] uppercase tracking-wider font-bold" style="color:var(--text3)">Session A</span>
+                        </div>
+                        <div class="font-semibold text-sm cursor-pointer transition-colors"
+                            style="color:var(--text)"
+                            onmouseover="this.style.color='var(--sage)'"
+                            onmouseout="this.style.color='var(--text)'"
+                            onclick="showGlossaryPopup('${escapeStr(d.gName)}')">${d.gName}</div>
+                        <p class="text-xs leading-relaxed mt-1" style="color:var(--text2)">${d.gDesc}</p>
+                    </div>
+                    <div class="session-block">
+                        <div class="flex items-center gap-1 mb-1.5">
+                            <span class="text-xs">⚡</span>
+                            <span class="text-[10px] uppercase tracking-wider font-bold" style="color:var(--text3)">Session B</span>
+                        </div>
+                        <div class="font-semibold text-sm cursor-pointer transition-colors"
+                            style="color:var(--text)"
+                            onmouseover="this.style.color='var(--sage)'"
+                            onmouseout="this.style.color='var(--text)'"
+                            onclick="showGlossaryPopup('${escapeStr(d.tName)}')">${d.tName}</div>
+                        <p class="text-xs leading-relaxed mt-1" style="color:var(--text2)">${d.tDesc}</p>
+                    </div>
+                </div>
+
+                ${isDone ? `<div class="mt-3 flex items-center gap-1.5 pt-3" style="border-top:1px solid var(--border)">
+                    <span class="text-xs">✅</span>
+                    <span class="text-[10px] font-bold uppercase tracking-wider" style="color:var(--sage)">Session Completed</span>
+                </div>` : ''}
+            `;
+            container.appendChild(card);
+        });
+
+        updateWeekProgress();
+    }
+
+    function escapeStr(s) {
+        return s.replace(/'/g, "\\'");
+    }
+
+    // ─── SESSION COMPLETION ───────────────────────────────────────────────────
+    function toggleSession(key, event) {
+        event.stopPropagation();
+        const wasCompleted = !!completedSessions[key];
+        if (wasCompleted) {
+            delete completedSessions[key];
+        } else {
+            completedSessions[key] = true;
+            launchConfetti();
         }
+        localStorage.setItem('jfit_completed', JSON.stringify(completedSessions));
+        renderActiveWeekSchedule();
+        updateProgressUI();
+        renderWeekTabs();
+    }
 
-        // Interactive Glossary definition search & display
-        function showGlossaryPopup(term) {
-            const cleanTerm = term.split('(')[0].trim();
-            let title = cleanTerm;
-            let body = "This specialized exercise format integrates with your training apps to stimulate cardiac pathways, build structural protein, or facilitate joint recovery.";
-
-            if (cleanTerm.includes("Gym Upper Body")) {
-                title = "Gym Upper Body Hypertrophy";
-                body = "Targeted weight training targeting the pectorals, deltoids, triceps, and upper back. Focus on dynamic contraction and slow negatives (eccentric phase) to produce microscopic tears in muscles that trigger hypertrophy during recovery.";
-            } else if (cleanTerm.includes("T25 Alpha")) {
-                title = "T25 Alpha Conditioning";
-                body = "High-intensity metabolic conditioning without equipment. Operates as an anaerobic cardiovascular stressor, stimulating fat oxidation, body composition balance, and lung capacity.";
-            } else if (cleanTerm.includes("T25 Beta")) {
-                title = "T25 Beta Progression";
-                body = "Cardiovascular interval sequence that introduces resistance weight, vertical core engagement, and explosive leg movements to force systemic coordination improvements.";
-            } else if (cleanTerm.includes("T25 Gamma")) {
-                title = "T25 Gamma Power Threshold";
-                body = "The highest intensity BODi block focusing on pure power endurance, anaerobic sprint patterns, and heavy compound fat depletion.";
-            } else if (cleanTerm.includes("Nike Running Club")) {
-                title = "NRC Aerobic Mechanics";
-                body = "Guided outdoor runs mapped inside your Nike app. Sunday easy sessions trigger Zone 2 aerobic conditioning to build arterial elasticity, while Tuesday speed runs expand VO2 Max.";
-            } else if (cleanTerm.includes("FitOn Pro Core")) {
-                title = "FitOn Transverse Core Training";
-                body = "Deep core stability training. Strengthening the obliques, rectus abdominis, and lower back protects the spine during heavy gym squats and limits impact strain from running.";
-            } else if (cleanTerm.includes("Nike Training Club") || cleanTerm.includes("NTC")) {
-                title = "Nike Training Club Integration";
-                body = "Utilizes NTC programs specifically optimized for full lower-body, leg-drive, and glute muscle development to supplement your upper-body gym sessions.";
-            } else if (cleanTerm.includes("FitOn Pro Stretch") || cleanTerm.includes("Yoga") || cleanTerm.includes("Rest")) {
-                title = "Restorative Mobility Pathways";
-                body = "Static and dynamic joint lengthening designed to stimulate parasympathetic recovery, lower high cortisol levels caused by hard exercise, and maintain muscular flexibility.";
-            }
-
-            document.getElementById('toast-title').innerText = title;
-            document.getElementById('toast-body').innerText = body;
-            
-            const toast = document.getElementById('glossary-toast');
-            toast.classList.remove('hidden');
-            
-            // Auto hide after 8 seconds
-            setTimeout(() => {
-                toast.classList.add('hidden');
-            }, 8000);
+    function weekCompletedCount(weekNum) {
+        let count = 0;
+        for (let d = 0; d < 7; d++) {
+            if (completedSessions[`w${weekNum}_d${d}`]) count++;
         }
+        return count;
+    }
 
-        function closeToast() {
-            document.getElementById('glossary-toast').classList.add('hidden');
+    function totalCompleted() {
+        return Object.keys(completedSessions).length;
+    }
+
+    function updateWeekProgress() {
+        const done = weekCompletedCount(activeWeek);
+        const pct = Math.round((done / 7) * 100);
+        document.getElementById('week-progress-text').textContent = `${done} / 7`;
+        document.getElementById('week-ring-pct').textContent = `${pct}%`;
+        const circumference = 100.53;
+        const offset = circumference - (pct / 100) * circumference;
+        document.getElementById('week-ring').style.strokeDashoffset = offset;
+    }
+
+    function updateProgressUI() {
+        const done = totalCompleted();
+        const pct = Math.round((done / TOTAL_SESSIONS) * 100);
+
+        document.getElementById('header-completed').textContent = `${done} / ${TOTAL_SESSIONS}`;
+        document.getElementById('ring-pct').textContent = `${pct}%`;
+        document.getElementById('ring-sub').textContent = `${done} of ${TOTAL_SESSIONS} sessions done`;
+
+        const circumference = 201.06;
+        const offset = circumference - (pct / 100) * circumference;
+        document.getElementById('overall-ring').style.strokeDashoffset = offset;
+
+        // Streak: count consecutive days from most recent completion
+        const streak = calculateStreak();
+        document.getElementById('header-streak').textContent = `${streak} day${streak !== 1 ? 's' : ''}`;
+    }
+
+    function calculateStreak() {
+        // Simplified streak: consecutive weeks where all 7 days completed
+        let streak = 0;
+        for (let w = 1; w <= 10; w++) {
+            if (weekCompletedCount(w) === 7) streak++;
+            else break;
         }
-
-        // Toggle Mediterranean Diet Focus Goal (BMI vs Muscle Build)
-        function setDietGoal(goal) {
-            activeDietGoal = goal;
-            
-            const btnBmi = document.getElementById('diet-btn-bmi');
-            const btnMuscle = document.getElementById('diet-btn-muscle');
-
-            if (goal === 'bmi') {
-                btnBmi.className = "py-2 text-xs font-semibold rounded-lg text-center transition-all bg-white text-[#C96F53] shadow-sm";
-                btnMuscle.className = "py-2 text-xs font-semibold rounded-lg text-center transition-all text-gray-600 hover:text-[#2D312E]";
-            } else {
-                btnMuscle.className = "py-2 text-xs font-semibold rounded-lg text-center transition-all bg-white text-[#C96F53] shadow-sm";
-                btnBmi.className = "py-2 text-xs font-semibold rounded-lg text-center transition-all text-gray-600 hover:text-[#2D312E]";
-            }
-
-            renderMeals();
-            updateCharts();
+        // Partial credit: add days completed in current incomplete week
+        for (let w = 1; w <= 10; w++) {
+            const cnt = weekCompletedCount(w);
+            if (cnt < 7) { streak += cnt; break; }
         }
+        return streak;
+    }
 
-        // Render dynamic Mediterranean meal list based on selected focus
-        function renderMeals() {
-            const data = mealPlanDatabase[activeDietGoal];
-            document.getElementById('meal-goal-title').innerText = data.title;
-            document.getElementById('meal-goal-desc').innerText = data.desc;
+    function resetProgress() {
+        if (!confirm('Reset all progress? This cannot be undone.')) return;
+        completedSessions = {};
+        localStorage.removeItem('jfit_completed');
+        renderActiveWeekSchedule();
+        updateProgressUI();
+        renderWeekTabs();
+    }
 
-            const container = document.getElementById('meal-list-container');
-            container.innerHTML = '';
+    // ─── DIET GOAL ──────────────────────────────────────────────────────────
+    function setDietGoal(goal) {
+        activeDietGoal = goal;
+        document.getElementById('diet-btn-bmi').className = `diet-pill${goal === 'bmi' ? ' active' : ''}`;
+        document.getElementById('diet-btn-muscle').className = `diet-pill${goal === 'muscle' ? ' active' : ''}`;
+        renderMeals();
+        updateCharts();
+    }
 
-            data.meals.forEach((meal) => {
-                const div = document.createElement('div');
-                div.className = "p-3 rounded-xl border border-gray-100 bg-[#FAF8F5]";
-                div.innerHTML = `
-                    <span class="block text-xs font-bold text-gray-800">${meal.name}</span>
-                    <p class="text-[11px] text-gray-600 mt-1 leading-relaxed">${meal.desc}</p>
-                `;
-                container.appendChild(div);
-            });
-        }
+    function renderMeals() {
+        const data = mealPlanDatabase[activeDietGoal];
+        document.getElementById('meal-goal-title').textContent = data.title;
+        document.getElementById('meal-goal-desc').textContent = data.desc;
+        const container = document.getElementById('meal-list-container');
+        container.innerHTML = '';
+        data.meals.forEach((meal, i) => {
+            const div = document.createElement('div');
+            div.className = 'session-block fade-up';
+            div.style.animationDelay = `${i * 60}ms`;
+            div.innerHTML = `
+                <div class="text-[10px] uppercase tracking-wider font-bold mb-0.5" style="color:var(--text3)">${meal.name}</div>
+                <div class="font-semibold text-sm" style="color:var(--text)">${meal.dish}</div>
+                <p class="text-[11px] leading-relaxed mt-1" style="color:var(--text2)">${meal.desc}</p>
+            `;
+            container.appendChild(div);
+        });
+    }
 
-        // Initialize both Chart.js visualizations
-        function initCharts() {
-            // Chart 1: Daily Macro targets doughnut
-            const macroCtx = document.getElementById('macroDoughnutChart').getContext('2d');
-            
-            // Initial data based on BMI goal
-            const initialRatio = activeDietGoal === 'bmi' ? [35, 40, 25] : [30, 45, 25];
-            
-            macroChart = new Chart(macroCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Protein', 'Complex Carbs', 'Healthy Fats'],
-                    datasets: [{
-                        data: initialRatio,
-                        backgroundColor: ['#6C8E75', '#C96F53', '#F59E0B'],
-                        borderWidth: 0,
-                        hoverOffset: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    },
-                    cutout: '72%'
-                }
-            });
-
-            // Chart 2: Platform Allocation bar chart
-            const platformCtx = document.getElementById('platformLoadChart').getContext('2d');
-            
-            // Weeks 1-5 allocations vs Weeks 6-10 allocations (estimates in percentage)
-            const weekAllocations = activeWeek <= 5 ? [35, 25, 25, 15] : [30, 30, 25, 15]; // Gym, T25, NRC, FitOn/NTC
-
-            platformChart = new Chart(platformCtx, {
-                type: 'bar',
-                data: {
-                    labels: ['Gym', 'BODi/T25', 'Nike Run', 'FitOn/NTC'],
-                    datasets: [{
-                        label: 'Allocation %',
-                        data: weekAllocations,
-                        backgroundColor: ['#475569', '#3B82F6', '#F97316', '#8B5CF6'],
-                        borderRadius: 6,
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            max: 50,
-                            ticks: {
-                                callback: function(value) { return value + "%"; }
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
+    // ─── CHARTS ─────────────────────────────────────────────────────────────
+    function initCharts() {
+        const macroCtx = document.getElementById('macroDoughnutChart').getContext('2d');
+        const ratio = [35, 40, 25];
+        macroChart = new Chart(macroCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Protein', 'Complex Carbs', 'Healthy Fats'],
+                datasets: [{
+                    data: ratio,
+                    backgroundColor: ['#6C8E75', '#C96F53', '#F59E0B'],
+                    borderWidth: 0,
+                    hoverOffset: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: { animateRotate: true, duration: 800 },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: ctx => ` ${ctx.label}: ${ctx.raw}%`
                         }
                     }
-                }
+                },
+                cutout: '74%'
+            }
+        });
+
+        const platformCtx = document.getElementById('platformLoadChart').getContext('2d');
+        platformChart = new Chart(platformCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Gym', 'BODi/T25', 'Nike Run', 'FitOn/NTC'],
+                datasets: [{
+                    label: 'Allocation %',
+                    data: [35, 25, 25, 15],
+                    backgroundColor: ['#475569', '#3B82F6', '#F97316', '#8B5CF6'],
+                    borderRadius: 8,
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: { duration: 600 },
+                scales: {
+                    y: {
+                        beginAtZero: true, max: 50,
+                        grid: { color: 'rgba(108,142,117,0.08)' },
+                        ticks: {
+                            callback: v => v + '%',
+                            color: '#8A9490',
+                            font: { size: 10 }
+                        }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: '#8A9490', font: { size: 10 } }
+                    }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        updateMacroNumbers();
+    }
+
+    function updateMacroNumbers() {
+        const bmi = activeDietGoal === 'bmi';
+        document.getElementById('macro-val-protein').textContent = bmi ? '35% (175g)' : '30% (195g)';
+        document.getElementById('macro-val-carbs').textContent = bmi ? '40% (200g)' : '45% (292g)';
+        document.getElementById('macro-val-fats').textContent = bmi ? '25% (55g)' : '25% (72g)';
+    }
+
+    function updateCharts() {
+        if (!macroChart || !platformChart) return;
+        const ratio = activeDietGoal === 'bmi' ? [35, 40, 25] : [30, 45, 25];
+        macroChart.data.datasets[0].data = ratio;
+        macroChart.update();
+        const alloc = activeWeek <= 5 ? [35, 25, 25, 15] : [30, 32, 23, 15];
+        platformChart.data.datasets[0].data = alloc;
+        platformChart.update();
+        updateMacroNumbers();
+    }
+
+    // ─── GLOSSARY POPUP ──────────────────────────────────────────────────────
+    const glossaryDefs = {
+        'Gym Upper Body': { title: 'Gym Upper Body Hypertrophy', body: 'Targeted weight training for pectorals, deltoids, triceps, and upper back. Focus on dynamic contraction and slow negatives (eccentric phase) to produce microscopic muscle tears that trigger hypertrophy during recovery.' },
+        'T25 Alpha': { title: 'T25 Alpha Conditioning', body: 'High-intensity metabolic conditioning without equipment. Operates as an anaerobic cardiovascular stressor, stimulating fat oxidation, body composition balance, and lung capacity.' },
+        'T25 Beta': { title: 'T25 Beta Progression', body: 'Cardiovascular interval sequence introducing resistance weight, vertical core engagement, and explosive leg movements to force systemic coordination improvements.' },
+        'T25 Gamma': { title: 'T25 Gamma Power Threshold', body: 'The highest intensity BODi block focusing on pure power endurance, anaerobic sprint patterns, and heavy compound fat depletion.' },
+        'Nike Running Club': { title: 'NRC Aerobic Mechanics', body: 'Guided outdoor runs mapped inside your Nike app. Easy sessions trigger Zone 2 aerobic conditioning to build arterial elasticity, while speed runs expand VO₂ Max.' },
+        'FitOn Pro Core': { title: 'FitOn Transverse Core Training', body: 'Deep core stability training strengthening obliques, rectus abdominis, and lower back — protecting the spine during heavy lifts and reducing impact strain from running.' },
+        'Nike Training Club': { title: 'Nike Training Club Integration', body: 'NTC programs optimized for full lower-body, leg-drive, and glute muscle development to supplement upper-body gym sessions.' },
+        'FitOn Pro Stretch': { title: 'Restorative Mobility Pathways', body: 'Static and dynamic joint lengthening designed to stimulate parasympathetic recovery, lower cortisol, and maintain muscular flexibility.' },
+        'FitOn Pro': { title: 'FitOn Pro Mobility Work', body: 'Post-workout flexibility and recovery sessions designed to flush lactic acid, reduce DOMS, and maintain joint range of motion throughout the 10-week program.' },
+        'Foam': { title: 'Self-Myofascial Release (SMR)', body: 'Foam rolling applies direct pressure to fascia and muscle tissue, breaking up adhesions and improving blood flow to aid muscle recovery and reduce soreness.' },
+        'Meal Prep': { title: 'Strategic Meal Preparation', body: 'Batch-cooking Mediterranean protein sources and complex carbs in advance ensures macro compliance and prevents impulsive low-quality food choices after hard training sessions.' }
+    };
+
+    let toastTimer = null;
+
+    function showGlossaryPopup(term) {
+        let entry = null;
+        for (const [key, def] of Object.entries(glossaryDefs)) {
+            if (term.includes(key)) { entry = def; break; }
+        }
+        if (!entry) {
+            entry = {
+                title: term.split('(')[0].trim(),
+                body: 'This specialized exercise format integrates with your training apps to stimulate cardiac pathways, build structural protein, or facilitate joint recovery.'
+            };
+        }
+
+        document.getElementById('toast-title').textContent = entry.title;
+        document.getElementById('toast-body').textContent = entry.body;
+
+        const toast = document.getElementById('glossary-toast');
+        toast.classList.add('show');
+
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(closeToast, 9000);
+    }
+
+    function closeToast() {
+        document.getElementById('glossary-toast').classList.remove('show');
+        clearTimeout(toastTimer);
+    }
+
+    // ─── CONFETTI ────────────────────────────────────────────────────────────
+    function launchConfetti() {
+        const canvas = document.getElementById('confetti-canvas');
+        canvas.style.display = 'block';
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const ctx = canvas.getContext('2d');
+        const pieces = Array.from({length: 80}, () => ({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height - canvas.height,
+            r: Math.random() * 8 + 4,
+            d: Math.random() * 80,
+            color: ['#C96F53','#6C8E75','#F59E0B','#3B82F6','#8B5CF6'][Math.floor(Math.random() * 5)],
+            tilt: Math.random() * 20 - 10,
+            tiltAngleIncrementModuleCount: 0,
+            tiltAngle: 0
+        }));
+
+        let angle = 0;
+        let frame;
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            angle += 0.01;
+            pieces.forEach(p => {
+                p.tiltAngle += p.tiltAngleIncrementModuleCount;
+                p.y += (Math.cos(angle + p.d) + 2) * 1.5;
+                p.x += Math.sin(angle);
+                p.tilt = Math.sin(p.tiltAngle) * 12;
+                ctx.beginPath();
+                ctx.lineWidth = p.r / 2;
+                ctx.strokeStyle = p.color;
+                ctx.moveTo(p.x + p.tilt + p.r / 4, p.y);
+                ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r / 4);
+                ctx.stroke();
             });
 
-            updateMacroNumbers();
+            if (pieces.every(p => p.y > canvas.height + 20)) {
+                canvas.style.display = 'none';
+                cancelAnimationFrame(frame);
+            } else {
+                frame = requestAnimationFrame(draw);
+            }
         }
-
-        // Dynamically recalculate numerical values for UI based on diet focus selected
-        function updateMacroNumbers() {
-            const isBmi = activeDietGoal === 'bmi';
-            document.getElementById('macro-val-protein').innerText = isBmi ? "35% (175g)" : "30% (195g)";
-            document.getElementById('macro-val-carbs').innerText = isBmi ? "40% (200g)" : "45% (292g)";
-            document.getElementById('macro-val-fats').innerText = isBmi ? "25% (55g)" : "25% (72g)";
-        }
-
-        // Refresh and update live chart states on tab/week/goal adjustments
-        function updateCharts() {
-            if (!macroChart || !platformChart) return;
-
-            // Update Macro doughnut chart details
-            const targetRatio = activeDietGoal === 'bmi' ? [35, 40, 25] : [30, 45, 25];
-            macroChart.data.datasets[0].data = targetRatio;
-            macroChart.update();
-
-            // Update Platform dynamic workloads depending on Phase advancement
-            const targetPlatformAllocations = activeWeek <= 5 ? [35, 25, 25, 15] : [30, 32, 23, 15];
-            platformChart.data.datasets[0].data = targetPlatformAllocations;
-            platformChart.update();
-
-            updateMacroNumbers();
-        }
+        draw();
+        setTimeout(() => { canvas.style.display = 'none'; cancelAnimationFrame(frame); }, 3000);
+    }
     </script>
 </body>
 </html>
