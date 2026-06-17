@@ -2,36 +2,51 @@
 <html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>JFit Wellness — 10-Week Hybrid Master Plan</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="JFit">
+    <meta name="theme-color" content="#7C3AED">
+    <link rel="manifest" href="manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;1,500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #F6F4EF;
+            --bg: #F8F7FF;
             --surface: #FFFFFF;
-            --surface2: #F0EDE6;
-            --border: rgba(108,142,117,0.12);
-            --text: #1C1F1D;
-            --text2: #4A5450;
-            --text3: #8A9490;
-            --terracotta: #C96F53;
-            --sage: #6C8E75;
-            --sand: #D4B896;
-            --gold: #B8943F;
-            --shadow: 0 2px 16px -4px rgba(44,60,50,0.10);
-            --shadow-lg: 0 8px 40px -12px rgba(44,60,50,0.16);
+            --surface2: #F0EDFF;
+            --border: rgba(124,58,237,0.1);
+            --text: #1C1028;
+            --text2: #4A3F6B;
+            --text3: #9585B5;
+            --shadow: 0 2px 16px -4px rgba(124,58,237,0.12);
+            --shadow-lg: 0 8px 40px -12px rgba(124,58,237,0.2);
             --radius: 20px;
+            --violet: #7C3AED;
+            --coral: #F43F5E;
+            --cyan: #06B6D4;
+            --lime: #84CC16;
+            --amber: #F59E0B;
+            --emerald: #10B981;
+            --pink: #EC4899;
+            --orange: #F97316;
+            --blue: #3B82F6;
+            /* legacy */
+            --terracotta: #F43F5E;
+            --sage: #10B981;
+            --sand: #D4B896;
+            --gold: #F97316;
         }
         [data-theme="dark"] {
-            --bg: #141917;
-            --surface: #1E2420;
-            --surface2: #252C28;
-            --border: rgba(108,142,117,0.14);
-            --text: #E8EDE9;
-            --text2: #9BAFA3;
-            --text3: #6B8078;
+            --bg: #0D0B14;
+            --surface: #1A1526;
+            --surface2: #211C30;
+            --border: rgba(124,58,237,0.18);
+            --text: #EDE8FF;
+            --text2: #A89CC8;
+            --text3: #6B5F8A;
             --shadow: 0 2px 16px -4px rgba(0,0,0,0.4);
             --shadow-lg: 0 8px 40px -12px rgba(0,0,0,0.5);
         }
@@ -58,17 +73,18 @@
             background: rgba(255,255,255,0.72);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(108,142,117,0.18);
+            border: 1px solid rgba(124,58,237,0.18);
         }
         [data-theme="dark"] .glass-strong {
-            background: rgba(20,25,23,0.8);
+            background: rgba(20,18,30,0.8);
         }
 
         /* Gradient accents */
-        .grad-terracotta { background: linear-gradient(135deg, #C96F53 0%, #E0956F 100%); }
-        .grad-sage { background: linear-gradient(135deg, #5A7D64 0%, #6C8E75 100%); }
-        .grad-dark { background: linear-gradient(135deg, #1C1F1D 0%, #2D312E 100%); }
-        .grad-hero { background: linear-gradient(135deg, #1C1F1D 0%, #2A3330 50%, #1C2820 100%); }
+        .grad-violet { background: linear-gradient(135deg, #7C3AED 0%, #A855F7 100%); }
+        .grad-sage { background: linear-gradient(135deg, #10B981 0%, #06B6D4 100%); }
+        .grad-coral { background: linear-gradient(135deg, #F43F5E 0%, #F97316 100%); }
+        .grad-dark { background: linear-gradient(135deg, #1C1028 0%, #2D1B69 100%); }
+        .grad-hero { background: linear-gradient(135deg, #1C1028 0%, #2D1B69 30%, #0F172A 60%, #0C1A15 100%); }
 
         /* Cards */
         .card {
@@ -89,16 +105,28 @@
         .day-card::before {
             content: '';
             position: absolute;
-            left: 0; top: 0; bottom: 0;
-            width: 4px;
-            border-radius: 4px 0 0 4px;
+            left: 0; top: 0; right: 0;
+            height: 6px;
         }
-        .day-card.push::before { background: linear-gradient(180deg, #C96F53, #E0956F); }
-        .day-card.pull::before { background: linear-gradient(180deg, #6C8E75, #8BB09A); }
-        .day-card.run::before  { background: linear-gradient(180deg, #F59E0B, #FBBF24); }
-        .day-card.legs::before { background: linear-gradient(180deg, #10B981, #34D399); }
-        .day-card.endurance::before { background: linear-gradient(180deg, #3B82F6, #60A5FA); }
-        .day-card.recovery::before { background: linear-gradient(180deg, #8B5CF6, #A78BFA); }
+        .day-card.push::before { background: linear-gradient(135deg, #F43F5E, #F97316); }
+        .day-card.pull::before { background: linear-gradient(135deg, #3B82F6, #06B6D4); }
+        .day-card.run::before  { background: linear-gradient(135deg, #F59E0B, #84CC16); }
+        .day-card.legs::before { background: linear-gradient(135deg, #10B981, #06B6D4); }
+        .day-card.endurance::before { background: linear-gradient(135deg, #7C3AED, #3B82F6); }
+        .day-card.recovery::before { background: linear-gradient(135deg, #EC4899, #8B5CF6); }
+
+        /* App link buttons */
+        .app-link-btn {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 5px 10px; border-radius: 8px; font-size: 10px;
+            font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
+            border: none; cursor: pointer; transition: all 0.2s; text-decoration: none;
+            margin-top: 6px;
+        }
+        .app-link-btn:hover { transform: translateY(-1px); filter: brightness(1.05); }
+        .fiton-btn { background: rgba(124,58,237,0.1); color: #7C3AED; }
+        .t25-btn { background: rgba(249,115,22,0.1); color: #F97316; }
+        .nrc-btn { background: rgba(16,185,129,0.1); color: #059669; }
 
         /* Pill badges */
         .pill {
@@ -112,9 +140,9 @@
             letter-spacing: 0.05em;
             text-transform: uppercase;
         }
-        .pill-terracotta { background: rgba(201,111,83,0.12); color: #C96F53; }
-        .pill-sage { background: rgba(108,142,117,0.12); color: #5A7D64; }
-        .pill-indigo { background: rgba(139,92,246,0.12); color: #7C3AED; }
+        .pill-terracotta { background: rgba(244,63,94,0.12); color: #F43F5E; }
+        .pill-sage { background: rgba(16,185,129,0.12); color: #059669; }
+        .pill-indigo { background: rgba(124,58,237,0.12); color: #7C3AED; }
         .pill-amber { background: rgba(245,158,11,0.12); color: #B45309; }
 
         /* Tabs */
@@ -130,13 +158,46 @@
             transition: all 0.2s;
             white-space: nowrap;
         }
-        .tab-btn:hover { border-color: var(--sage); color: var(--sage); }
+        .tab-btn:hover { border-color: var(--violet); color: var(--violet); }
         .tab-btn.active {
-            background: var(--text);
+            background: var(--violet);
             color: white;
             border-color: transparent;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 12px rgba(124,58,237,0.35);
             transform: scale(1.04);
+        }
+
+        /* Primary nav pills */
+        .nav-pills {
+            display: flex;
+            gap: 4px;
+            background: var(--surface2);
+            border-radius: 16px;
+            padding: 5px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .nav-pills::-webkit-scrollbar { display: none; }
+        .nav-pill {
+            flex: 1;
+            min-width: max-content;
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 700;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            color: var(--text2);
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .nav-pill:hover { color: var(--violet); }
+        .nav-pill.active {
+            background: var(--violet);
+            color: white;
+            box-shadow: 0 4px 14px rgba(124,58,237,0.4);
         }
 
         /* Phase buttons */
@@ -151,9 +212,9 @@
             border: 2px solid transparent;
             transition: all 0.3s cubic-bezier(.4,0,.2,1);
         }
-        .phase-btn.active { background: var(--terracotta); color: white; box-shadow: 0 6px 20px rgba(201,111,83,0.35); }
+        .phase-btn.active { background: linear-gradient(135deg,#7C3AED,#3B82F6); color: white; box-shadow: 0 6px 20px rgba(124,58,237,0.4); }
         .phase-btn.inactive { background: var(--surface); color: var(--text2); border-color: var(--border); }
-        .phase-btn.inactive:hover { border-color: var(--sage); color: var(--sage); }
+        .phase-btn.inactive:hover { border-color: var(--violet); color: var(--violet); }
 
         /* Stat cards */
         .stat-card {
@@ -161,6 +222,12 @@
             border-radius: 14px;
             padding: 14px 16px;
             text-align: center;
+        }
+        .stat-card-hero {
+            border-radius: 14px;
+            padding: 14px 16px;
+            text-align: center;
+            color: white;
         }
 
         /* Session blocks inside day cards */
@@ -187,10 +254,10 @@
             flex-shrink: 0;
         }
         .check-btn.done {
-            background: var(--sage);
-            border-color: var(--sage);
+            background: var(--violet);
+            border-color: var(--violet);
             color: white;
-            box-shadow: 0 2px 8px rgba(108,142,117,0.35);
+            box-shadow: 0 2px 8px rgba(124,58,237,0.4);
         }
 
         /* Progress ring */
@@ -228,6 +295,35 @@
             opacity: 1;
         }
 
+        /* Modal */
+        .modal-overlay {
+            position:fixed;inset:0;z-index:300;
+            background:rgba(13,11,20,0.75);
+            backdrop-filter:blur(8px);
+            display:flex;align-items:center;justify-content:center;padding:20px;
+            opacity:0;pointer-events:none;transition:opacity 0.3s;
+        }
+        .modal-overlay.show { opacity:1;pointer-events:all; }
+        .modal-card {
+            background:var(--surface);border-radius:28px;padding:28px;
+            max-width:420px;width:100%;
+            box-shadow:0 24px 80px rgba(0,0,0,0.3);
+            transform:scale(0.92) translateY(20px);
+            transition:transform 0.35s cubic-bezier(.4,0,.2,1);
+            max-height:90vh;overflow-y:auto;
+        }
+        .modal-overlay.show .modal-card { transform:scale(1) translateY(0); }
+        .energy-star {
+            font-size:28px;cursor:pointer;border:none;background:none;
+            filter:grayscale(1);opacity:0.4;transition:all 0.15s;
+        }
+        .energy-star.active { filter:none;opacity:1;transform:scale(1.2); }
+        .mood-btn {
+            font-size:28px;cursor:pointer;padding:8px;border-radius:12px;
+            border:2px solid transparent;background:var(--surface2);transition:all 0.15s;
+        }
+        .mood-btn.selected { border-color:#7C3AED;background:rgba(124,58,237,0.1);transform:scale(1.15); }
+
         /* Nutrition chart */
         .chart-container { position: relative; width: 100%; height: 240px; }
 
@@ -255,7 +351,6 @@
         }
         .pop { animation: pop 0.3s ease; }
 
-        /* Number counter animation */
         @keyframes countUp {
             from { opacity: 0; transform: translateY(6px); }
             to { opacity: 1; transform: translateY(0); }
@@ -276,7 +371,7 @@
             cursor: pointer;
             transition: background 0.2s;
         }
-        .toggle input:checked + .toggle-track { background: var(--sage); border-color: var(--sage); }
+        .toggle input:checked + .toggle-track { background: var(--violet); border-color: var(--violet); }
         .toggle-track::after {
             content: '';
             position: absolute;
@@ -310,7 +405,7 @@
         }
         .diet-pill.active {
             background: var(--surface);
-            color: var(--terracotta);
+            color: var(--violet);
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
 
@@ -335,9 +430,9 @@
             color: var(--text2);
             transition: all 0.18s;
         }
-        .meal-day-btn:hover { border-color: var(--sage); color: var(--sage); }
+        .meal-day-btn:hover { border-color: var(--violet); color: var(--violet); }
         .meal-day-btn.active {
-            background: var(--sage);
+            background: var(--violet);
             color: white;
             border-color: transparent;
         }
@@ -352,7 +447,7 @@
             transform: translateX(-50%);
             width: 4px; height: 4px;
             border-radius: 50%;
-            background: var(--terracotta);
+            background: var(--coral);
         }
 
         /* Substitute toggle */
@@ -372,7 +467,7 @@
             margin-top: 6px;
             transition: color 0.15s;
         }
-        .sub-toggle:hover { color: var(--terracotta); }
+        .sub-toggle:hover { color: var(--coral); }
         .sub-panel {
             overflow: hidden;
             max-height: 0;
@@ -392,7 +487,7 @@
             border: 1px solid var(--border);
             transition: all 0.2s;
         }
-        .glossary-card:hover { border-color: var(--sage); transform: translateY(-2px); }
+        .glossary-card:hover { border-color: var(--violet); transform: translateY(-2px); }
 
         /* Header */
         header {
@@ -401,6 +496,16 @@
             position: sticky;
             top: 0;
             z-index: 50;
+            backdrop-filter: blur(12px);
+        }
+
+        /* Sticky nav */
+        .primary-nav {
+            position: sticky;
+            top: 64px;
+            z-index: 45;
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
             backdrop-filter: blur(12px);
         }
 
@@ -422,6 +527,7 @@
             body { background: white !important; font-size: 11px !important; }
             .card { box-shadow: none !important; border: 1px solid #e2e8f0 !important; break-inside: avoid; }
             #days-container { grid-template-columns: repeat(2, 1fr) !important; }
+            #view-progress, #view-nutrition, #view-glossary { display: block !important; }
         }
 
         /* Tooltip */
@@ -453,7 +559,7 @@
 
                 <!-- Logo -->
                 <div class="flex items-center gap-3">
-                    <div class="w-9 h-9 grad-sage rounded-xl flex items-center justify-center text-white font-black text-sm shadow-sm">JF</div>
+                    <div class="w-9 h-9 grad-violet rounded-xl flex items-center justify-center text-white font-black text-sm shadow-sm">JF</div>
                     <div class="hidden sm:block">
                         <div class="text-[10px] uppercase tracking-widest font-bold" style="color:var(--text3)">Hybrid Elite Program</div>
                         <div class="font-bold text-sm leading-tight" style="color:var(--text)">JFit Wellness</div>
@@ -489,54 +595,64 @@
                     <button onclick="window.print()" class="pill pill-sage hidden sm:flex no-print" style="padding:8px 14px;font-size:12px;cursor:pointer;border:none">
                         🖨️ Print
                     </button>
-                    <a href="#glossary-section" class="pill pill-indigo" style="padding:8px 14px;font-size:12px;text-decoration:none;cursor:pointer">
-                        📚 Glossary
-                    </a>
                 </div>
             </div>
         </div>
     </header>
 
+    <!-- ═══════════════════════ PRIMARY NAV ═══════════════════════ -->
+    <nav class="primary-nav no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <div class="nav-pills">
+                <button id="nav-schedule" class="nav-pill active" onclick="switchView('schedule')">🏋️ Schedule</button>
+                <button id="nav-progress" class="nav-pill" onclick="switchView('progress')">📊 Progress</button>
+                <button id="nav-nutrition" class="nav-pill" onclick="switchView('nutrition')">🍽️ Nutrition</button>
+                <button id="nav-glossary" class="nav-pill" onclick="switchView('glossary')">📚 Glossary</button>
+            </div>
+        </div>
+    </nav>
+
     <!-- ═══════════════════════ HERO ═══════════════════════ -->
-    <section class="relative overflow-hidden no-print" style="background: var(--surface); border-bottom: 1px solid var(--border);">
+    <section class="relative overflow-hidden no-print grad-hero">
         <!-- Orbs -->
-        <div class="hero-orb" style="width:400px;height:400px;background:rgba(108,142,117,0.08);top:-120px;right:-80px;"></div>
-        <div class="hero-orb" style="width:300px;height:300px;background:rgba(201,111,83,0.06);bottom:-100px;left:10%;"></div>
+        <div class="hero-orb" style="width:400px;height:400px;background:rgba(124,58,237,0.45);top:-120px;right:-80px;"></div>
+        <div class="hero-orb" style="width:300px;height:300px;background:rgba(6,182,212,0.3);bottom:-100px;left:10%;"></div>
+        <div class="hero-orb" style="width:260px;height:260px;background:rgba(236,72,153,0.28);top:30%;left:40%;"></div>
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-14 relative">
             <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
 
                 <!-- Left -->
                 <div class="max-w-xl">
-                    <span class="pill pill-sage mb-3 inline-flex">Professional Research-Backed Architecture</span>
-                    <h1 class="serif text-3xl md:text-4xl font-bold leading-tight mb-3" style="color:var(--text)">
+                    <span class="pill mb-3 inline-flex" style="background:rgba(255,255,255,0.12);color:#C4B5FD">Professional Research-Backed Architecture</span>
+                    <h1 class="serif text-3xl md:text-4xl font-bold leading-tight mb-3" style="color:#FFFFFF">
                         Hybrid Strength &<br>Cardio Master Plan
                     </h1>
-                    <p class="text-sm leading-relaxed mb-6" style="color:var(--text2)">
+                    <p class="text-sm leading-relaxed mb-6" style="color:#C8BFE0">
                         Your 10-week synergistic blueprint combining
-                        <span class="font-semibold" style="color:var(--terracotta)" data-tip="BODi T25 — 25-min daily cardio program by Shaun T">T25 Alpha → Gamma</span>,
-                        <span class="font-semibold" style="color:var(--sage)" data-tip="Nike Running Club — structured outdoor run training">NRC guided runs</span>, and
-                        <span class="font-semibold" style="color:var(--text)">gym progressive overload</span> paired
-                        with <span class="font-semibold" style="color:var(--gold)">Mediterranean macros</span>.
+                        <span class="font-semibold" style="color:#FB7185" data-tip="BODi T25 — 25-min daily cardio program by Shaun T">T25 Alpha → Gamma</span>,
+                        <span class="font-semibold" style="color:#34D399" data-tip="Nike Running Club — structured outdoor run training">NRC guided runs</span>, and
+                        <span class="font-semibold" style="color:#FFFFFF">gym progressive overload</span> paired
+                        with <span class="font-semibold" style="color:#FBBF24">Mediterranean macros</span>.
                     </p>
 
                     <!-- 4 stats row -->
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                        <div class="stat-card">
-                            <div class="text-xl font-black" style="color:var(--text)">10</div>
-                            <div class="text-[10px] uppercase tracking-wider font-bold mt-0.5" style="color:var(--text3)">Total Weeks</div>
+                        <div class="stat-card-hero" style="background:linear-gradient(135deg,#7C3AED,#A855F7)">
+                            <div class="text-xl font-black">10</div>
+                            <div class="text-[10px] uppercase tracking-wider font-bold mt-0.5" style="opacity:.85">Total Weeks</div>
                         </div>
-                        <div class="stat-card">
-                            <div class="text-xl font-black" style="color:var(--terracotta)">6</div>
-                            <div class="text-[10px] uppercase tracking-wider font-bold mt-0.5" style="color:var(--text3)">Days On / Week</div>
+                        <div class="stat-card-hero" style="background:linear-gradient(135deg,#F43F5E,#F97316)">
+                            <div class="text-xl font-black">6</div>
+                            <div class="text-[10px] uppercase tracking-wider font-bold mt-0.5" style="opacity:.85">Days On / Week</div>
                         </div>
-                        <div class="stat-card">
-                            <div class="text-xl font-black" style="color:var(--sage)">3×</div>
-                            <div class="text-[10px] uppercase tracking-wider font-bold mt-0.5" style="color:var(--text3)">Upper Gym / Wk</div>
+                        <div class="stat-card-hero" style="background:linear-gradient(135deg,#06B6D4,#3B82F6)">
+                            <div class="text-xl font-black">3×</div>
+                            <div class="text-[10px] uppercase tracking-wider font-bold mt-0.5" style="opacity:.85">Upper Gym / Wk</div>
                         </div>
-                        <div class="stat-card">
-                            <div class="text-xl font-black" style="color:var(--gold)">Med</div>
-                            <div class="text-[10px] uppercase tracking-wider font-bold mt-0.5" style="color:var(--text3)">Primary Fuel</div>
+                        <div class="stat-card-hero" style="background:linear-gradient(135deg,#10B981,#84CC16)">
+                            <div class="text-xl font-black">Med</div>
+                            <div class="text-[10px] uppercase tracking-wider font-bold mt-0.5" style="opacity:.85">Primary Fuel</div>
                         </div>
                     </div>
                 </div>
@@ -545,7 +661,7 @@
                 <div class="flex flex-col items-center gap-3 mx-auto md:mx-0">
                     <div class="relative w-36 h-36">
                         <svg class="progress-ring w-full h-full" viewBox="0 0 80 80">
-                            <circle class="ring-track" cx="40" cy="40" r="32"></circle>
+                            <circle class="ring-track" cx="40" cy="40" r="32" style="stroke:rgba(255,255,255,0.15)"></circle>
                             <circle class="ring-fill" id="overall-ring" cx="40" cy="40" r="32"
                                 stroke="url(#ringGrad)"
                                 stroke-dasharray="201.06"
@@ -553,21 +669,22 @@
                             </circle>
                             <defs>
                                 <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" stop-color="#C96F53"/>
-                                    <stop offset="100%" stop-color="#6C8E75"/>
+                                    <stop offset="0%" stop-color="#EC4899"/>
+                                    <stop offset="50%" stop-color="#7C3AED"/>
+                                    <stop offset="100%" stop-color="#06B6D4"/>
                                 </linearGradient>
                             </defs>
                         </svg>
                         <div class="absolute inset-0 flex flex-col items-center justify-center">
-                            <div class="font-black text-2xl leading-none" style="color:var(--text)" id="ring-pct">0%</div>
-                            <div class="text-[10px] uppercase tracking-wider font-bold mt-1" style="color:var(--text3)">Program</div>
+                            <div class="font-black text-2xl leading-none" style="color:#FFFFFF" id="ring-pct">0%</div>
+                            <div class="text-[10px] uppercase tracking-wider font-bold mt-1" style="color:#C8BFE0">Program</div>
                         </div>
                     </div>
                     <div class="text-center">
-                        <div class="font-semibold text-sm" style="color:var(--text)">Overall Progress</div>
-                        <div class="text-xs" style="color:var(--text3)" id="ring-sub">0 of 70 sessions done</div>
+                        <div class="font-semibold text-sm" style="color:#FFFFFF">Overall Progress</div>
+                        <div class="text-xs" style="color:#C8BFE0" id="ring-sub">0 of 70 sessions done</div>
                     </div>
-                    <button onclick="resetProgress()" class="text-xs font-medium px-3 py-1.5 rounded-lg border" style="border-color:var(--border);color:var(--text3);background:var(--surface);cursor:pointer">
+                    <button onclick="resetProgress()" class="text-xs font-medium px-3 py-1.5 rounded-lg border" style="border-color:rgba(255,255,255,0.2);color:#C8BFE0;background:rgba(255,255,255,0.06);cursor:pointer">
                         Reset Progress
                     </button>
                 </div>
@@ -579,62 +696,131 @@
     <!-- ═══════════════════════ MAIN ═══════════════════════ -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
 
-        <!-- Phase toggle -->
-        <div class="flex gap-3 mb-6 no-print">
-            <button onclick="switchPhase(1)" id="phase-btn-1" class="phase-btn active">
-                🎯 Phase 1 — Weeks 1–5 (Alpha Base)
-            </button>
-            <button onclick="switchPhase(2)" id="phase-btn-2" class="phase-btn inactive">
-                ⚡ Phase 2 — Weeks 6–10 (Beta & Gamma Peak)
-            </button>
-        </div>
-
-        <!-- Week tabs -->
-        <div class="week-tabs-scroll mb-8 no-print" id="week-tabs-container"></div>
-
-        <!-- Main grid -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-
-            <!-- ── Left: Schedule ── -->
-            <div class="lg:col-span-8 space-y-5">
-
-                <!-- Week header bar -->
-                <div class="card p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 no-print">
-                    <div>
-                        <span class="pill pill-sage mb-1.5" id="phase-badge-text">Phase 1 Integration</span>
-                        <h2 class="font-bold text-lg leading-tight" style="color:var(--text)" id="active-week-display-title">Active Schedule: Week 1</h2>
-                        <p class="text-xs mt-0.5" style="color:var(--text3)" id="week-focus-text">Cardiovascular foundations & baseline muscle cell recruitment.</p>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <div class="text-right">
-                            <div class="text-[10px] uppercase tracking-wider font-bold" style="color:var(--text3)">Week Progress</div>
-                            <div class="font-black text-sm" style="color:var(--text)" id="week-progress-text">0 / 7</div>
-                        </div>
-                        <div class="relative w-12 h-12">
-                            <svg class="progress-ring w-full h-full" viewBox="0 0 40 40">
-                                <circle class="ring-track" cx="20" cy="20" r="16" stroke-width="4"></circle>
-                                <circle class="ring-fill" id="week-ring" cx="20" cy="20" r="16"
-                                    stroke="#6C8E75" stroke-width="4"
-                                    stroke-dasharray="100.53"
-                                    stroke-dashoffset="100.53">
-                                </circle>
-                            </svg>
-                            <div class="absolute inset-0 flex items-center justify-center text-[10px] font-black" style="color:var(--text)" id="week-ring-pct">0%</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 7-day cards -->
-                <div id="days-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+        <!-- ════════ SCHEDULE VIEW ════════ -->
+        <div id="view-schedule">
+            <!-- Phase toggle -->
+            <div class="flex gap-3 mb-6 no-print">
+                <button onclick="switchPhase(1)" id="phase-btn-1" class="phase-btn active">
+                    🎯 Phase 1 — Weeks 1–5 (Alpha Base)
+                </button>
+                <button onclick="switchPhase(2)" id="phase-btn-2" class="phase-btn inactive">
+                    ⚡ Phase 2 — Weeks 6–10 (Beta & Gamma Peak)
+                </button>
             </div>
 
-            <!-- ── Right: Nutrition & Analytics ── -->
-            <div class="lg:col-span-4 space-y-5">
+            <!-- Week tabs -->
+            <div class="week-tabs-scroll mb-8 no-print" id="week-tabs-container"></div>
+
+            <!-- Week header bar -->
+            <div class="card p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-5 no-print">
+                <div>
+                    <span class="pill pill-indigo mb-1.5" id="phase-badge-text">Phase 1 Integration</span>
+                    <h2 class="font-bold text-lg leading-tight" style="color:var(--text)" id="active-week-display-title">Active Schedule: Week 1</h2>
+                    <p class="text-xs mt-0.5" style="color:var(--text3)" id="week-focus-text">Cardiovascular foundations & baseline muscle cell recruitment.</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <div class="text-right">
+                        <div class="text-[10px] uppercase tracking-wider font-bold" style="color:var(--text3)">Week Progress</div>
+                        <div class="font-black text-sm" style="color:var(--text)" id="week-progress-text">0 / 7</div>
+                    </div>
+                    <div class="relative w-12 h-12">
+                        <svg class="progress-ring w-full h-full" viewBox="0 0 40 40">
+                            <circle class="ring-track" cx="20" cy="20" r="16" stroke-width="4"></circle>
+                            <circle class="ring-fill" id="week-ring" cx="20" cy="20" r="16"
+                                stroke="#7C3AED" stroke-width="4"
+                                stroke-dasharray="100.53"
+                                stroke-dashoffset="100.53">
+                            </circle>
+                        </svg>
+                        <div class="absolute inset-0 flex items-center justify-center text-[10px] font-black" style="color:var(--text)" id="week-ring-pct">0%</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7-day cards -->
+            <div id="days-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+        </div>
+
+        <!-- ════════ PROGRESS VIEW ════════ -->
+        <div id="view-progress" style="display:none">
+            <h2 class="serif" style="font-size:24px;font-weight:700;color:var(--text);margin-bottom:4px">Your Progress</h2>
+            <p style="font-size:13px;color:var(--text3);margin-bottom:24px">Daily check-ins, streaks, and energy trends.</p>
+
+            <!-- 4 stat cards -->
+            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:24px" class="sm:grid-cols-4">
+                <div style="border-radius:18px;padding:18px;color:white;background:linear-gradient(135deg,#7C3AED,#EC4899)">
+                    <div style="font-size:10px;font-weight:700;text-transform:uppercase;opacity:.8;margin-bottom:4px">Sessions Done</div>
+                    <div style="font-size:32px;font-weight:900" id="prog-total">0</div>
+                    <div style="font-size:11px;opacity:.7;margin-top:2px">of 70</div>
+                </div>
+                <div style="border-radius:18px;padding:18px;color:white;background:linear-gradient(135deg,#F59E0B,#F43F5E)">
+                    <div style="font-size:10px;font-weight:700;text-transform:uppercase;opacity:.8;margin-bottom:4px">Streak 🔥</div>
+                    <div style="font-size:32px;font-weight:900" id="prog-streak">0</div>
+                    <div style="font-size:11px;opacity:.7;margin-top:2px">days</div>
+                </div>
+                <div style="border-radius:18px;padding:18px;color:white;background:linear-gradient(135deg,#10B981,#06B6D4)">
+                    <div style="font-size:10px;font-weight:700;text-transform:uppercase;opacity:.8;margin-bottom:4px">Avg Energy ⚡</div>
+                    <div style="font-size:32px;font-weight:900" id="prog-energy">–</div>
+                    <div style="font-size:11px;opacity:.7;margin-top:2px">out of 5</div>
+                </div>
+                <div style="border-radius:18px;padding:18px;color:white;background:linear-gradient(135deg,#3B82F6,#84CC16)">
+                    <div style="font-size:10px;font-weight:700;text-transform:uppercase;opacity:.8;margin-bottom:4px">Weeks Done ✨</div>
+                    <div style="font-size:32px;font-weight:900" id="prog-weeks">0</div>
+                    <div style="font-size:11px;opacity:.7;margin-top:2px">of 10</div>
+                </div>
+            </div>
+
+            <!-- Calendar heatmap -->
+            <div class="card" style="padding:24px;margin-bottom:24px">
+                <h3 style="font-weight:700;font-size:16px;color:var(--text);margin-bottom:4px">10-Week Activity Calendar</h3>
+                <p style="font-size:12px;color:var(--text3);margin-bottom:16px">Color = energy level · Tap a cell to see check-in notes</p>
+                <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:8px">
+                    <div style="text-align:center;font-size:9px;font-weight:700;text-transform:uppercase;color:var(--text3)">Mon</div>
+                    <div style="text-align:center;font-size:9px;font-weight:700;text-transform:uppercase;color:var(--text3)">Tue</div>
+                    <div style="text-align:center;font-size:9px;font-weight:700;text-transform:uppercase;color:var(--text3)">Wed</div>
+                    <div style="text-align:center;font-size:9px;font-weight:700;text-transform:uppercase;color:var(--text3)">Thu</div>
+                    <div style="text-align:center;font-size:9px;font-weight:700;text-transform:uppercase;color:var(--text3)">Fri</div>
+                    <div style="text-align:center;font-size:9px;font-weight:700;text-transform:uppercase;color:var(--text3)">Sat</div>
+                    <div style="text-align:center;font-size:9px;font-weight:700;text-transform:uppercase;color:var(--text3)">Sun</div>
+                </div>
+                <div id="calendar-grid" style="display:flex;flex-direction:column;gap:6px"></div>
+                <!-- Legend -->
+                <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;align-items:center">
+                    <span style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase">Energy:</span>
+                    <span style="display:flex;align-items:center;gap:4px"><span style="width:14px;height:14px;border-radius:4px;background:linear-gradient(135deg,#3B82F6,#06B6D4);display:inline-block"></span><span style="font-size:10px;color:var(--text3)">1</span></span>
+                    <span style="display:flex;align-items:center;gap:4px"><span style="width:14px;height:14px;border-radius:4px;background:linear-gradient(135deg,#84CC16,#F59E0B);display:inline-block"></span><span style="font-size:10px;color:var(--text3)">3</span></span>
+                    <span style="display:flex;align-items:center;gap:4px"><span style="width:14px;height:14px;border-radius:4px;background:linear-gradient(135deg,#EC4899,#8B5CF6);display:inline-block"></span><span style="font-size:10px;color:var(--text3)">5</span></span>
+                    <span style="display:flex;align-items:center;gap:4px"><span style="width:14px;height:14px;border-radius:4px;background:linear-gradient(135deg,#10B981,#06B6D4);display:inline-block"></span><span style="font-size:10px;color:var(--text3)">Done</span></span>
+                </div>
+            </div>
+
+            <!-- Energy trend chart -->
+            <div class="card" style="padding:24px;margin-bottom:24px">
+                <h3 style="font-weight:700;font-size:16px;color:var(--text);margin-bottom:4px">Energy Trend</h3>
+                <p style="font-size:12px;color:var(--text3);margin-bottom:16px">Your energy across completed sessions with check-ins.</p>
+                <div style="position:relative;width:100%;height:200px">
+                    <canvas id="energyTrendChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Recent check-ins -->
+            <div class="card" style="padding:24px">
+                <h3 style="font-weight:700;font-size:16px;color:var(--text);margin-bottom:16px">Recent Check-ins</h3>
+                <div id="checkin-history"></div>
+            </div>
+        </div>
+
+        <!-- ════════ NUTRITION VIEW ════════ -->
+        <div id="view-nutrition" style="display:none">
+            <h2 class="serif" style="font-size:24px;font-weight:700;color:var(--text);margin-bottom:4px">Nutrition & Fueling</h2>
+            <p style="font-size:13px;color:var(--text3);margin-bottom:24px">Mediterranean macros, 7-day meal plans, and platform allocation.</p>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 items-start">
 
                 <!-- Macro chart card -->
                 <div class="card p-6">
                     <div style="border-bottom:1px solid var(--border)" class="pb-4 mb-4">
-                        <span class="pill pill-amber mb-1.5 inline-flex" style="background:rgba(184,148,63,0.1);color:#8A6020">Lean Muscle Building Foods</span>
+                        <span class="pill pill-amber mb-1.5 inline-flex" style="background:rgba(245,158,11,0.1);color:#B45309">Lean Muscle Building Foods</span>
                         <h3 class="font-bold text-lg" style="color:var(--text)">Mediterranean Macro Mix</h3>
                         <p class="text-xs mt-0.5" style="color:var(--text3)">High lean-protein, healthy polyunsaturated fats, and non-refined complex carbs.</p>
                     </div>
@@ -655,13 +841,13 @@
                     <div class="space-y-2.5 pt-4" style="border-top:1px solid var(--border)">
                         <div class="flex justify-between items-center">
                             <span class="flex items-center gap-2 text-sm font-medium" style="color:var(--text2)">
-                                <span class="w-3 h-3 rounded-full inline-block" style="background:#6C8E75"></span> Protein
+                                <span class="w-3 h-3 rounded-full inline-block" style="background:#7C3AED"></span> Protein
                             </span>
                             <span class="font-bold text-sm" style="color:var(--text)" id="macro-val-protein">35% (175g)</span>
                         </div>
                         <div class="flex justify-between items-center">
                             <span class="flex items-center gap-2 text-sm font-medium" style="color:var(--text2)">
-                                <span class="w-3 h-3 rounded-full inline-block" style="background:#C96F53"></span> Complex Carbs
+                                <span class="w-3 h-3 rounded-full inline-block" style="background:#06B6D4"></span> Complex Carbs
                             </span>
                             <span class="font-bold text-sm" style="color:var(--text)" id="macro-val-carbs">40% (200g)</span>
                         </div>
@@ -726,7 +912,7 @@
                                 <div class="text-[11px] leading-relaxed mt-0.5" style="color:var(--text2)">Mon Push · Wed Pull · Fri Accessory. Track weights for progressive overload.</div>
                             </div>
                         </div>
-                        <div class="flex items-start gap-3 p-3 rounded-xl" style="background:rgba(139,92,246,0.07);border:1px solid rgba(139,92,246,0.12)">
+                        <div class="flex items-start gap-3 p-3 rounded-xl" style="background:rgba(124,58,237,0.07);border:1px solid rgba(124,58,237,0.12)">
                             <span class="text-xl">🧘</span>
                             <div>
                                 <div class="font-bold text-xs" style="color:var(--text)">FitOn Pro</div>
@@ -746,8 +932,8 @@
             </div>
         </div>
 
-        <!-- ═══════════════════════ GLOSSARY ═══════════════════════ -->
-        <section id="glossary-section" class="mt-14">
+        <!-- ════════ GLOSSARY VIEW ════════ -->
+        <div id="view-glossary" style="display:none">
             <div style="border-bottom:1px solid var(--border)" class="pb-4 mb-6">
                 <span class="pill pill-indigo mb-2 inline-flex">Learn the Science</span>
                 <h2 class="serif text-2xl font-bold" style="color:var(--text)">Scientific Explanations & Glossary</h2>
@@ -755,15 +941,15 @@
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div class="glossary-card">
-                    <h4 class="font-bold text-sm flex items-center gap-2 mb-2" style="color:var(--terracotta)">🧬 Progressive Hypertrophy</h4>
+                    <h4 class="font-bold text-sm flex items-center gap-2 mb-2" style="color:#F43F5E">🧬 Progressive Hypertrophy</h4>
                     <p class="text-xs leading-relaxed" style="color:var(--text2)">To build muscle while losing fat, gym lifts must push fibers near failure. Over 10 weeks, aim to add reps or weight every session.</p>
                 </div>
                 <div class="glossary-card">
-                    <h4 class="font-bold text-sm flex items-center gap-2 mb-2" style="color:var(--sage)">🔥 EPOC — Afterburn Effect</h4>
+                    <h4 class="font-bold text-sm flex items-center gap-2 mb-2" style="color:#10B981">🔥 EPOC — Afterburn Effect</h4>
                     <p class="text-xs leading-relaxed" style="color:var(--text2)">Excess Post-Exercise Oxygen Consumption. High-intensity training (T25) keeps metabolic rate elevated up to 24h post-workout, maximizing fat oxidation.</p>
                 </div>
                 <div class="glossary-card">
-                    <h4 class="font-bold text-sm flex items-center gap-2 mb-2" style="color:var(--gold)">🫀 Zone 2 Aerobic Conditioning</h4>
+                    <h4 class="font-bold text-sm flex items-center gap-2 mb-2" style="color:#F97316">🫀 Zone 2 Aerobic Conditioning</h4>
                     <p class="text-xs leading-relaxed" style="color:var(--text2)">Running at 60–70% max heart rate teaches mitochondria to burn fat as primary fuel. Improves stamina and recovery during heavy gym sessions.</p>
                 </div>
                 <div class="glossary-card">
@@ -778,8 +964,20 @@
                     <h4 class="font-bold text-sm flex items-center gap-2 mb-2" style="color:#1D4ED8">💧 Cellular Rehydration</h4>
                     <p class="text-xs leading-relaxed" style="color:var(--text2)">T25 and heavy lifting deplete glycogen and water. Electrolytes force nutrients into cell walls, optimizing protein synthesis and hypertrophy.</p>
                 </div>
+                <div class="glossary-card">
+                    <h4 class="font-bold text-sm flex items-center gap-2 mb-2" style="color:#7C3AED">🧠 Mind-Muscle Connection</h4>
+                    <p class="text-xs leading-relaxed" style="color:var(--text2)">Consciously focusing attention on the working muscle increases motor-unit recruitment and EMG activity, producing more complete fiber stimulation and better hypertrophy per rep.</p>
+                </div>
+                <div class="glossary-card">
+                    <h4 class="font-bold text-sm flex items-center gap-2 mb-2" style="color:#EC4899">😴 Sleep & Recovery Science</h4>
+                    <p class="text-xs leading-relaxed" style="color:var(--text2)">Deep slow-wave sleep triggers the largest pulse of growth hormone, while REM consolidates motor learning. Aim for 7–9 hours to repair micro-tears and replenish glycogen.</p>
+                </div>
+                <div class="glossary-card">
+                    <h4 class="font-bold text-sm flex items-center gap-2 mb-2" style="color:#06B6D4">⚛️ ATP Energy Pathways</h4>
+                    <p class="text-xs leading-relaxed" style="color:var(--text2)">Short sprints draw on the phosphocreatine system, T25 intervals tap glycolysis, and Zone 2 runs rely on aerobic oxidation. Training all three widens your total energy capacity.</p>
+                </div>
             </div>
-        </section>
+        </div>
 
     </main>
 
@@ -787,6 +985,9 @@
     <footer class="no-print mt-16 py-8 text-center text-xs" style="border-top:1px solid var(--border);color:var(--text3)">
         <div class="font-bold mb-1" style="color:var(--text2)">JFit Wellness — Hybrid Elite Master Plan v3.0</div>
         <div>Combining specialized cardio algorithms with progressive strength and Mediterranean nutrition science.</div>
+        <div style="margin-top:8px;font-size:11px">
+            📱 iPhone: tap Share → <strong>"Add to Home Screen"</strong> to install as app
+        </div>
     </footer>
 
     <!-- ═══════════════════════ GLOSSARY TOAST ═══════════════════════ -->
@@ -801,6 +1002,69 @@
         <div class="mt-3 pt-3 flex items-center gap-1.5" style="border-top:1px solid var(--border)">
             <span class="text-[10px] uppercase tracking-wider font-bold" style="color:var(--text3)">Tap any session name for definitions</span>
         </div>
+    </div>
+
+    <!-- ═══════════════════════ CHECK-IN MODAL ═══════════════════════ -->
+    <div id="checkin-modal" class="modal-overlay">
+      <div class="modal-card">
+        <div class="text-center mb-5">
+          <div style="font-size:48px" id="checkin-emoji">🎉</div>
+          <h3 style="font-weight:900;font-size:20px;color:var(--text)">Session Complete!</h3>
+          <p style="font-size:13px;color:var(--text3);margin-top:4px" id="checkin-session-name"></p>
+        </div>
+        <!-- Energy -->
+        <div style="margin-bottom:20px">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text3);margin-bottom:8px">⚡ Energy Level</div>
+          <div style="display:flex;justify-content:space-around" id="energy-stars">
+            <button class="energy-star" onclick="setEnergy(1)">⚡</button>
+            <button class="energy-star" onclick="setEnergy(2)">⚡</button>
+            <button class="energy-star" onclick="setEnergy(3)">⚡</button>
+            <button class="energy-star" onclick="setEnergy(4)">⚡</button>
+            <button class="energy-star" onclick="setEnergy(5)">⚡</button>
+          </div>
+          <div style="text-align:center;font-size:11px;color:var(--text3);margin-top:4px" id="energy-label">Tap to rate</div>
+        </div>
+        <!-- Mood -->
+        <div style="margin-bottom:20px">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text3);margin-bottom:8px">😊 How do you feel?</div>
+          <div style="display:flex;justify-content:space-around">
+            <button class="mood-btn" onclick="setMood('😴','Exhausted')">😴</button>
+            <button class="mood-btn" onclick="setMood('😐','Neutral')">😐</button>
+            <button class="mood-btn" onclick="setMood('😊','Good')">😊</button>
+            <button class="mood-btn" onclick="setMood('💪','Pumped')">💪</button>
+            <button class="mood-btn" onclick="setMood('🔥','On Fire')">🔥</button>
+          </div>
+        </div>
+        <!-- Notes -->
+        <div style="margin-bottom:20px">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text3);margin-bottom:8px">📝 Notes (optional)</div>
+          <textarea id="checkin-notes" placeholder="How did it go?" rows="2" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:10px 12px;font-size:13px;color:var(--text);resize:none;outline:none;font-family:inherit"></textarea>
+        </div>
+        <div style="display:flex;gap:10px">
+          <button onclick="skipCheckin()" style="flex:1;padding:12px;border-radius:14px;background:var(--surface2);color:var(--text3);border:none;font-weight:700;font-size:14px;cursor:pointer">Skip</button>
+          <button onclick="saveCheckin()" style="flex:1;padding:12px;border-radius:14px;background:linear-gradient(135deg,#7C3AED,#06B6D4);color:white;border:none;font-weight:700;font-size:14px;cursor:pointer;box-shadow:0 4px 16px rgba(124,58,237,0.35)">Save ✓</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════ T25 VIDEO MODAL ═══════════════════════ -->
+    <div id="t25-modal" class="modal-overlay">
+      <div class="modal-card" style="max-width:680px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+          <div>
+            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text3)">T25 Video Library</div>
+            <h3 style="font-weight:900;font-size:18px;color:var(--text);margin-top:2px" id="t25-modal-title"></h3>
+          </div>
+          <button onclick="closeT25Modal()" style="width:32px;height:32px;border-radius:10px;background:var(--surface2);border:none;cursor:pointer;font-size:16px;color:var(--text3)">✕</button>
+        </div>
+        <div style="position:relative;padding-top:56.25%;background:#000;border-radius:14px;overflow:hidden;margin-bottom:16px">
+          <iframe id="t25-iframe" style="position:absolute;inset:0;width:100%;height:100%;border:none" allowfullscreen></iframe>
+        </div>
+        <div style="display:flex;gap:10px">
+          <a id="t25-drive-link" href="#" target="_blank" style="flex:1;padding:12px;border-radius:14px;background:linear-gradient(135deg,#F97316,#F43F5E);color:white;font-weight:700;font-size:13px;text-align:center;text-decoration:none">📁 Open in Drive</a>
+          <button onclick="closeT25Modal()" style="flex:1;padding:12px;border-radius:14px;background:var(--surface2);color:var(--text3);border:none;font-weight:700;font-size:13px;cursor:pointer">Close</button>
+        </div>
+      </div>
     </div>
 
     <!-- ═══════════════════════ CONFETTI CANVAS ═══════════════════════ -->
@@ -1082,9 +1346,22 @@
     let activeMealDay = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1; // 0=Mon … 6=Sun
     let macroChart = null;
     let platformChart = null;
+    let energyChart = null;
     let completedSessions = JSON.parse(localStorage.getItem('jfit_completed') || '{}');
+    let checkIns = JSON.parse(localStorage.getItem('jfit_checkins') || '{}');
+    let pendingCheckinKey = null;
+    let pendingCheckinName = '';
+    let selectedEnergy = 0;
+    let selectedMood = null;
+    let chartsInitialized = false;
 
     const TOTAL_SESSIONS = 70; // 10 weeks × 7 days
+
+    const T25_FOLDERS = {
+        alpha: '1BLh90L0MntBtQn_MIxosPNUJy8IR6daz',
+        beta:  '1m0kMmpyex6MQ-qTU1VdZZBsCZTywmwp4',
+        gamma: '1TBmWUbu_xuAhJTDWjzwGnlA5toPMlIA3'
+    };
 
     // ─── INIT ─────────────────────────────────────────────────────────────────
     window.onload = () => {
@@ -1095,10 +1372,25 @@
         }
         renderWeekTabs();
         renderActiveWeekSchedule();
-        initCharts();
-        renderMeals();
         updateProgressUI();
     };
+
+    // ─── VIEW SWITCHING ──────────────────────────────────────────────────────
+    function switchView(view) {
+        ['schedule','progress','nutrition','glossary'].forEach(v => {
+            document.getElementById('view-'+v).style.display = v === view ? 'block' : 'none';
+            document.getElementById('nav-'+v).classList.toggle('active', v === view);
+        });
+        if (view === 'nutrition' && !chartsInitialized) {
+            chartsInitialized = true;
+            initCharts();
+            renderMeals();
+        }
+        if (view === 'progress') {
+            renderProgressView();
+        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 
     // ─── DARK MODE ───────────────────────────────────────────────────────────
     function toggleDark(el) {
@@ -1107,6 +1399,7 @@
         localStorage.setItem('jfit_dark', dark);
         if (macroChart) macroChart.update();
         if (platformChart) platformChart.update();
+        if (energyChart) energyChart.update();
     }
 
     // ─── PHASE / WEEK ────────────────────────────────────────────────────────
@@ -1166,6 +1459,7 @@
 
             const card = document.createElement('div');
             card.className = `card day-card ${d.cardClass} p-5 fade-up`;
+            card.style.paddingTop = '20px';
             card.style.animationDelay = `${idx * 40}ms`;
 
             const labelColor = {
@@ -1180,8 +1474,18 @@
             const labelStyle = d.cardClass === 'legs'
                 ? 'background:rgba(16,185,129,0.1);color:#047857'
                 : d.cardClass === 'endurance'
-                    ? 'background:rgba(59,130,246,0.1);color:#1D4ED8'
+                    ? 'background:rgba(124,58,237,0.1);color:#6D28D9'
                     : '';
+
+            // App link buttons
+            const gAppLink = d.gName.includes('Nike')
+                ? `<a href="https://www.nike.com/nrc-app" target="_blank" class="app-link-btn nrc-btn">🏃 Open NRC</a>` : '';
+            let tAppLink = '';
+            if (d.tName.includes('T25')) {
+                tAppLink = `<button onclick="openT25Modal('${escapeStr(d.tName)}')" class="app-link-btn t25-btn">▶ Play T25</button>`;
+            } else if (d.tName.includes('FitOn')) {
+                tAppLink = `<a href="https://fiton.app" target="_blank" class="app-link-btn fiton-btn">🧘 Open FitOn</a>`;
+            }
 
             card.innerHTML = `
                 <div class="flex justify-between items-start mb-4">
@@ -1207,10 +1511,11 @@
                         </div>
                         <div class="font-semibold text-sm cursor-pointer transition-colors"
                             style="color:var(--text)"
-                            onmouseover="this.style.color='var(--sage)'"
+                            onmouseover="this.style.color='var(--violet)'"
                             onmouseout="this.style.color='var(--text)'"
                             onclick="showGlossaryPopup('${escapeStr(d.gName)}')">${d.gName}</div>
                         <p class="text-xs leading-relaxed mt-1" style="color:var(--text2)">${d.gDesc}</p>
+                        ${gAppLink}
                     </div>
                     <div class="session-block">
                         <div class="flex items-center gap-1 mb-1.5">
@@ -1219,16 +1524,17 @@
                         </div>
                         <div class="font-semibold text-sm cursor-pointer transition-colors"
                             style="color:var(--text)"
-                            onmouseover="this.style.color='var(--sage)'"
+                            onmouseover="this.style.color='var(--violet)'"
                             onmouseout="this.style.color='var(--text)'"
                             onclick="showGlossaryPopup('${escapeStr(d.tName)}')">${d.tName}</div>
                         <p class="text-xs leading-relaxed mt-1" style="color:var(--text2)">${d.tDesc}</p>
+                        ${tAppLink}
                     </div>
                 </div>
 
                 ${isDone ? `<div class="mt-3 flex items-center gap-1.5 pt-3" style="border-top:1px solid var(--border)">
                     <span class="text-xs">✅</span>
-                    <span class="text-[10px] font-bold uppercase tracking-wider" style="color:var(--sage)">Session Completed</span>
+                    <span class="text-[10px] font-bold uppercase tracking-wider" style="color:var(--violet)">Session Completed</span>
                 </div>` : ''}
             `;
             container.appendChild(card);
@@ -1247,9 +1553,16 @@
         const wasCompleted = !!completedSessions[key];
         if (wasCompleted) {
             delete completedSessions[key];
+            delete checkIns[key];
+            localStorage.setItem('jfit_checkins', JSON.stringify(checkIns));
         } else {
             completedSessions[key] = true;
             launchConfetti();
+            // get session display name
+            const [,wPart,dPart] = key.match(/w(\d+)_d(\d+)/);
+            const dayData = workoutDatabase[+wPart].days[+dPart];
+            const name = `Week ${wPart} · ${dayData.day} — ${dayData.type}`;
+            setTimeout(() => openCheckinModal(key, name), 800);
         }
         localStorage.setItem('jfit_completed', JSON.stringify(completedSessions));
         renderActiveWeekSchedule();
@@ -1314,10 +1627,202 @@
     function resetProgress() {
         if (!confirm('Reset all progress? This cannot be undone.')) return;
         completedSessions = {};
+        checkIns = {};
         localStorage.removeItem('jfit_completed');
+        localStorage.removeItem('jfit_checkins');
         renderActiveWeekSchedule();
         updateProgressUI();
         renderWeekTabs();
+        if (document.getElementById('view-progress').style.display !== 'none') {
+            renderProgressView();
+        }
+    }
+
+    // ─── DAILY CHECK-IN ──────────────────────────────────────────────────────
+    function openCheckinModal(key, name) {
+        pendingCheckinKey = key;
+        pendingCheckinName = name;
+        selectedEnergy = 0;
+        selectedMood = null;
+        document.getElementById('checkin-session-name').textContent = name;
+        document.getElementById('checkin-notes').value = '';
+        document.getElementById('energy-label').textContent = 'Tap to rate';
+        document.querySelectorAll('.energy-star').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+        document.getElementById('checkin-modal').classList.add('show');
+    }
+
+    function setEnergy(level) {
+        selectedEnergy = level;
+        const labels = ['','Exhausted','Low','Good','Great','On Fire! 🔥'];
+        document.getElementById('energy-label').textContent = labels[level];
+        document.querySelectorAll('.energy-star').forEach((s, i) => {
+            s.classList.toggle('active', i < level);
+        });
+    }
+
+    function setMood(emoji, label) {
+        selectedMood = emoji;
+        document.querySelectorAll('.mood-btn').forEach(b => {
+            b.classList.toggle('selected', b.textContent.trim() === emoji);
+        });
+    }
+
+    function saveCheckin() {
+        if (pendingCheckinKey) {
+            checkIns[pendingCheckinKey] = {
+                energy: selectedEnergy,
+                mood: selectedMood,
+                note: document.getElementById('checkin-notes').value.trim(),
+                date: new Date().toISOString().slice(0,10),
+                name: pendingCheckinName
+            };
+            localStorage.setItem('jfit_checkins', JSON.stringify(checkIns));
+        }
+        document.getElementById('checkin-modal').classList.remove('show');
+    }
+
+    function skipCheckin() {
+        document.getElementById('checkin-modal').classList.remove('show');
+    }
+
+    // ─── T25 VIDEO MODAL ─────────────────────────────────────────────────────
+    function openT25Modal(name) {
+        const lower = name.toLowerCase();
+        const phase = lower.includes('gamma') ? 'gamma' : lower.includes('beta') ? 'beta' : 'alpha';
+        const folderId = T25_FOLDERS[phase];
+        document.getElementById('t25-modal-title').textContent = name;
+        document.getElementById('t25-iframe').src = `https://drive.google.com/embeddedfolderview?id=${folderId}#list`;
+        document.getElementById('t25-drive-link').href = `https://drive.google.com/drive/folders/${folderId}`;
+        document.getElementById('t25-modal').classList.add('show');
+    }
+
+    function closeT25Modal() {
+        document.getElementById('t25-modal').classList.remove('show');
+        document.getElementById('t25-iframe').src = '';
+    }
+
+    // ─── PROGRESS VIEW ───────────────────────────────────────────────────────
+    function renderProgressView() {
+        const done = totalCompleted();
+        const streak = calculateStreak();
+        document.getElementById('prog-total').textContent = done;
+        document.getElementById('prog-streak').textContent = streak;
+
+        const energyVals = Object.values(checkIns).map(c => c.energy).filter(e => e > 0);
+        const avgEnergy = energyVals.length ? (energyVals.reduce((a,b)=>a+b,0)/energyVals.length).toFixed(1) : '–';
+        document.getElementById('prog-energy').textContent = avgEnergy;
+
+        let fullWeeks = 0;
+        for (let w=1;w<=10;w++) { if (weekCompletedCount(w)===7) fullWeeks++; }
+        document.getElementById('prog-weeks').textContent = fullWeeks;
+
+        renderCalendar();
+        renderCheckinHistory();
+        renderEnergyChart();
+    }
+
+    function renderCalendar() {
+        const grid = document.getElementById('calendar-grid');
+        grid.innerHTML = '';
+        const energyGrads = {
+            0: 'var(--surface2)',
+            1: 'linear-gradient(135deg,#3B82F6,#06B6D4)',
+            2: 'linear-gradient(135deg,#06B6D4,#10B981)',
+            3: 'linear-gradient(135deg,#84CC16,#F59E0B)',
+            4: 'linear-gradient(135deg,#F97316,#F43F5E)',
+            5: 'linear-gradient(135deg,#EC4899,#8B5CF6)'
+        };
+        for (let w=1;w<=10;w++) {
+            const row = document.createElement('div');
+            row.style.cssText = 'display:grid;grid-template-columns:repeat(7,1fr);gap:4px';
+            for (let d=0;d<7;d++) {
+                const key = `w${w}_d${d}`;
+                const done = !!completedSessions[key];
+                const ci = checkIns[key];
+                const cell = document.createElement('div');
+                cell.style.cssText = `aspect-ratio:1;border-radius:6px;cursor:pointer;border:1px solid var(--border);transition:transform .15s;position:relative;`;
+                if (done) {
+                    const grad = ci && ci.energy > 0 ? energyGrads[ci.energy] : 'linear-gradient(135deg,#10B981,#06B6D4)';
+                    cell.style.background = grad;
+                    cell.style.borderColor = 'transparent';
+                    if (ci && ci.mood) {
+                        cell.title = `${ci.mood} Energy: ${ci.energy}/5${ci.note ? ' · ' + ci.note : ''}`;
+                    }
+                } else {
+                    cell.style.background = 'var(--surface2)';
+                }
+                cell.addEventListener('mouseover', () => cell.style.transform = 'scale(1.15)');
+                cell.addEventListener('mouseout', () => cell.style.transform = 'scale(1)');
+                if (done && ci) {
+                    cell.onclick = () => showCheckinDetail(key);
+                }
+                row.appendChild(cell);
+            }
+            grid.appendChild(row);
+        }
+    }
+
+    function showCheckinDetail(key) {
+        const ci = checkIns[key];
+        if (!ci) return;
+        const toast = document.getElementById('glossary-toast');
+        document.getElementById('toast-title').textContent = ci.name || key;
+        document.getElementById('toast-body').textContent = `${ci.mood || ''} Energy: ${ci.energy}/5 · ${ci.date}${ci.note ? ' · ' + ci.note : ''}`;
+        toast.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(closeToast, 6000);
+    }
+
+    function renderCheckinHistory() {
+        const el = document.getElementById('checkin-history');
+        const entries = Object.entries(checkIns).reverse().slice(0,10);
+        if (!entries.length) {
+            el.innerHTML = '<p style="font-size:13px;color:var(--text3)">No check-ins yet. Complete a session to log your first!</p>';
+            return;
+        }
+        el.innerHTML = entries.map(([key, ci]) => `
+            <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;background:var(--surface2);border:1px solid var(--border);margin-bottom:8px">
+                <div style="font-size:24px">${ci.mood || '✅'}</div>
+                <div style="flex:1;min-width:0">
+                    <div style="font-size:12px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${ci.name || key}</div>
+                    <div style="font-size:11px;color:var(--text3);margin-top:1px">${ci.date} · Energy ${ci.energy}/5${ci.note ? ' · ' + ci.note : ''}</div>
+                </div>
+                ${'⚡'.repeat(ci.energy)}
+            </div>
+        `).join('');
+    }
+
+    function renderEnergyChart() {
+        const ctx = document.getElementById('energyTrendChart').getContext('2d');
+        const data = Object.values(checkIns).filter(c => c.energy > 0).map(c => c.energy);
+        const labels = data.map((_, i) => `S${i+1}`);
+        if (energyChart) { energyChart.destroy(); energyChart = null; }
+        if (!data.length) return;
+        energyChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels,
+                datasets: [{
+                    data,
+                    borderColor: '#7C3AED',
+                    backgroundColor: 'rgba(124,58,237,0.08)',
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#EC4899',
+                    pointRadius: 5,
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                scales: {
+                    y: { min:0, max:5, ticks:{ stepSize:1, color:'#9585B5', font:{size:10} }, grid:{ color:'rgba(124,58,237,0.06)' } },
+                    x: { ticks:{ color:'#9585B5', font:{size:10} }, grid:{ display:false } }
+                },
+                plugins: { legend:{ display:false } }
+            }
+        });
     }
 
     // ─── DIET GOAL ──────────────────────────────────────────────────────────
@@ -1350,8 +1855,8 @@
         const todayName = DAYS[todayIdx];
         todayBadge.textContent = activeMealDay === todayIdx ? `${todayName} · Today` : DAYS[activeMealDay];
         todayBadge.style.background = activeMealDay === todayIdx
-            ? 'rgba(108,142,117,0.12)' : 'rgba(184,148,63,0.1)';
-        todayBadge.style.color = activeMealDay === todayIdx ? 'var(--sage)' : '#8A6020';
+            ? 'rgba(16,185,129,0.12)' : 'rgba(245,158,11,0.1)';
+        todayBadge.style.color = activeMealDay === todayIdx ? '#059669' : '#B45309';
     }
 
     function renderMeals() {
@@ -1384,7 +1889,7 @@
                 </button>
                 <div class="sub-panel" id="${uid}">
                     <div class="mt-2 pt-2" style="border-top:1px dashed var(--border)">
-                        <div class="text-[10px] uppercase tracking-wider font-bold mb-0.5" style="color:var(--terracotta)">🔄 Alternative Option</div>
+                        <div class="text-[10px] uppercase tracking-wider font-bold mb-0.5" style="color:var(--coral)">🔄 Alternative Option</div>
                         <p class="text-[11px] leading-relaxed" style="color:var(--text2)">${meal.sub}</p>
                     </div>
                 </div>
@@ -1413,7 +1918,7 @@
                 labels: ['Protein', 'Complex Carbs', 'Healthy Fats'],
                 datasets: [{
                     data: ratio,
-                    backgroundColor: ['#6C8E75', '#C96F53', '#F59E0B'],
+                    backgroundColor: ['#7C3AED', '#06B6D4', '#F59E0B'],
                     borderWidth: 0,
                     hoverOffset: 8
                 }]
@@ -1442,7 +1947,7 @@
                 datasets: [{
                     label: 'Allocation %',
                     data: [35, 25, 25, 15],
-                    backgroundColor: ['#475569', '#3B82F6', '#F97316', '#8B5CF6'],
+                    backgroundColor: ['#7C3AED', '#06B6D4', '#F97316', '#EC4899'],
                     borderRadius: 8,
                     borderWidth: 0
                 }]
@@ -1454,16 +1959,16 @@
                 scales: {
                     y: {
                         beginAtZero: true, max: 50,
-                        grid: { color: 'rgba(108,142,117,0.08)' },
+                        grid: { color: 'rgba(124,58,237,0.08)' },
                         ticks: {
                             callback: v => v + '%',
-                            color: '#8A9490',
+                            color: '#9585B5',
                             font: { size: 10 }
                         }
                     },
                     x: {
                         grid: { display: false },
-                        ticks: { color: '#8A9490', font: { size: 10 } }
+                        ticks: { color: '#9585B5', font: { size: 10 } }
                     }
                 },
                 plugins: { legend: { display: false } }
@@ -1547,7 +2052,7 @@
             y: Math.random() * canvas.height - canvas.height,
             r: Math.random() * 8 + 4,
             d: Math.random() * 80,
-            color: ['#C96F53','#6C8E75','#F59E0B','#3B82F6','#8B5CF6'][Math.floor(Math.random() * 5)],
+            color: ['#7C3AED','#EC4899','#06B6D4','#F59E0B','#84CC16','#F43F5E'][Math.floor(Math.random() * 6)],
             tilt: Math.random() * 20 - 10,
             tiltAngleIncrementModuleCount: 0,
             tiltAngle: 0
@@ -1580,6 +2085,11 @@
         }
         draw();
         setTimeout(() => { canvas.style.display = 'none'; cancelAnimationFrame(frame); }, 3000);
+    }
+
+    // ─── SERVICE WORKER ──────────────────────────────────────────────────────
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
     }
     </script>
 </body>
