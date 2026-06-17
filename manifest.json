@@ -1,0 +1,18 @@
+{
+  "name": "JFit Wellness",
+  "short_name": "JFit",
+  "description": "10-Week Hybrid Strength & Cardio Master Plan",
+  "start_url": "/jfit-welness/",
+  "display": "standalone",
+  "background_color": "#0D0B14",
+  "theme_color": "#7C3AED",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='40' fill='%237C3AED'/><text x='50%' y='58%' dominant-baseline='middle' text-anchor='middle' font-family='Inter,sans-serif' font-weight='900' font-size='80' fill='white'>JF</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
