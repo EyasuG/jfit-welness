@@ -125,6 +125,7 @@
         }
         .app-link-btn:hover { transform: translateY(-1px); filter: brightness(1.05); }
         .fiton-btn { background: rgba(124,58,237,0.1); color: #7C3AED; }
+        .ntc-btn { background: rgba(59,130,246,0.1); color: #2563EB; }
         .t25-btn { background: rgba(249,115,22,0.1); color: #F97316; }
         .nrc-btn { background: rgba(16,185,129,0.1); color: #059669; }
 
@@ -1518,8 +1519,15 @@
                     : '';
 
             // App link buttons
-            const gAppLink = d.gName.includes('Nike')
-                ? `<a href="https://www.nike.com/nrc-app" target="_blank" class="app-link-btn nrc-btn">🏃 Open NRC</a>` : '';
+            let gAppLink = '';
+            if (d.gName.includes('Nike Running')) {
+                // Extract run type from name e.g. "Nike Running Club (Speed Run)" → "Speed Run"
+                const runType = (d.gName.match(/\(([^)]+)\)/) || ['',''])[1];
+                gAppLink = `<a href="https://apps.apple.com/app/nike-run-club/id387771637" target="_blank" class="app-link-btn nrc-btn" title="Open Nike Run Club → ${runType}">🏃 NRC · ${runType}</a>`;
+            } else if (d.gName.includes('Nike Training')) {
+                const workoutType = (d.gName.match(/\(([^)]+)\)/) || ['',''])[1];
+                gAppLink = `<a href="https://apps.apple.com/app/nike-training-club/id301521403" target="_blank" class="app-link-btn ntc-btn" title="Open Nike Training Club → ${workoutType}">🏋️ NTC · ${workoutType}</a>`;
+            }
             let tAppLink = '';
             if (d.tName.includes('T25')) {
                 tAppLink = `<button onclick="openT25Modal('${escapeStr(d.tName)}')" class="app-link-btn t25-btn">▶ Play T25</button>`;
