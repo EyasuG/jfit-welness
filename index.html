@@ -1360,6 +1360,43 @@
 
     const TOTAL_SESSIONS = 70; // 10 weeks × 7 days
 
+    // ─── FITON DIRECT WORKOUT LINKS ──────────────────────────────────────────
+    const FITON_LINKS = {
+        // Core workouts
+        'FitOn Pro Core Crunch':          'https://app.fitonapp.com/browse/workout/976',
+        'FitOn Pro Deep Ab Lab':          'https://app.fitonapp.com/browse/workout/548',
+        'FitOn Pro Core Heat':            'https://app.fitonapp.com/browse/workout/2206',
+        'FitOn Pro HIIT Core':            'https://app.fitonapp.com/browse/workout/2212',
+        'FitOn Pro Dynamic Core Stability':'https://app.fitonapp.com/browse/workout/1137',
+        'FitOn Pro Ab Target':            'https://app.fitonapp.com/browse/workout/21',
+        'FitOn Pro Lower Abs Burn':       'https://app.fitonapp.com/browse/workout/213',
+        'FitOn Pro Pilates Ab Lab':       'https://app.fitonapp.com/browse/workout/313',
+        // Stretch / Yoga / Mobility
+        'FitOn Pro Stretch':              'https://app.fitonapp.com/browse/workout/110',
+        'FitOn Pro Active Stretch':       'https://app.fitonapp.com/browse/workout/506',
+        'FitOn Pro Restorative Stretch':  'https://app.fitonapp.com/browse/workout/983',
+        'FitOn Pro Flow Yoga':            'https://app.fitonapp.com/browse/workout/1798',
+        'FitOn Pro Vinyasa Yoga Stretch': 'https://app.fitonapp.com/browse/workout/1707',
+        'FitOn Pro Hip Opener Flow':      'https://app.fitonapp.com/browse/workout/2143',
+        // Similar workouts mapped to closest link
+        'FitOn Pro Total Leg Release':    'https://app.fitonapp.com/browse/workout/506',
+        'FitOn Pro Deep Release Yoga':    'https://app.fitonapp.com/browse/workout/983',
+        'FitOn Pro Full-Body Decompress': 'https://app.fitonapp.com/browse/workout/983',
+        'FitOn Pro Full Body Yoga Stretch':'https://app.fitonapp.com/browse/workout/1798',
+        'FitOn Pro Spinal Release Stretch':'https://app.fitonapp.com/browse/workout/110',
+        'FitOn Pro Relax Yoga':           'https://app.fitonapp.com/browse/workout/1798',
+        'FitOn Pro Spinal Alignment Yoga':'https://app.fitonapp.com/browse/workout/1798',
+        'FitOn Pro Deep Leg Stretch':     'https://app.fitonapp.com/browse/workout/506',
+        'FitOn Pro Deep Leg Recovery':    'https://app.fitonapp.com/browse/workout/506',
+        'FitOn Pro Decompress Yoga':      'https://app.fitonapp.com/browse/workout/1798',
+        'FitOn Pro Flow Yoga Stretch':    'https://app.fitonapp.com/browse/workout/1798',
+        'FitOn Pro Meditation & Rest':    'https://app.fitonapp.com/browse/workout/110',
+    };
+
+    function getFitOnUrl(name) {
+        return FITON_LINKS[name] || 'https://fiton.app';
+    }
+
     const T25_FOLDERS = {
         alpha: '1BLh90L0MntBtQn_MIxosPNUJy8IR6daz',
         beta:  '1m0kMmpyex6MQ-qTU1VdZZBsCZTywmwp4',
@@ -1487,7 +1524,7 @@
             if (d.tName.includes('T25')) {
                 tAppLink = `<button onclick="openT25Modal('${escapeStr(d.tName)}')" class="app-link-btn t25-btn">▶ Play T25</button>`;
             } else if (d.tName.includes('FitOn')) {
-                tAppLink = `<a href="https://fiton.app" target="_blank" class="app-link-btn fiton-btn">🧘 Open FitOn</a>`;
+                tAppLink = `<a href="${getFitOnUrl(d.tName)}" target="_blank" class="app-link-btn fiton-btn">🧘 Open FitOn</a>`;
             }
 
             card.innerHTML = `
