@@ -489,7 +489,7 @@
         }
         .glossary-card:hover { border-color: var(--violet); transform: translateY(-2px); }
 
-        /* Header */
+        /* Header — push below notch/Dynamic Island on iPhone */
         header {
             background: var(--surface);
             border-bottom: 1px solid var(--border);
@@ -497,6 +497,12 @@
             top: 0;
             z-index: 50;
             backdrop-filter: blur(12px);
+            padding-top: env(safe-area-inset-top, 0px);
+        }
+
+        /* Offset sticky nav so it sits right below the padded header */
+        .primary-nav {
+            top: calc(4rem + env(safe-area-inset-top, 0px)) !important;
         }
 
         /* Sticky nav */
@@ -985,9 +991,6 @@
     <footer class="no-print mt-16 py-8 text-center text-xs" style="border-top:1px solid var(--border);color:var(--text3)">
         <div class="font-bold mb-1" style="color:var(--text2)">JFit Wellness — Hybrid Elite Master Plan v3.0</div>
         <div>Combining specialized cardio algorithms with progressive strength and Mediterranean nutrition science.</div>
-        <div style="margin-top:8px;font-size:11px">
-            📱 iPhone: tap Share → <strong>"Add to Home Screen"</strong> to install as app
-        </div>
     </footer>
 
     <!-- ═══════════════════════ GLOSSARY TOAST ═══════════════════════ -->
