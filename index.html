@@ -128,6 +128,11 @@
         .ntc-btn { background: rgba(59,130,246,0.1); color: #2563EB; }
         .t25-btn { background: rgba(249,115,22,0.1); color: #F97316; }
         .nrc-btn { background: rgba(16,185,129,0.1); color: #059669; }
+        .muscle-btn { background: linear-gradient(135deg,rgba(124,58,237,0.15),rgba(59,130,246,0.15)); color: var(--violet); border: 1px solid rgba(124,58,237,0.22) !important; }
+        .muscle-btn:hover { background: linear-gradient(135deg,rgba(124,58,237,0.25),rgba(59,130,246,0.25)); }
+        /* Exercise bar animation */
+        @keyframes barGrow { from { width: 0%; } to { width: var(--w); } }
+        .ex-bar { animation: barGrow 0.7s cubic-bezier(.4,0,.2,1) forwards; }
 
         /* Pill badges */
         .pill {
@@ -1520,6 +1525,10 @@
                     : '';
 
             // App link buttons
+            let gymDiagramBtn = '';
+            if (d.gName.includes('Gym')) {
+                gymDiagramBtn = `<button onclick="openGymModal('${escapeStr(d.gName)}','${escapeStr(d.gDesc)}')" class="app-link-btn muscle-btn">💪 Muscle Diagram</button>`;
+            }
             let gAppLink = '';
             if (d.gName.includes('Nike Running')) {
                 // Extract run type from name e.g. "Nike Running Club (Speed Run)" → "Speed Run"
@@ -1564,7 +1573,7 @@
                             onmouseout="this.style.color='var(--text)'"
                             onclick="showGlossaryPopup('${escapeStr(d.gName)}')">${d.gName}</div>
                         <p class="text-xs leading-relaxed mt-1" style="color:var(--text2)">${d.gDesc}</p>
-                        ${gAppLink}
+                        ${gymDiagramBtn}${gAppLink ? ' ' + gAppLink : ''}
                     </div>
                     <div class="session-block">
                         <div class="flex items-center gap-1 mb-1.5">
@@ -2136,10 +2145,206 @@
         setTimeout(() => { canvas.style.display = 'none'; cancelAnimationFrame(frame); }, 3000);
     }
 
+    // ─── GYM EXERCISE DIAGRAM MODAL ──────────────────────────────────────────
+
+    const GYM_MUSCLE_DATA = {
+        push: {
+            primary: [
+                { name: 'Chest (Pectorals)', color: '#F43F5E', pct: 90 },
+                { name: 'Triceps Brachii', color: '#F97316', pct: 76 },
+                { name: 'Anterior Deltoid', color: '#F59E0B', pct: 62 }
+            ],
+            secondary: [
+                { name: 'Medial Deltoid', color: '#84CC16', pct: 38 },
+                { name: 'Serratus Anterior', color: '#06B6D4', pct: 22 }
+            ],
+            svg: { chest:'#F43F5E', tricep:'#F97316', delt:'#F59E0B', midDelt:'rgba(132,204,22,0.55)', lat:'rgba(150,150,190,0.2)', bicep:'rgba(150,150,190,0.2)', midBack:'rgba(150,150,190,0.18)', trap:'rgba(150,150,190,0.28)', abs:'rgba(150,150,190,0.18)', quad:'rgba(150,150,190,0.2)', ham:'rgba(150,150,190,0.18)', glute:'rgba(150,150,190,0.18)', calf:'rgba(150,150,190,0.18)' }
+        },
+        accessory: {
+            primary: [
+                { name: 'Medial Deltoid', color: '#F59E0B', pct: 88 },
+                { name: 'Posterior Deltoid', color: '#10B981', pct: 74 },
+                { name: 'Triceps Brachii', color: '#F97316', pct: 66 }
+            ],
+            secondary: [
+                { name: 'Biceps Brachii', color: '#7C3AED', pct: 58 },
+                { name: 'Rotator Cuff', color: '#06B6D4', pct: 34 }
+            ],
+            svg: { delt:'#F59E0B', midDelt:'#10B981', tricep:'#F97316', bicep:'#7C3AED', chest:'rgba(150,150,190,0.2)', lat:'rgba(150,150,190,0.2)', midBack:'rgba(150,150,190,0.18)', trap:'rgba(150,150,190,0.28)', abs:'rgba(150,150,190,0.18)', quad:'rgba(150,150,190,0.2)', ham:'rgba(150,150,190,0.18)', glute:'rgba(150,150,190,0.18)', calf:'rgba(150,150,190,0.18)' }
+        },
+        pull: {
+            primary: [
+                { name: 'Latissimus Dorsi', color: '#3B82F6', pct: 90 },
+                { name: 'Biceps Brachii', color: '#7C3AED', pct: 82 },
+                { name: 'Rhomboids & Mid-Back', color: '#06B6D4', pct: 68 }
+            ],
+            secondary: [
+                { name: 'Posterior Deltoid', color: '#10B981', pct: 55 },
+                { name: 'Trapezius', color: '#84CC16', pct: 42 },
+                { name: 'Brachialis', color: '#F59E0B', pct: 35 }
+            ],
+            svg: { lat:'#3B82F6', bicep:'#7C3AED', midBack:'#06B6D4', midDelt:'#10B981', trap:'#84CC16', chest:'rgba(150,150,190,0.2)', tricep:'rgba(150,150,190,0.2)', delt:'rgba(150,150,190,0.2)', abs:'rgba(150,150,190,0.18)', quad:'rgba(150,150,190,0.2)', ham:'rgba(150,150,190,0.18)', glute:'rgba(150,150,190,0.18)', calf:'rgba(150,150,190,0.18)' }
+        },
+        legs: {
+            primary: [
+                { name: 'Quadriceps', color: '#10B981', pct: 90 },
+                { name: 'Gluteus Maximus', color: '#F43F5E', pct: 85 },
+                { name: 'Hamstrings', color: '#3B82F6', pct: 72 }
+            ],
+            secondary: [
+                { name: 'Calves (Gastrocnemius)', color: '#F97316', pct: 48 },
+                { name: 'Hip Flexors', color: '#8B5CF6', pct: 38 },
+                { name: 'Core (Stabilizer)', color: '#F59E0B', pct: 28 }
+            ],
+            svg: { quad:'#10B981', glute:'#F43F5E', ham:'#3B82F6', calf:'#F97316', abs:'rgba(245,158,11,0.4)', chest:'rgba(150,150,190,0.2)', lat:'rgba(150,150,190,0.2)', bicep:'rgba(150,150,190,0.2)', midBack:'rgba(150,150,190,0.18)', tricep:'rgba(150,150,190,0.2)', delt:'rgba(150,150,190,0.2)', midDelt:'rgba(150,150,190,0.2)', trap:'rgba(150,150,190,0.28)' }
+        }
+    };
+
+    const _N = 'rgba(155,155,190,0.22)';
+
+    function buildBodySVG(s) {
+        const g = k => s[k] || _N;
+        return `<svg viewBox="0 0 100 240" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;filter:drop-shadow(0 4px 18px rgba(0,0,0,0.22))">
+  <ellipse cx="50" cy="14" rx="12" ry="13" fill="#F5CBA7"/>
+  <rect x="45" y="25.5" width="10" height="7" rx="3" fill="#F5CBA7"/>
+  <path d="M39,27 Q50,37 61,27 L75,38 Q50,52 25,38 Z" fill="${g('trap')}" opacity=".88"/>
+  <ellipse cx="25" cy="41" rx="14" ry="9.5" fill="${g('delt')}"/>
+  <ellipse cx="75" cy="41" rx="14" ry="9.5" fill="${g('delt')}"/>
+  <ellipse cx="24" cy="43.5" rx="11" ry="8" fill="${g('midDelt')}" opacity=".72"/>
+  <ellipse cx="76" cy="43.5" rx="11" ry="8" fill="${g('midDelt')}" opacity=".72"/>
+  <ellipse cx="38" cy="59" rx="13.5" ry="15" fill="${g('chest')}"/>
+  <ellipse cx="62" cy="59" rx="13.5" ry="15" fill="${g('chest')}"/>
+  <path d="M25,42 Q15,76 20,107 L27,102 Q21,73 30,46 Z" fill="${g('lat')}"/>
+  <path d="M75,42 Q85,76 80,107 L73,102 Q79,73 70,46 Z" fill="${g('lat')}"/>
+  <ellipse cx="50" cy="63" rx="9.5" ry="14" fill="${g('midBack')}" opacity=".62"/>
+  <ellipse cx="16" cy="70" rx="8" ry="16" fill="${g('tricep')}"/>
+  <ellipse cx="84" cy="70" rx="8" ry="16" fill="${g('tricep')}"/>
+  <ellipse cx="16" cy="67" rx="6.5" ry="12.5" fill="${g('bicep')}"/>
+  <ellipse cx="84" cy="67" rx="6.5" ry="12.5" fill="${g('bicep')}"/>
+  <ellipse cx="12" cy="98" rx="5.5" ry="13" fill="#F5CBA7"/>
+  <ellipse cx="88" cy="98" rx="5.5" ry="13" fill="#F5CBA7"/>
+  <ellipse cx="12" cy="113" rx="5" ry="4" fill="#F5CBA7"/>
+  <ellipse cx="88" cy="113" rx="5" ry="4" fill="#F5CBA7"/>
+  <rect x="43" y="75" width="6" height="7" rx="2.5" fill="${g('abs')}" opacity=".9"/>
+  <rect x="51" y="75" width="6" height="7" rx="2.5" fill="${g('abs')}" opacity=".9"/>
+  <rect x="43" y="84" width="6" height="7" rx="2.5" fill="${g('abs')}" opacity=".7"/>
+  <rect x="51" y="84" width="6" height="7" rx="2.5" fill="${g('abs')}" opacity=".7"/>
+  <rect x="43" y="93" width="6" height="6" rx="2.5" fill="${g('abs')}" opacity=".5"/>
+  <rect x="51" y="93" width="6" height="6" rx="2.5" fill="${g('abs')}" opacity=".5"/>
+  <ellipse cx="50" cy="112" rx="24" ry="12" fill="#F5CBA7"/>
+  <ellipse cx="36" cy="112" rx="17" ry="12" fill="${g('glute')}" opacity=".9"/>
+  <ellipse cx="64" cy="112" rx="17" ry="12" fill="${g('glute')}" opacity=".9"/>
+  <ellipse cx="37" cy="151" rx="15.5" ry="31" fill="${g('quad')}"/>
+  <ellipse cx="63" cy="151" rx="15.5" ry="31" fill="${g('quad')}"/>
+  <ellipse cx="37" cy="154" rx="11.5" ry="27" fill="${g('ham')}" opacity=".72"/>
+  <ellipse cx="63" cy="154" rx="11.5" ry="27" fill="${g('ham')}" opacity=".72"/>
+  <ellipse cx="36" cy="186" rx="9.5" ry="6.5" fill="#F5CBA7"/>
+  <ellipse cx="64" cy="186" rx="9.5" ry="6.5" fill="#F5CBA7"/>
+  <ellipse cx="35" cy="212" rx="9.5" ry="19" fill="${g('calf')}"/>
+  <ellipse cx="65" cy="212" rx="9.5" ry="19" fill="${g('calf')}"/>
+  <ellipse cx="33" cy="232" rx="8" ry="3.5" fill="#F5CBA7"/>
+  <ellipse cx="67" cy="232" rx="8" ry="3.5" fill="#F5CBA7"/>
+  <ellipse cx="50" cy="14" rx="12" ry="13" fill="none" stroke="rgba(0,0,0,0.07)" stroke-width="1"/>
+  <path d="M38,26 Q25,31 21,43 Q12,62 11,85 Q10,105 15,117 L21,122 L79,122 L85,117 Q90,105 89,85 Q88,62 79,43 Q75,31 62,26" fill="none" stroke="rgba(0,0,0,0.07)" stroke-width="1.2"/>
+</svg>`;
+    }
+
+    function renderMuscleBars(muscles, small) {
+        return muscles.map(m => `
+            <div style="margin-bottom:${small?'6':'9'}px">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
+                    <span style="font-size:${small?'11':'12.5'}px;font-weight:${small?'500':'700'};color:var(--text);display:flex;align-items:center;gap:6px">
+                        <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${m.color};flex-shrink:0;box-shadow:0 0 6px ${m.color}88"></span>
+                        ${m.name}
+                    </span>
+                    <span style="font-size:10px;font-weight:800;color:${m.color};margin-left:6px;flex-shrink:0">${m.pct}%</span>
+                </div>
+                <div style="height:${small?'5':'7'}px;background:var(--surface2);border-radius:999px;overflow:hidden">
+                    <div class="ex-bar" style="height:100%;width:${m.pct}%;background:linear-gradient(90deg,${m.color}cc,${m.color});border-radius:999px;opacity:${small?'0.72':'1'}"></div>
+                </div>
+            </div>`).join('');
+    }
+
+    function getGymType(gName) {
+        if (gName.includes('Accessory')) return 'accessory';
+        if (gName.includes('Push')) return 'push';
+        if (gName.includes('Pull')) return 'pull';
+        if (gName.includes('Lower Body') || gName.includes('Glutes') || gName.includes('Quads') || gName.includes('Legs')) return 'legs';
+        return 'push';
+    }
+
+    function parseGymExercises(gDesc) {
+        const clean = gDesc.replace(/\.$/, '');
+        return clean.split(/,\s+/).map(p => {
+            const m = p.match(/^(.+?)\s+(\d+[×xX](?:\d+|\w+)[^,]*)$/);
+            if (m) return { name: m[1].trim(), sets: m[2].trim() };
+            return { name: p.trim(), sets: '' };
+        }).filter(e => e.name.length > 1);
+    }
+
+    function openGymModal(gName, gDesc) {
+        const gymType = getGymType(gName);
+        const data = GYM_MUSCLE_DATA[gymType];
+        document.getElementById('gm-title').textContent = gName;
+        document.getElementById('gm-body-svg').innerHTML = buildBodySVG(data.svg);
+        document.getElementById('gm-primary').innerHTML = renderMuscleBars(data.primary, false);
+        document.getElementById('gm-secondary').innerHTML = renderMuscleBars(data.secondary, true);
+        const colors = ['#F43F5E','#F97316','#F59E0B','#84CC16','#06B6D4','#7C3AED'];
+        const exs = parseGymExercises(gDesc);
+        document.getElementById('gm-exercises').innerHTML = exs.map((ex, i) => {
+            const c = colors[i % colors.length];
+            const ytUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(ex.name + ' proper form tutorial')}`;
+            return `<a href="${ytUrl}" target="_blank" rel="noopener"
+                style="display:flex;align-items:center;justify-content:space-between;padding:11px 13px;background:var(--surface2);border-radius:13px;margin-bottom:8px;border:1.5px solid var(--border);text-decoration:none;transition:all 0.2s"
+                onmouseover="this.style.borderColor='${c}';this.style.transform='translateX(3px)'"
+                onmouseout="this.style.borderColor='var(--border)';this.style.transform='translateX(0)'">
+                <div style="flex:1;min-width:0">
+                    <div style="display:flex;align-items:center;gap:8px">
+                        <span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:7px;background:${c};color:white;font-size:10px;font-weight:800;flex-shrink:0">${i+1}</span>
+                        <span style="font-size:13px;font-weight:700;color:var(--text)">${ex.name}</span>
+                    </div>
+                    ${ex.sets ? `<div style="font-size:11px;color:var(--text3);margin-top:4px;padding-left:30px;font-weight:600">${ex.sets}</div>` : ''}
+                </div>
+                <div style="background:linear-gradient(135deg,#FF0000,#b91c1c);color:white;padding:5px 10px;border-radius:8px;font-size:10px;font-weight:800;white-space:nowrap;flex-shrink:0;margin-left:10px">▶ Demo</div>
+            </a>`;
+        }).join('');
+        document.getElementById('gym-diagram-modal').classList.add('show');
+    }
+
+    function closeGymModal() {
+        document.getElementById('gym-diagram-modal').classList.remove('show');
+    }
+
     // ─── SERVICE WORKER ──────────────────────────────────────────────────────
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('./sw.js').catch(() => {});
     }
     </script>
+
+<!-- GYM MUSCLE DIAGRAM MODAL -->
+<div id="gym-diagram-modal" class="modal-overlay" onclick="if(event.target===this)closeGymModal()">
+    <div class="modal-card" style="max-width:540px">
+        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:20px">
+            <div>
+                <div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:var(--text3)">Muscle Analysis</div>
+                <h3 id="gm-title" style="font-size:17px;font-weight:900;color:var(--text);margin-top:4px;line-height:1.25"></h3>
+            </div>
+            <button onclick="closeGymModal()" style="background:var(--surface2);border:none;cursor:pointer;width:34px;height:34px;border-radius:10px;font-size:16px;color:var(--text2);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-left:12px;font-weight:700">✕</button>
+        </div>
+        <div style="display:flex;gap:16px;align-items:start;margin-bottom:20px">
+            <div id="gm-body-svg" style="flex-shrink:0;width:108px"></div>
+            <div style="flex:1;min-width:0">
+                <div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:var(--text3);margin-bottom:9px">PRIMARY MUSCLES</div>
+                <div id="gm-primary"></div>
+                <div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:var(--text3);margin-top:13px;margin-bottom:8px">SECONDARY</div>
+                <div id="gm-secondary"></div>
+            </div>
+        </div>
+        <div style="border-top:1px solid var(--border);padding-top:16px">
+            <div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:var(--text3);margin-bottom:11px">EXERCISES — TAP FOR VIDEO DEMO</div>
+            <div id="gm-exercises"></div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
