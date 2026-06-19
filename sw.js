@@ -1,4 +1,4 @@
-const CACHE = 'jfit-v5';
+const CACHE = 'jfit-v6';
 const ASSETS = ['./', './index.html', './manifest.json'];
 
 self.addEventListener('install', e => {
