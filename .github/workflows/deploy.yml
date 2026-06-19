@@ -23,10 +23,8 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-      - name: Checkout feature/mobile-pwa-app
+      - name: Checkout main
         uses: actions/checkout@v4
-        with:
-          ref: feature/mobile-pwa-app
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
