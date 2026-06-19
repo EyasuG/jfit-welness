@@ -2,8 +2,8 @@ name: Deploy JFit to GitHub Pages
 
 on:
   push:
-    branches: [feature/mobile-pwa-app, main]
-  workflow_dispatch: # allow manual trigger from GitHub UI
+    branches: [main]          # GitHub Pages protection only allows main to deploy
+  workflow_dispatch:          # manual trigger from GitHub Actions UI
 
 permissions:
   contents: read
@@ -23,7 +23,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-      - name: Checkout
+      - name: Checkout feature/mobile-pwa-app
         uses: actions/checkout@v4
         with:
           ref: feature/mobile-pwa-app
