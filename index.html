@@ -125,6 +125,7 @@
         }
         .app-link-btn:hover { transform: translateY(-1px); filter: brightness(1.05); }
         .fiton-btn { background: rgba(124,58,237,0.1); color: #7C3AED; }
+        .ntc-btn { background: rgba(59,130,246,0.1); color: #2563EB; }
         .t25-btn { background: rgba(249,115,22,0.1); color: #F97316; }
         .nrc-btn { background: rgba(16,185,129,0.1); color: #059669; }
 
@@ -489,7 +490,7 @@
         }
         .glossary-card:hover { border-color: var(--violet); transform: translateY(-2px); }
 
-        /* Header */
+        /* Header — push below notch/Dynamic Island on iPhone */
         header {
             background: var(--surface);
             border-bottom: 1px solid var(--border);
@@ -497,6 +498,12 @@
             top: 0;
             z-index: 50;
             backdrop-filter: blur(12px);
+            padding-top: env(safe-area-inset-top, 0px);
+        }
+
+        /* Offset sticky nav so it sits right below the padded header */
+        .primary-nav {
+            top: calc(4rem + env(safe-area-inset-top, 0px)) !important;
         }
 
         /* Sticky nav */
@@ -985,9 +992,6 @@
     <footer class="no-print mt-16 py-8 text-center text-xs" style="border-top:1px solid var(--border);color:var(--text3)">
         <div class="font-bold mb-1" style="color:var(--text2)">JFit Wellness — Hybrid Elite Master Plan v3.0</div>
         <div>Combining specialized cardio algorithms with progressive strength and Mediterranean nutrition science.</div>
-        <div style="margin-top:8px;font-size:11px">
-            📱 iPhone: tap Share → <strong>"Add to Home Screen"</strong> to install as app
-        </div>
     </footer>
 
     <!-- ═══════════════════════ GLOSSARY TOAST ═══════════════════════ -->
@@ -1357,6 +1361,43 @@
 
     const TOTAL_SESSIONS = 70; // 10 weeks × 7 days
 
+    // ─── FITON DIRECT WORKOUT LINKS ──────────────────────────────────────────
+    const FITON_LINKS = {
+        // Core workouts
+        'FitOn Pro Core Crunch':          'https://app.fitonapp.com/browse/workout/976',
+        'FitOn Pro Deep Ab Lab':          'https://app.fitonapp.com/browse/workout/548',
+        'FitOn Pro Core Heat':            'https://app.fitonapp.com/browse/workout/2206',
+        'FitOn Pro HIIT Core':            'https://app.fitonapp.com/browse/workout/2212',
+        'FitOn Pro Dynamic Core Stability':'https://app.fitonapp.com/browse/workout/1137',
+        'FitOn Pro Ab Target':            'https://app.fitonapp.com/browse/workout/21',
+        'FitOn Pro Lower Abs Burn':       'https://app.fitonapp.com/browse/workout/213',
+        'FitOn Pro Pilates Ab Lab':       'https://app.fitonapp.com/browse/workout/313',
+        // Stretch / Yoga / Mobility
+        'FitOn Pro Stretch':              'https://app.fitonapp.com/browse/workout/110',
+        'FitOn Pro Active Stretch':       'https://app.fitonapp.com/browse/workout/506',
+        'FitOn Pro Restorative Stretch':  'https://app.fitonapp.com/browse/workout/983',
+        'FitOn Pro Flow Yoga':            'https://app.fitonapp.com/browse/workout/1798',
+        'FitOn Pro Vinyasa Yoga Stretch': 'https://app.fitonapp.com/browse/workout/1707',
+        'FitOn Pro Hip Opener Flow':      'https://app.fitonapp.com/browse/workout/2143',
+        // Similar workouts mapped to closest link
+        'FitOn Pro Total Leg Release':    'https://app.fitonapp.com/browse/workout/506',
+        'FitOn Pro Deep Release Yoga':    'https://app.fitonapp.com/browse/workout/983',
+        'FitOn Pro Full-Body Decompress': 'https://app.fitonapp.com/browse/workout/983',
+        'FitOn Pro Full Body Yoga Stretch':'https://app.fitonapp.com/browse/workout/1798',
+        'FitOn Pro Spinal Release Stretch':'https://app.fitonapp.com/browse/workout/110',
+        'FitOn Pro Relax Yoga':           'https://app.fitonapp.com/browse/workout/1798',
+        'FitOn Pro Spinal Alignment Yoga':'https://app.fitonapp.com/browse/workout/1798',
+        'FitOn Pro Deep Leg Stretch':     'https://app.fitonapp.com/browse/workout/506',
+        'FitOn Pro Deep Leg Recovery':    'https://app.fitonapp.com/browse/workout/506',
+        'FitOn Pro Decompress Yoga':      'https://app.fitonapp.com/browse/workout/1798',
+        'FitOn Pro Flow Yoga Stretch':    'https://app.fitonapp.com/browse/workout/1798',
+        'FitOn Pro Meditation & Rest':    'https://app.fitonapp.com/browse/workout/110',
+    };
+
+    function getFitOnUrl(name) {
+        return FITON_LINKS[name] || 'https://fiton.app';
+    }
+
     const T25_FOLDERS = {
         alpha: '1BLh90L0MntBtQn_MIxosPNUJy8IR6daz',
         beta:  '1m0kMmpyex6MQ-qTU1VdZZBsCZTywmwp4',
@@ -1478,13 +1519,20 @@
                     : '';
 
             // App link buttons
-            const gAppLink = d.gName.includes('Nike')
-                ? `<a href="https://www.nike.com/nrc-app" target="_blank" class="app-link-btn nrc-btn">🏃 Open NRC</a>` : '';
+            let gAppLink = '';
+            if (d.gName.includes('Nike Running')) {
+                // Extract run type from name e.g. "Nike Running Club (Speed Run)" → "Speed Run"
+                const runType = (d.gName.match(/\(([^)]+)\)/) || ['',''])[1];
+                gAppLink = `<a href="https://apps.apple.com/app/nike-run-club/id387771637" target="_blank" class="app-link-btn nrc-btn" title="Open Nike Run Club → ${runType}">🏃 NRC · ${runType}</a>`;
+            } else if (d.gName.includes('Nike Training')) {
+                const workoutType = (d.gName.match(/\(([^)]+)\)/) || ['',''])[1];
+                gAppLink = `<a href="https://apps.apple.com/app/nike-training-club/id301521403" target="_blank" class="app-link-btn ntc-btn" title="Open Nike Training Club → ${workoutType}">🏋️ NTC · ${workoutType}</a>`;
+            }
             let tAppLink = '';
             if (d.tName.includes('T25')) {
                 tAppLink = `<button onclick="openT25Modal('${escapeStr(d.tName)}')" class="app-link-btn t25-btn">▶ Play T25</button>`;
             } else if (d.tName.includes('FitOn')) {
-                tAppLink = `<a href="https://fiton.app" target="_blank" class="app-link-btn fiton-btn">🧘 Open FitOn</a>`;
+                tAppLink = `<a href="${getFitOnUrl(d.tName)}" target="_blank" class="app-link-btn fiton-btn">🧘 Open FitOn</a>`;
             }
 
             card.innerHTML = `
