@@ -43,6 +43,8 @@ The app is a single `index.html` PWA. The following features are **complete and 
 | 7-day meal variety (BMI + Muscle modes) | ✅ Done | 56 unique meals total |
 | Per-meal substitute toggle | ✅ Done | Animated expand/collapse |
 | Meal day auto-detects today | ✅ Done | Highlights current weekday |
+| Muscle Gain Lab | ✅ Done | Personalized protein, training volume, rep ranges, recovery cues, and weekly execution guidance |
+| Weekly body weight trend chart | ✅ Done | Stored in `jfit_strength` and rendered in Nutrition view |
 | Glossary toast popup | ✅ Done | 9s auto-dismiss, spring animation |
 | Hover tooltips on technical terms | ✅ Done | CSS `::after` via `data-tip` |
 | App integration guide (sidebar) | ✅ Done | NRC, Gym, FitOn, BODi cards |
@@ -61,7 +63,7 @@ The app is a single `index.html` PWA. The following features are **complete and 
 |---|---|---|---|---|---|
 | 1 | Add water intake tracker (daily goal: 3–4L, tap to increment) | Medium | Open | Claude Code | — |
 | 2 | Workout timer / stopwatch overlay for active sessions | Medium | Open | Claude Code | — |
-| 3 | Body weight log chart (user inputs weekly weigh-in, sparkline shows trend) | High | Open | 🔒 Driver only | — |
+| 3 | Body weight log chart (user inputs weekly weigh-in, sparkline shows trend) | High | ✅ Done | User-directed | Codex (2026-07-28) |
 | 4 | Animated muscle-group heat map showing which muscles are hit each day | Low | Open | Claude Code | — |
 | 5 | Export weekly schedule as a PNG card (share to social) | Low | Open | Claude Code | — |
 | 6 | Calorie target calculator input (height/weight → TDEE → auto-set macro grams) | High | Open | 🔒 Driver only | — |
@@ -127,7 +129,22 @@ Bump `jfit-vN` in `sw.js` whenever any cached static asset changes.
 Use this section for context that doesn't fit anywhere else — things one agent wants the
 next agent to know, or things the human owner flagged mid-session.
 
-*(Empty — add entries below as needed)*
+### 2026-07-27 — Claude Code → Codex
+
+**`main` is clean and up to date.** Your `codex/pwa-hardening-checkin-modal` branch was
+reviewed, had one fix applied (check-in modal Save button token correction), and was
+merged with a no-ff merge commit. You're clear to branch off `main` for new work.
+
+**For your research + interactive feature work:**
+- Branch off `main` using `feature/<name>` or `codex/<name>`
+- Keep PRs focused — one feature per PR is easier for Claude Code to review
+- If you're adding a new `localStorage` key, register it in `CLAUDE.md → localStorage Keys`
+  AND `AI_COLLAB.md → Current State` before opening the PR
+- If you're adding a new CSS token, add it to both `:root` and `[data-theme="dark"]` blocks
+- Heavy JS additions should go at the end of the `<script>` block, after existing functions
+- Do not reorganize existing function order — it breaks the driver's mental model of the file
+
+**Current `main` HEAD:** `e4a6e73` (merge commit)
 
 ---
 
@@ -148,6 +165,13 @@ DATE        | AGENT        | CHANGE SUMMARY
             |              | auto-detect today's day in meal tab strip
 2026-07-27  | Claude 4.6   | Created AGENTS.md, CLAUDE.md, AI_COLLAB.md,
             |              | .github/pull_request_template.md for Codex collab
+2026-07-28  | Codex        | PWA hardening pass — upgraded SW to `jfit-v7`
+            |              | with runtime CDN caching + update prompt, added
+            |              | local app icons, documented `jfit_checkins`
+2026-07-28  | Codex        | Added Muscle Gain Lab — evidence-based strength
+            |              | coaching, weekly weigh-in trend chart, dynamic
+            |              | muscle-mode macro targets, and session execution
+            |              | cues stored in `jfit_strength`
 2026-07-28  | Codex        | PWA hardening pass — upgraded SW to `jfit-v7`
             |              | with runtime CDN caching + update prompt, added
             |              | local app icons, documented `jfit_checkins`
