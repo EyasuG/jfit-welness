@@ -53,20 +53,32 @@ using Tailwind CSS (CDN), Chart.js (CDN), and vanilla JavaScript. All state is s
 - **Print**: `.no-print` hides elements from the print stylesheet. Do not remove this class
   from navigation, charts, or controls.
 
+## Agent Roles
+
+**Claude Code is the primary driver.** Codex is a collaborator.
+
+| Agent | Role |
+|---|---|
+| Claude Code | Owns architecture, implements features, merges PRs |
+| **Codex (you)** | Code reviews, accessibility audits, bug reports, improvement suggestions |
+
 ## Task Guidelines for Codex
 
-When asked to review, improve, or extend this project:
+Your lane is **review and suggest**, not implement-and-merge unilaterally.
 
-1. **Read `AI_COLLAB.md` first** — it has the current feature status, open tasks, and
-   notes left by other agents.
-2. **Do not restructure the file into multiple files** unless explicitly asked. The
-   single-file architecture is intentional for the PWA/deploy setup.
-3. **Test mentally**: since there is no test suite, reason through edge cases (week
-   switching, localStorage empty state, dark mode, print layout) before finalizing changes.
-4. **Log your work**: after completing a task, update the `## Agent Activity Log` section
-   in `AI_COLLAB.md` with a brief entry.
-5. **PR descriptions**: follow the template in `.github/pull_request_template.md` and
-   fill in the "Agent Notes" section.
+1. **Read `AI_COLLAB.md` first** — check `## Agent Roles`, `## Current State`, and
+   `## Open Tasks`. Tasks marked `🔒 Driver only` are reserved for Claude Code.
+2. **Your assigned tasks** are those in the Open Tasks table with `Owner: Codex` —
+   primarily code reviews, accessibility passes, and investigation reports (#7–12).
+3. **For review tasks**: open a PR with your findings as inline comments or a summary
+   in the PR description. Do **not** rewrite large blocks of working code.
+4. **For bug/improvement ideas** not already in the task list: add them to the Open Tasks
+   table in `AI_COLLAB.md` with `Codex-suggested` in the Claimed By column, then open
+   a PR for Claude Code to evaluate. Do not implement them yourself.
+5. **Do not merge your own PRs.** Claude Code reviews and merges.
+6. **Log your work**: append to `## Agent Activity Log` in `AI_COLLAB.md`.
+7. **PR format**: follow `.github/pull_request_template.md` — fill in Agent Notes,
+   task reference, and confirm `AI_COLLAB.md` was updated.
 
 ## What Not to Do
 

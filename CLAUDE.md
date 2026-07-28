@@ -8,6 +8,12 @@ Single-file PWA fitness planner (`index.html`). No build step. Tailwind CSS + Ch
 CDN, vanilla JS, `localStorage` for persistence. See `AGENTS.md` for the full tech-stack
 table and repo layout.
 
+## Role
+
+Claude Code is the **primary driver** on this project. Codex collaborates via PRs (reviews,
+audits, suggestions). Claude Code reviews and merges Codex PRs, implements all features, and
+owns all architectural decisions. See `AI_COLLAB.md → Agent Roles` for full breakdown.
+
 ## Claude-Specific Workflow
 
 - **Before starting any task**: read `AI_COLLAB.md` → `## Current State` and

@@ -7,6 +7,22 @@ and human collaborators stay in sync.
 
 ---
 
+## Agent Roles
+
+| Agent | Role | Responsibilities |
+|---|---|---|
+| **Claude Code** | 🚗 Primary Driver | Owns architecture, implements all features, writes and merges PRs, maintains this file, makes final decisions on code structure |
+| **Codex** | 🤝 Collaborator | Code reviews, surfacing bugs, suggesting improvements, writing up task proposals — opens PRs for Claude Code to review and merge |
+
+**Ground rules:**
+- Claude Code has final say on all architectural decisions.
+- Codex should open PRs against `main` with the `.github/pull_request_template.md` filled in — Claude Code will review and merge.
+- Codex should **not** merge its own PRs.
+- If Codex spots a bug or improvement opportunity not in the Open Tasks list, it adds it there (with `Codex-suggested` in the Claimed By column) rather than implementing it unilaterally.
+- Anything marked `🔒 Driver only` in the Open Tasks list is reserved for Claude Code.
+
+---
+
 ## Current State (last updated: 2026-07-27)
 
 The app is a single `index.html` PWA. The following features are **complete and stable**:
@@ -40,18 +56,20 @@ The app is a single `index.html` PWA. The following features are **complete and 
 > Agents: pick a task, note it as "In Progress (AgentName, date)" while working,
 > then mark it Done and log it in the Activity Log below.
 
-| # | Task | Priority | Status | Claimed By |
-|---|---|---|---|---|
-| 1 | Add water intake tracker (daily goal: 3–4L, tap to increment) | Medium | Open | — |
-| 2 | Workout timer / stopwatch overlay for active sessions | Medium | Open | — |
-| 3 | Body weight log chart (user inputs weekly weigh-in, sparkline shows trend) | High | Open | — |
-| 4 | Animated muscle-group heat map showing which muscles are hit each day | Low | Open | — |
-| 5 | Export weekly schedule as a PNG card (share to social) | Low | Open | — |
-| 6 | Calorie target calculator input (height/weight → TDEE → auto-set macro grams) | High | Open | — |
-| 7 | Code review: audit all inline `onclick` handlers → convert to event delegation | Low | Open | — |
-| 8 | Accessibility pass: add `aria-label` to SVG progress rings and icon-only buttons | Medium | Open | — |
-| 9 | Add `prefers-reduced-motion` guard around confetti and fade-up animations | Low | Open | — |
-| 10 | Investigate: `calculateStreak()` logic is simplified — refine to track actual days | Medium | Open | — |
+| # | Task | Priority | Status | Owner | Claimed By |
+|---|---|---|---|---|---|
+| 1 | Add water intake tracker (daily goal: 3–4L, tap to increment) | Medium | Open | Claude Code | — |
+| 2 | Workout timer / stopwatch overlay for active sessions | Medium | Open | Claude Code | — |
+| 3 | Body weight log chart (user inputs weekly weigh-in, sparkline shows trend) | High | Open | 🔒 Driver only | — |
+| 4 | Animated muscle-group heat map showing which muscles are hit each day | Low | Open | Claude Code | — |
+| 5 | Export weekly schedule as a PNG card (share to social) | Low | Open | Claude Code | — |
+| 6 | Calorie target calculator input (height/weight → TDEE → auto-set macro grams) | High | Open | 🔒 Driver only | — |
+| 7 | Code review: audit inline `onclick` handlers, unused variables, dead code | Low | Open | **Codex** | — |
+| 8 | Accessibility review: `aria-label` on SVG rings, icon-only buttons, color contrast | Medium | Open | **Codex** | — |
+| 9 | Add `prefers-reduced-motion` guard around confetti and fade-up animations | Low | Open | **Codex** | — |
+| 10 | Investigate + report: `calculateStreak()` logic gaps — file findings as PR comment | Medium | Open | **Codex** | — |
+| 11 | Review meal substitute toggle — check keyboard accessibility and focus states | Low | Open | **Codex** | — |
+| 12 | Review dark mode — flag any elements that don't respond to `data-theme` correctly | Low | Open | **Codex** | — |
 
 ---
 
