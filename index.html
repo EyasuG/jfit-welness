@@ -544,6 +544,162 @@
             opacity: 1;
         }
 
+        .coach-field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .coach-label {
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text3);
+        }
+        .coach-control {
+            width: 100%;
+            background: var(--surface2);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 11px 12px;
+            font-size: 13px;
+            font-family: inherit;
+            outline: none;
+        }
+        .coach-control:focus {
+            border-color: var(--violet);
+            box-shadow: 0 0 0 3px rgba(124,58,237,0.12);
+        }
+        .coach-stat {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 16px;
+        }
+        .coach-stat-kicker {
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text3);
+            margin-bottom: 6px;
+        }
+        .coach-stat-value {
+            font-size: 20px;
+            font-weight: 900;
+            line-height: 1.1;
+            color: var(--text);
+        }
+        .coach-stat-copy {
+            font-size: 11px;
+            line-height: 1.55;
+            color: var(--text2);
+            margin-top: 6px;
+        }
+        .coach-note {
+            margin-top: 8px;
+            padding: 10px 12px;
+            border-radius: 12px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            font-size: 11px;
+            line-height: 1.6;
+            color: var(--text2);
+        }
+        .coach-note strong {
+            color: var(--text);
+        }
+        .coach-evidence-item {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 14px;
+        }
+        .coach-evidence-item h5 {
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 5px;
+        }
+        .coach-evidence-item p {
+            font-size: 11px;
+            line-height: 1.6;
+            color: var(--text2);
+            margin: 0;
+        }
+        .coach-evidence-source {
+            display: inline-flex;
+            margin-top: 8px;
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--violet);
+        }
+        .coach-week-grid {
+            display: grid;
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+            gap: 10px;
+        }
+        .coach-week-item {
+            border-radius: 14px;
+            padding: 14px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+        }
+        .coach-week-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+        .coach-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text2);
+        }
+        .coach-log-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            border: none;
+            border-radius: 12px;
+            background: var(--violet);
+            color: var(--text-inverse);
+            box-shadow: var(--shadow-accent);
+            padding: 10px 14px;
+            font-size: 12px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+        .coach-log-btn.secondary {
+            background: var(--surface2);
+            color: var(--text2);
+            box-shadow: none;
+            border: 1px solid var(--border);
+        }
+        .coach-hint {
+            font-size: 11px;
+            line-height: 1.6;
+            color: var(--text2);
+        }
+        .coach-divider {
+            border-top: 1px solid var(--border);
+            margin: 20px 0;
+        }
+
         /* Glossary cards */
         .glossary-card {
             background: var(--surface2);
@@ -1027,6 +1183,120 @@
                     </div>
                 </div>
 
+                <!-- Muscle gain lab -->
+                <div class="card p-6 lg:col-span-2 no-print">
+                    <div style="border-bottom:1px solid var(--border)" class="pb-4 mb-5">
+                        <span class="pill pill-indigo mb-1.5 inline-flex">Strength-Training Playbook</span>
+                        <h3 class="font-bold text-lg" style="color:var(--text)">Muscle Gain Lab</h3>
+                        <p class="text-xs mt-0.5" style="color:var(--text3)">Dial in protein, training volume, recovery, and weekly execution using the strongest current hypertrophy evidence.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 mb-5">
+                        <label class="coach-field">
+                            <span class="coach-label">Body Weight</span>
+                            <input id="coach-bodyweight" class="coach-control" type="number" min="0" step="0.1" inputmode="decimal" placeholder="Enter your current weight" oninput="updateStrengthField('bodyweight', this.value)" aria-label="Current body weight">
+                        </label>
+                        <label class="coach-field">
+                            <span class="coach-label">Units</span>
+                            <select id="coach-unit" class="coach-control" onchange="updateStrengthField('unit', this.value)" aria-label="Body weight units">
+                                <option value="lb">Pounds (lb)</option>
+                                <option value="kg">Kilograms (kg)</option>
+                            </select>
+                        </label>
+                        <label class="coach-field">
+                            <span class="coach-label">Training Age</span>
+                            <select id="coach-experience" class="coach-control" onchange="updateStrengthField('experience', this.value)" aria-label="Strength training experience">
+                                <option value="beginner">Beginner</option>
+                                <option value="intermediate">Intermediate</option>
+                                <option value="advanced">Advanced</option>
+                            </select>
+                        </label>
+                        <label class="coach-field">
+                            <span class="coach-label">Lifting Days / Week</span>
+                            <select id="coach-days" class="coach-control" onchange="updateStrengthField('daysPerWeek', this.value)" aria-label="Lifting days per week">
+                                <option value="3">3 days</option>
+                                <option value="4">4 days</option>
+                                <option value="5">5 days</option>
+                                <option value="6">6 days</option>
+                            </select>
+                        </label>
+                        <label class="coach-field">
+                            <span class="coach-label">Muscle Gain Pace</span>
+                            <select id="coach-goal" class="coach-control" onchange="updateStrengthField('goal', this.value)" aria-label="Muscle gain pace">
+                                <option value="recomp">Recomp / maintain</option>
+                                <option value="lean">Lean bulk</option>
+                                <option value="aggressive">Faster bulk</option>
+                            </select>
+                        </label>
+                        <label class="coach-field">
+                            <span class="coach-label">Recovery Capacity</span>
+                            <select id="coach-recovery" class="coach-control" onchange="updateStrengthField('recovery', this.value)" aria-label="Recovery capacity">
+                                <option value="limited">Limited</option>
+                                <option value="normal">Normal</option>
+                                <option value="high">High</option>
+                            </select>
+                        </label>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 mb-5">
+                        <div class="coach-stat">
+                            <div class="coach-stat-kicker">Protein Target</div>
+                            <div class="coach-stat-value" id="coach-protein-target">Add your body weight</div>
+                            <div class="coach-stat-copy" id="coach-protein-copy">Muscle gain is most consistent when daily protein intake stays in the evidence-backed range.</div>
+                        </div>
+                        <div class="coach-stat">
+                            <div class="coach-stat-kicker">Weekly Set Target</div>
+                            <div class="coach-stat-value" id="coach-volume-target">12–16 sets</div>
+                            <div class="coach-stat-copy" id="coach-volume-copy">Most lifters grow best when hard sets are spread across the week instead of crammed into one day.</div>
+                        </div>
+                        <div class="coach-stat">
+                            <div class="coach-stat-kicker">Effort & Rest</div>
+                            <div class="coach-stat-value" id="coach-effort-target">1–3 RIR</div>
+                            <div class="coach-stat-copy" id="coach-effort-copy">Stay close to failure, but not buried by it. Rest long enough to keep the next set productive.</div>
+                        </div>
+                        <div class="coach-stat">
+                            <div class="coach-stat-kicker">Rep Strategy</div>
+                            <div class="coach-stat-value" id="coach-rep-target">5–8 / 8–15</div>
+                            <div class="coach-stat-copy" id="coach-rep-copy">Use lower reps for compounds and moderate-to-higher reps to stack accessory hypertrophy work.</div>
+                        </div>
+                        <div class="coach-stat">
+                            <div class="coach-stat-kicker">Bodyweight Pace</div>
+                            <div class="coach-stat-value" id="coach-gain-target">0.25–0.5% / wk</div>
+                            <div class="coach-stat-copy" id="coach-gain-copy">For a lean bulk, gain slowly enough that performance rises without rushing fat gain.</div>
+                        </div>
+                        <div class="coach-stat">
+                            <div class="coach-stat-kicker">Recovery Floor</div>
+                            <div class="coach-stat-value" id="coach-recovery-target">Sleep 7–9 h</div>
+                            <div class="coach-stat-copy" id="coach-recovery-copy">Creatine 3–5 g/day, consistent sleep, and easier cardio make the strength work actually pay off.</div>
+                        </div>
+                    </div>
+
+                    <div class="session-block mb-5">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
+                            <div>
+                                <div class="text-[10px] uppercase tracking-wider font-bold mb-1" style="color:var(--text3)">Weekly Weigh-In</div>
+                                <div class="font-bold text-sm" style="color:var(--text)">Track your trend, not one random scale reading.</div>
+                            </div>
+                            <button class="coach-log-btn" type="button" onclick="logCurrentWeighIn()" aria-label="Log today's body weight into the trend chart">⚖️ Log Current Weight</button>
+                        </div>
+                        <p class="coach-hint mb-3" id="coach-weight-status">Enter your current body weight above, then log it once per week. The chart will tell you whether your gain pace matches your goal.</p>
+                        <div style="position:relative;width:100%;height:200px">
+                            <canvas id="strengthWeightChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 xl:grid-cols-2 gap-5">
+                        <div class="session-block">
+                            <div class="text-[10px] uppercase tracking-wider font-bold mb-2" style="color:var(--text3)">How To Run This Week</div>
+                            <div id="coach-week-guide" class="coach-week-grid"></div>
+                        </div>
+                        <div class="session-block">
+                            <div class="text-[10px] uppercase tracking-wider font-bold mb-2" style="color:var(--text3)">Research-Backed Rules</div>
+                            <div id="coach-evidence-grid" class="grid grid-cols-1 gap-3"></div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
 
@@ -1443,8 +1713,10 @@
     let macroChart = null;
     let platformChart = null;
     let energyChart = null;
+    let strengthWeightChart = null;
     let completedSessions = JSON.parse(localStorage.getItem('jfit_completed') || '{}');
     let checkIns = JSON.parse(localStorage.getItem('jfit_checkins') || '{}');
+    let strengthCoach = normalizeStrengthCoach(JSON.parse(localStorage.getItem('jfit_strength') || 'null'));
     let pendingCheckinKey = null;
     let pendingCheckinName = '';
     let selectedEnergy = 0;
@@ -1499,6 +1771,39 @@
         gamma: '1TBmWUbu_xuAhJTDWjzwGnlA5toPMlIA3'
     };
 
+    const STRENGTH_EVIDENCE = [
+        {
+            title: 'Weekly volume drives growth',
+            body: 'Most lifters do best with at least ~10 hard sets per muscle each week, then scale upward as experience and recovery improve.',
+            source: 'Volume meta-analysis'
+        },
+        {
+            title: 'Protein works best daily',
+            body: 'Daily intake around 1.6–2.2 g/kg is the best-supported range for gaining muscle while strength training.',
+            source: 'Protein meta-analysis'
+        },
+        {
+            title: 'Failure is optional, not mandatory',
+            body: 'You can grow well without taking every set to failure. Most working sets should finish with 1–3 reps still in reserve.',
+            source: 'Failure-training reviews'
+        },
+        {
+            title: 'Rest long enough to perform',
+            body: 'Longer rests generally preserve rep quality and total work. Compounds usually deserve 2–3 minutes; accessories often need 60–90 seconds.',
+            source: 'Rest-interval review'
+        },
+        {
+            title: 'Loads can vary for hypertrophy',
+            body: 'Heavy lifting is best for absolute strength, but hypertrophy can come from a broad rep range when sets are hard and technique stays clean.',
+            source: 'Hypertrophy review guidance'
+        },
+        {
+            title: 'Creatine and sleep raise the ceiling',
+            body: 'Creatine monohydrate can improve lean mass and strength gains, and 7–9 hours of sleep keeps adaptation moving.',
+            source: 'Creatine review + recovery guidance'
+        }
+    ];
+
     // ─── INIT ─────────────────────────────────────────────────────────────────
     window.onload = () => {
         const dark = localStorage.getItem('jfit_dark') === 'true';
@@ -1509,6 +1814,7 @@
         renderWeekTabs();
         renderActiveWeekSchedule();
         updateProgressUI();
+        hydrateStrengthInputs();
         registerServiceWorker();
     };
 
@@ -1522,6 +1828,9 @@
             chartsInitialized = true;
             initCharts();
             renderMeals();
+        }
+        if (view === 'nutrition') {
+            renderStrengthLab();
         }
         if (view === 'progress') {
             renderProgressView();
@@ -1565,6 +1874,7 @@
         renderWeekTabs();
         renderActiveWeekSchedule();
         updateCharts();
+        renderStrengthLab();
     }
 
     function selectWeek(weekNum) {
@@ -1579,6 +1889,7 @@
         }
         renderActiveWeekSchedule();
         updateCharts();
+        renderStrengthLab();
     }
 
     // ─── SCHEDULE RENDER ─────────────────────────────────────────────────────
@@ -1635,6 +1946,9 @@
                 tAppLink = `<a href="${getFitOnUrl(d.tName)}" target="_blank" class="app-link-btn fiton-btn">🧘 Open FitOn</a>`;
             }
 
+            const sessionAGuide = getSessionExecutionGuide(d, 'a');
+            const sessionBGuide = getSessionExecutionGuide(d, 'b');
+
             card.innerHTML = `
                 <div class="flex justify-between items-start mb-4">
                     <div class="flex-1 min-w-0 pr-2">
@@ -1663,6 +1977,7 @@
                             onmouseout="this.style.color='var(--text)'"
                             onclick="showGlossaryPopup('${escapeStr(d.gName)}')">${d.gName}</div>
                         <p class="text-xs leading-relaxed mt-1" style="color:var(--text2)">${d.gDesc}</p>
+                        <div class="coach-note">${sessionAGuide}</div>
                         ${gymDiagramBtn}${gAppLink ? ' ' + gAppLink : ''}
                     </div>
                     <div class="session-block">
@@ -1676,6 +1991,7 @@
                             onmouseout="this.style.color='var(--text)'"
                             onclick="showGlossaryPopup('${escapeStr(d.tName)}')">${d.tName}</div>
                         <p class="text-xs leading-relaxed mt-1" style="color:var(--text2)">${d.tDesc}</p>
+                        <div class="coach-note">${sessionBGuide}</div>
                         ${tAppLink}
                     </div>
                 </div>
@@ -1693,6 +2009,392 @@
 
     function escapeStr(s) {
         return s.replace(/'/g, "\\'");
+    }
+
+    function normalizeStrengthCoach(raw) {
+        return {
+            bodyweight: raw && Number.isFinite(Number(raw.bodyweight)) ? Number(raw.bodyweight) : '',
+            unit: raw && raw.unit === 'kg' ? 'kg' : 'lb',
+            experience: raw && ['beginner','intermediate','advanced'].includes(raw.experience) ? raw.experience : 'intermediate',
+            daysPerWeek: raw && [3,4,5,6].includes(Number(raw.daysPerWeek)) ? Number(raw.daysPerWeek) : 4,
+            goal: raw && ['recomp','lean','aggressive'].includes(raw.goal) ? raw.goal : 'lean',
+            recovery: raw && ['limited','normal','high'].includes(raw.recovery) ? raw.recovery : 'normal',
+            weighIns: raw && Array.isArray(raw.weighIns) ? raw.weighIns.filter(entry =>
+                entry && Number.isFinite(Number(entry.weight)) && typeof entry.date === 'string'
+            ).map(entry => ({
+                date: entry.date,
+                weight: Number(entry.weight)
+            })) : []
+        };
+    }
+
+    function saveStrengthCoach() {
+        localStorage.setItem('jfit_strength', JSON.stringify(strengthCoach));
+    }
+
+    function roundWeightValueForStorage(value) {
+        return Math.round(Number(value) * 10) / 10;
+    }
+
+    function convertWeightValue(value, fromUnit, toUnit) {
+        const numericValue = Number(value);
+        if (!Number.isFinite(numericValue) || fromUnit === toUnit) return numericValue;
+        return fromUnit === 'lb'
+            ? roundWeightValueForStorage(numericValue / 2.20462)
+            : roundWeightValueForStorage(numericValue * 2.20462);
+    }
+
+    function getLocalDateStamp(date = new Date()) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    function hydrateStrengthInputs() {
+        const bodyweightEl = document.getElementById('coach-bodyweight');
+        if (!bodyweightEl) return;
+        if (document.activeElement !== bodyweightEl) {
+            bodyweightEl.value = strengthCoach.bodyweight === '' ? '' : strengthCoach.bodyweight;
+        }
+        document.getElementById('coach-unit').value = strengthCoach.unit;
+        document.getElementById('coach-experience').value = strengthCoach.experience;
+        document.getElementById('coach-days').value = String(strengthCoach.daysPerWeek);
+        document.getElementById('coach-goal').value = strengthCoach.goal;
+        document.getElementById('coach-recovery').value = strengthCoach.recovery;
+    }
+
+    function updateStrengthField(field, value) {
+        if (field === 'bodyweight') {
+            const numericValue = Number(value);
+            strengthCoach.bodyweight = value === '' || Number.isNaN(numericValue)
+                ? ''
+                : Math.max(0, numericValue);
+        } else if (field === 'daysPerWeek') {
+            strengthCoach.daysPerWeek = Number(value);
+        } else if (field === 'unit') {
+            const nextUnit = value === 'kg' ? 'kg' : 'lb';
+            const previousUnit = strengthCoach.unit;
+            if (nextUnit !== previousUnit) {
+                if (strengthCoach.bodyweight !== '') {
+                    strengthCoach.bodyweight = convertWeightValue(strengthCoach.bodyweight, previousUnit, nextUnit);
+                }
+                strengthCoach.weighIns = strengthCoach.weighIns.map(entry => ({
+                    ...entry,
+                    weight: convertWeightValue(entry.weight, previousUnit, nextUnit)
+                }));
+                strengthCoach.unit = nextUnit;
+            }
+        } else {
+            strengthCoach[field] = value;
+        }
+        saveStrengthCoach();
+        updateMacroNumbers();
+        renderStrengthLab();
+        renderActiveWeekSchedule();
+    }
+
+    function getStrengthTargets() {
+        const weight = strengthCoach.bodyweight === '' ? null : Number(strengthCoach.bodyweight);
+        const weightKg = weight == null ? null : (strengthCoach.unit === 'kg' ? weight : weight / 2.20462);
+        const goalConfig = {
+            recomp: {
+                protein: [1.8, 2.2],
+                largeSets: [10, 14],
+                smallSets: [6, 10],
+                gainRate: '0.00–0.25% / wk',
+                calorieText: 'Stay near maintenance or use a tiny +100 to +200 kcal bump. Let gym performance lead the way.',
+                carbPerKg: [2.5, 4],
+                fatPerKg: [0.6, 0.9]
+            },
+            lean: {
+                protein: [1.6, 2.2],
+                largeSets: [12, 16],
+                smallSets: [8, 12],
+                gainRate: '0.25–0.50% / wk',
+                calorieText: 'A lean bulk usually works best with a small +150 to +300 kcal/day surplus.',
+                carbPerKg: [3, 5],
+                fatPerKg: [0.6, 0.9]
+            },
+            aggressive: {
+                protein: [1.6, 2],
+                largeSets: [14, 18],
+                smallSets: [8, 14],
+                gainRate: '0.50–0.75% / wk',
+                calorieText: 'Use a larger +250 to +450 kcal/day surplus, but audit waist gain and performance every 2–3 weeks.',
+                carbPerKg: [4, 6],
+                fatPerKg: [0.7, 1]
+            }
+        }[strengthCoach.goal];
+
+        const experienceAdjust = {
+            beginner: -1,
+            intermediate: 0,
+            advanced: 2
+        }[strengthCoach.experience];
+
+        const recoveryAdjust = {
+            limited: -2,
+            normal: 0,
+            high: 2
+        }[strengthCoach.recovery];
+
+        const largeLow = Math.max(8, goalConfig.largeSets[0] + experienceAdjust + Math.min(0, recoveryAdjust));
+        const largeHigh = Math.max(largeLow + 2, goalConfig.largeSets[1] + experienceAdjust + recoveryAdjust);
+        const smallLow = Math.max(6, goalConfig.smallSets[0] + Math.min(0, experienceAdjust));
+        const smallHigh = Math.max(smallLow + 2, goalConfig.smallSets[1] + Math.min(2, recoveryAdjust));
+
+        const compoundRepRange = strengthCoach.experience === 'advanced' ? '4–8 reps' : '5–8 reps';
+        const accessoryRepRange = strengthCoach.experience === 'beginner' ? '8–12 reps' : '8–15 reps';
+        const effortRange = strengthCoach.experience === 'beginner' ? '2–3 RIR' : strengthCoach.experience === 'advanced' ? '0–2 RIR' : '1–2 RIR';
+        const progressionRule = strengthCoach.experience === 'beginner'
+            ? 'Own the rep range first. Once every set is crisp at the top end, add a little load.'
+            : strengthCoach.experience === 'advanced'
+                ? 'Progress by load, reps, or extra sets. If performance stalls for 2–3 exposures, deload volume for a week.'
+                : 'When all working sets hit the top of the rep range with solid form, add load next time.';
+
+        const muscleFrequency = strengthCoach.daysPerWeek >= 5 ? '2–3 touches per muscle / wk' : '2 touches per muscle / wk';
+        const weighInHint = strengthCoach.goal === 'recomp'
+            ? 'Let waist, mirror, and gym numbers matter more than fast scale gain.'
+            : strengthCoach.goal === 'lean'
+                ? 'Aim for steady, boring scale progress. Fast gain is usually mostly fat and water.'
+                : 'Faster scale gain can work, but only if lifts are moving and recovery stays solid.';
+
+        const proteinLabel = weightKg == null
+            ? 'Add your body weight'
+            : `${Math.round(weightKg * goalConfig.protein[0])}–${Math.round(weightKg * goalConfig.protein[1])} g/day`;
+        const carbLabel = weightKg == null
+            ? 'Use a small carb bump around training'
+            : `${Math.round(weightKg * goalConfig.carbPerKg[0])}–${Math.round(weightKg * goalConfig.carbPerKg[1])} g/day`;
+        const fatLabel = weightKg == null
+            ? 'Keep fats moderate'
+            : `${Math.round(weightKg * goalConfig.fatPerKg[0])}–${Math.round(weightKg * goalConfig.fatPerKg[1])} g/day`;
+
+        return {
+            weightKg,
+            proteinLabel,
+            carbLabel,
+            fatLabel,
+            largeSetLabel: `${largeLow}–${largeHigh} hard sets`,
+            smallSetLabel: `${smallLow}–${smallHigh} hard sets`,
+            effortRange,
+            compoundRepRange,
+            accessoryRepRange,
+            restLabel: '2–3 min compounds · 60–90 s accessories',
+            gainRate: goalConfig.gainRate,
+            calorieText: goalConfig.calorieText,
+            progressionRule,
+            muscleFrequency,
+            weighInHint,
+            recoveryFloor: 'Sleep 7–9 h · Creatine 3–5 g/day',
+            proteinCopy: weightKg == null
+                ? 'Protein is easier to personalize once your body weight is set.'
+                : `Anchor this across 3–5 feedings, and bias the higher end when cutting or recovering poorly.`,
+            volumeCopy: `Use ${largeLow}–${largeHigh} weekly sets for chest, back, quads, and glutes. Smaller muscles usually grow on ${smallLow}–${smallHigh}.`,
+            effortCopy: `Stop most working sets with ${effortRange} and save true failure for safer isolation lifts only.`,
+            repCopy: `Compounds: ${compoundRepRange}. Accessories: ${accessoryRepRange}. Both can build size if the last reps are challenging.`,
+            recoveryCopy: `${goalConfig.calorieText} ${weighInHint}`,
+            frequencyCopy: `Best split target: ${muscleFrequency}. If recovery is limited, hold volume steady before adding more sets.`
+        };
+    }
+
+    function getSessionExecutionGuide(day, sessionType) {
+        const targets = getStrengthTargets();
+        if (sessionType === 'a') {
+            if (['push','pull','legs'].includes(day.cardClass)) {
+                return `<strong>How to do it:</strong> Run your first compound in the ${targets.compoundRepRange} range, stack later work in ${targets.accessoryRepRange}, rest ${targets.restLabel}, and finish most sets with ${targets.effortRange}.`;
+            }
+            if (day.cardClass === 'run') {
+                return `<strong>Run focus:</strong> This supports your muscle gain when the pace is precise, not reckless. Hit the session target, but do not turn it into an all-out death march that ruins the next lifting day.`;
+            }
+            if (day.cardClass === 'endurance') {
+                return `<strong>Endurance focus:</strong> Keep this comfortably aerobic. Conversational effort preserves leg recovery better than sneaky threshold work.`;
+            }
+            return `<strong>Recovery focus:</strong> Make today win on protein, sleep, hydration, and easy movement. The muscle grows between hard sessions, not only during them.`;
+        }
+
+        if (day.tName.includes('T25')) {
+            return `<strong>Session B cue:</strong> Treat T25 as conditioning support. Stay crisp, but if lower-body fatigue is piling up, leave 1–2 gears in reserve so Session A keeps progressing.`;
+        }
+        if (day.tName.includes('FitOn') || day.tName.includes('Yoga') || day.tName.includes('Stretch')) {
+            return `<strong>Session B cue:</strong> Use this to restore range of motion and come back stronger. Better mobility usually means cleaner reps and better output on your next heavy day.`;
+        }
+        if (day.tName.includes('Nutrition') || day.tName.includes('Meal Prep') || day.tName.includes('Meditation')) {
+            return `<strong>Session B cue:</strong> Nail the recovery details: hit ${targets.proteinLabel.toLowerCase()}, prep carbs for tomorrow, and protect sleep.`;
+        }
+        return `<strong>Session B cue:</strong> Keep this additive, not exhausting. If it starts stealing from your main lifts, trim intensity before you trim the weight room.`;
+    }
+
+    function renderStrengthLab() {
+        const guideEl = document.getElementById('coach-week-guide');
+        if (!guideEl) return;
+
+        hydrateStrengthInputs();
+        const targets = getStrengthTargets();
+
+        document.getElementById('coach-protein-target').textContent = targets.proteinLabel;
+        document.getElementById('coach-protein-copy').textContent = targets.proteinCopy;
+        document.getElementById('coach-volume-target').textContent = targets.largeSetLabel;
+        document.getElementById('coach-volume-copy').textContent = targets.volumeCopy;
+        document.getElementById('coach-effort-target').textContent = targets.effortRange;
+        document.getElementById('coach-effort-copy').textContent = targets.effortCopy;
+        document.getElementById('coach-rep-target').textContent = `${targets.compoundRepRange} / ${targets.accessoryRepRange}`;
+        document.getElementById('coach-rep-copy').textContent = targets.repCopy;
+        document.getElementById('coach-gain-target').textContent = targets.gainRate;
+        document.getElementById('coach-gain-copy').textContent = targets.recoveryCopy;
+        document.getElementById('coach-recovery-target').textContent = targets.recoveryFloor;
+        document.getElementById('coach-recovery-copy').textContent = `${targets.frequencyCopy} ${targets.progressionRule}`;
+
+        const week = workoutDatabase[activeWeek];
+        guideEl.innerHTML = week.days.map(day => `
+            <div class="coach-week-item">
+                <div class="coach-week-title">
+                    <div>
+                        <div class="text-[10px] uppercase tracking-wider font-bold" style="color:var(--text3)">${day.day}</div>
+                        <div class="font-bold text-sm" style="color:var(--text)">${day.type}</div>
+                    </div>
+                    <span class="coach-pill">${day.label}</span>
+                </div>
+                <p class="text-[11px] leading-relaxed mb-2" style="color:var(--text2)">${getSessionExecutionGuide(day, 'a').replace('<strong>How to do it:</strong> ', '').replace('<strong>Run focus:</strong> ', '').replace('<strong>Endurance focus:</strong> ', '').replace('<strong>Recovery focus:</strong> ', '')}</p>
+                <p class="text-[10px] leading-relaxed" style="color:var(--text3)">${getSessionExecutionGuide(day, 'b').replace(/<strong>[^<]+<\/strong>\s*/, '')}</p>
+            </div>
+        `).join('');
+
+        document.getElementById('coach-evidence-grid').innerHTML = STRENGTH_EVIDENCE.map(item => `
+            <div class="coach-evidence-item">
+                <h5>${item.title}</h5>
+                <p>${item.body}</p>
+                <span class="coach-evidence-source">${item.source}</span>
+            </div>
+        `).join('');
+
+        renderStrengthWeightChart();
+    }
+
+    function renderStrengthWeightChart() {
+        const canvas = document.getElementById('strengthWeightChart');
+        const status = document.getElementById('coach-weight-status');
+        if (!canvas || !status) return;
+
+        const weighIns = strengthCoach.weighIns.slice().sort((a, b) => a.date.localeCompare(b.date));
+        if (strengthWeightChart) {
+            strengthWeightChart.destroy();
+            strengthWeightChart = null;
+        }
+
+        const targets = getStrengthTargets();
+        if (!weighIns.length) {
+            status.textContent = `Enter your current body weight above, then log it once per week. Goal cue: ${targets.gainRate}. ${targets.weighInHint}`;
+            return;
+        }
+
+        const labels = weighIns.map(entry => {
+            const d = new Date(entry.date + 'T00:00:00');
+            return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+        });
+        const data = weighIns.map(entry => entry.weight);
+
+        status.textContent = buildWeightTrendMessage(weighIns);
+
+        const cs = getComputedStyle(document.documentElement);
+        const clrEmerald = cs.getPropertyValue('--emerald').trim();
+        const clrViolet  = cs.getPropertyValue('--violet').trim();
+        const clrText3   = cs.getPropertyValue('--text3').trim();
+
+        strengthWeightChart = new Chart(canvas.getContext('2d'), {
+            type: 'line',
+            data: {
+                labels,
+                datasets: [{
+                    data,
+                    borderColor: clrEmerald,
+                    backgroundColor: 'rgba(16,185,129,0.10)',
+                    fill: true,
+                    tension: 0.35,
+                    pointRadius: 4,
+                    pointBackgroundColor: clrViolet,
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: {
+                        ticks: { color: clrText3, font: { size: 10 } },
+                        grid: { color: 'rgba(124,58,237,0.06)' }
+                    },
+                    x: {
+                        ticks: { color: clrText3, font: { size: 10 } },
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+    }
+
+    function buildWeightTrendMessage(weighIns) {
+        const targets = getStrengthTargets();
+        if (weighIns.length < 2) {
+            return `Logged ${formatWeightValue(weighIns[weighIns.length - 1].weight)}. Add another weigh-in next week so the app can compare your gain pace to the ${targets.gainRate} target.`;
+        }
+
+        if (weighIns.length < 3) {
+            return `Logged ${weighIns.length} weekly weigh-ins. Add one more before changing calories so the trend is based on more than normal scale noise.`;
+        }
+
+        const recentWeighIns = weighIns.slice(-3);
+        const first = recentWeighIns[0];
+        const last = recentWeighIns[recentWeighIns.length - 1];
+        const days = Math.max(1, Math.round((new Date(last.date) - new Date(first.date)) / 86400000));
+        const delta = last.weight - first.weight;
+        const weeklyRate = delta / days * 7;
+        const currentWeight = last.weight;
+        const targetPct = strengthCoach.goal === 'recomp'
+            ? [0.0, 0.0025]
+            : strengthCoach.goal === 'lean'
+                ? [0.0025, 0.005]
+                : [0.005, 0.0075];
+        const lowTarget = currentWeight * targetPct[0];
+        const highTarget = currentWeight * targetPct[1];
+        const formattedRate = `${weeklyRate >= 0 ? '+' : ''}${formatWeightValue(weeklyRate)}/wk`;
+
+        if (weeklyRate < lowTarget) {
+            return `Recent pace: ${formattedRate} across your last ${recentWeighIns.length} weigh-ins. That's slower than the ${targets.gainRate} target, so consider a small calorie bump or tighter meal consistency for 10–14 days.`;
+        }
+        if (weeklyRate > highTarget && strengthCoach.goal !== 'recomp') {
+            return `Recent pace: ${formattedRate} across your last ${recentWeighIns.length} weigh-ins. That's faster than the ${targets.gainRate} lane, so pull the surplus back slightly and protect the lean-bulk quality.`;
+        }
+        return `Recent pace: ${formattedRate} across your last ${recentWeighIns.length} weigh-ins. You're moving inside the ${targets.gainRate} zone, so keep training hard and let the trend do the talking.`;
+    }
+
+    function formatWeightValue(value) {
+        const rounded = Math.abs(value) >= 10 ? value.toFixed(1) : value.toFixed(2);
+        return `${rounded} ${strengthCoach.unit}`;
+    }
+
+    function logCurrentWeighIn() {
+        const bodyweightInput = document.getElementById('coach-bodyweight');
+        if (bodyweightInput && bodyweightInput.value !== '') {
+            strengthCoach.bodyweight = Math.max(0, Number(bodyweightInput.value));
+        }
+        if (strengthCoach.bodyweight === '' || !Number.isFinite(Number(strengthCoach.bodyweight)) || Number(strengthCoach.bodyweight) <= 0) {
+            alert('Add your current body weight first, then tap log weigh-in.');
+            return;
+        }
+        const today = getLocalDateStamp();
+        const existing = strengthCoach.weighIns.find(entry => entry.date === today);
+        if (existing) {
+            existing.weight = roundWeightValueForStorage(strengthCoach.bodyweight);
+        } else {
+            strengthCoach.weighIns.push({
+                date: today,
+                weight: roundWeightValueForStorage(strengthCoach.bodyweight)
+            });
+        }
+        saveStrengthCoach();
+        renderStrengthLab();
     }
 
     // ─── SESSION COMPLETION ───────────────────────────────────────────────────
@@ -1980,6 +2682,7 @@
         document.getElementById('diet-btn-muscle').className = `diet-pill${goal === 'muscle' ? ' active' : ''}`;
         renderMeals();
         updateCharts();
+        renderStrengthLab();
     }
 
     function renderMealDayTabs() {
@@ -2128,9 +2831,16 @@
 
     function updateMacroNumbers() {
         const bmi = activeDietGoal === 'bmi';
-        document.getElementById('macro-val-protein').textContent = bmi ? '35% (175g)' : '30% (195g)';
-        document.getElementById('macro-val-carbs').textContent = bmi ? '40% (200g)' : '45% (292g)';
-        document.getElementById('macro-val-fats').textContent = bmi ? '25% (55g)' : '25% (72g)';
+        if (bmi) {
+            document.getElementById('macro-val-protein').textContent = '175 g/day';
+            document.getElementById('macro-val-carbs').textContent = '200 g/day';
+            document.getElementById('macro-val-fats').textContent = '55 g/day';
+            return;
+        }
+        const targets = getStrengthTargets();
+        document.getElementById('macro-val-protein').textContent = targets.proteinLabel;
+        document.getElementById('macro-val-carbs').textContent = targets.carbLabel;
+        document.getElementById('macro-val-fats').textContent = targets.fatLabel;
     }
 
     function updateCharts() {
