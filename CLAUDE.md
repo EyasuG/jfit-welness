@@ -58,6 +58,7 @@ owns all architectural decisions. See `AI_COLLAB.md → Agent Roles` for full br
 | `jfit_completed` | JSON object | `{ "w1_d0": true, … }` — session completion map |
 | `jfit_checkins` | JSON object | Per-session energy, mood, note, and ISO date history |
 | `jfit_dark` | `"true"` / `"false"` | Dark mode preference |
+| `jfit_daily` | JSON object | Daily phone-first recovery check entries for sleep, energy, soreness, and protein readiness |
 | `jfit_strength` | JSON object | Muscle Gain Lab inputs plus weekly body-weight trend entries |
 
 Add new keys with `jfit_` prefix and document them here and in `AI_COLLAB.md`.

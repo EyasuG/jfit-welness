@@ -43,6 +43,9 @@ The app is a single `index.html` PWA. The following features are **complete and 
 | 7-day meal variety (BMI + Muscle modes) | ✅ Done | 56 unique meals total |
 | Per-meal substitute toggle | ✅ Done | Animated expand/collapse |
 | Meal day auto-detects today | ✅ Done | Highlights current weekday |
+| Today command center | ✅ Done | Phone-first summary card for the current day with quick actions |
+| Workout mode modal + rest timer | ✅ Done | Full-screen phone flow for today’s session with 60s/90s/2m/3m timer presets |
+| Daily recovery quick check | ✅ Done | Stored in `jfit_daily` with sleep, energy, soreness, and protein readiness |
 | Muscle Gain Lab | ✅ Done | Personalized protein, training volume, rep ranges, recovery cues, and weekly execution guidance |
 | Weekly body weight trend chart | ✅ Done | Stored in `jfit_strength` and rendered in Nutrition view |
 | Glossary toast popup | ✅ Done | 9s auto-dismiss, spring animation |
@@ -62,7 +65,7 @@ The app is a single `index.html` PWA. The following features are **complete and 
 | # | Task | Priority | Status | Owner | Claimed By |
 |---|---|---|---|---|---|
 | 1 | Add water intake tracker (daily goal: 3–4L, tap to increment) | Medium | Open | Claude Code | — |
-| 2 | Workout timer / stopwatch overlay for active sessions | Medium | Open | Claude Code | — |
+| 2 | Workout timer / stopwatch overlay for active sessions | Medium | ✅ Done | User-directed | Codex (2026-07-28) |
 | 3 | Body weight log chart (user inputs weekly weigh-in, sparkline shows trend) | High | ✅ Done | User-directed | Codex (2026-07-28) |
 | 4 | Animated muscle-group heat map showing which muscles are hit each day | Low | Open | Claude Code | — |
 | 5 | Export weekly schedule as a PNG card (share to social) | Low | Open | Claude Code | — |
@@ -73,6 +76,10 @@ The app is a single `index.html` PWA. The following features are **complete and 
 | 10 | Investigate + report: `calculateStreak()` logic gaps — file findings as PR comment | Medium | Open | **Codex** | — |
 | 11 | Review meal substitute toggle — check keyboard accessibility and focus states | Low | Open | **Codex** | — |
 | 12 | Review dark mode — flag any elements that don't respond to `data-theme` correctly | Low | Open | **Codex** | — |
+| 13 | Install-flow polish for iPhone: stronger add-to-home-screen onboarding and post-install cues | Medium | Open | Claude Code | Codex-suggested |
+| 14 | Notification strategy for workout, weigh-in, and bedtime reminders without breaking the local-first model | High | Open | 🔒 Driver only | Codex-suggested |
+| 15 | Improve workout timer resilience when the app backgrounds or the screen locks | Medium | Open | Claude Code | Codex-suggested |
+| 16 | Add app shortcuts / quick actions for “Start Today”, “Recovery Check”, and “Log Weight” | Medium | Open | Claude Code | Codex-suggested |
 
 ---
 
@@ -175,4 +182,8 @@ DATE        | AGENT        | CHANGE SUMMARY
 2026-07-28  | Codex        | PWA hardening pass — upgraded SW to `jfit-v7`
             |              | with runtime CDN caching + update prompt, added
             |              | local app icons, documented `jfit_checkins`
+2026-07-28  | Codex        | Added phone-first utility layer: Today command
+            |              | center, quick recovery logging stored in
+            |              | `jfit_daily`, mobile action dock, and workout
+            |              | mode with built-in rest timer presets
 ```
