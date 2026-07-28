@@ -43,6 +43,9 @@ The app is a single `index.html` PWA. The following features are **complete and 
 | 7-day meal variety (BMI + Muscle modes) | ✅ Done | 56 unique meals total |
 | Per-meal substitute toggle | ✅ Done | Animated expand/collapse |
 | Meal day auto-detects today | ✅ Done | Highlights current weekday |
+| Today command center | ✅ Done | Phone-first summary card for the current day with quick actions |
+| Workout mode modal + rest timer | ✅ Done | Full-screen phone flow for today’s session with 60s/90s/2m/3m timer presets |
+| Daily recovery quick check | ✅ Done | Stored in `jfit_daily` with sleep, energy, soreness, and protein readiness |
 | Muscle Gain Lab | ✅ Done | Personalized protein, training volume, rep ranges, recovery cues, and weekly execution guidance |
 | Weekly body weight trend chart | ✅ Done | Stored in `jfit_strength` and rendered in Nutrition view |
 | Glossary toast popup | ✅ Done | 9s auto-dismiss, spring animation |
@@ -62,7 +65,7 @@ The app is a single `index.html` PWA. The following features are **complete and 
 | # | Task | Priority | Status | Owner | Claimed By |
 |---|---|---|---|---|---|
 | 1 | Add water intake tracker (daily goal: 3–4L, tap to increment) | Medium | Open | Claude Code | — |
-| 2 | Workout timer / stopwatch overlay for active sessions | Medium | Open | Claude Code | — |
+| 2 | Workout timer / stopwatch overlay for active sessions | Medium | ✅ Done | User-directed | Codex (2026-07-28) |
 | 3 | Body weight log chart (user inputs weekly weigh-in, sparkline shows trend) | High | ✅ Done | User-directed | Codex (2026-07-28) |
 | 4 | Animated muscle-group heat map showing which muscles are hit each day | Low | Open | Claude Code | — |
 | 5 | Export weekly schedule as a PNG card (share to social) | Low | Open | Claude Code | — |
@@ -73,6 +76,68 @@ The app is a single `index.html` PWA. The following features are **complete and 
 | 10 | Investigate + report: `calculateStreak()` logic gaps — file findings as PR comment | Medium | Open | **Codex** | — |
 | 11 | Review meal substitute toggle — check keyboard accessibility and focus states | Low | Open | **Codex** | — |
 | 12 | Review dark mode — flag any elements that don't respond to `data-theme` correctly | Low | Open | **Codex** | — |
+| 13 | Install-flow polish for iPhone: stronger add-to-home-screen onboarding and post-install cues | Medium | Open | Claude Code | Codex-suggested |
+| 14 | Notification strategy for workout, weigh-in, and bedtime reminders without breaking the local-first model | High | Open | 🔒 Driver only | Codex-suggested |
+| 15 | Improve workout timer resilience when the app backgrounds or the screen locks | Medium | Open | Claude Code | Codex-suggested |
+| 16 | Add app shortcuts / quick actions for “Start Today”, “Recovery Check”, and “Log Weight” | Medium | Open | Claude Code | Codex-suggested |
+
+---
+
+## Deployment
+
+### Live URL
+**https://eyasug.github.io/jfit-welness/**
+
+### How It Works
+Every push to `main` triggers the GitHub Actions workflow at
+`.github/workflows/deploy.yml`, which validates the build and deploys the
+entire repo root to GitHub Pages. No build step — the files are served as-is.
+
+### CI on Pull Requests
+`.github/workflows/pr-check.yml` runs on every PR targeting `main` and:
+- Blocks merge if hardcoded hex colors are found in the JS/script block
+- Blocks merge if `sw.js` is missing a versioned cache name
+- Validates `manifest.json` is well-formed JSON
+- Warns (non-blocking) if `AI_COLLAB.md` was not updated
+- Posts a summary comment on the PR when all checks pass
+
+### One-Time GitHub Setup (owner must do this once)
+1. Go to **Settings → Pages** in the `EyasuG/jfit-welness` repo
+2. Under **Source**, select **GitHub Actions**
+3. Save — the next push to `main` will auto-deploy
+
+### Service Worker Cache
+Bump `jfit-vN` in `sw.js` whenever any static asset changes (images, JS, CSS).
+The PR check enforces that a cache version string is always present.
+
+---
+
+## Deployment
+
+### Live URL
+**https://eyasug.github.io/jfit-welness/**
+
+### How It Works
+Every push to `main` triggers `.github/workflows/deploy.yml`, which runs a
+validate step first, then deploys the entire repo root to GitHub Pages.
+No build step — files are served as-is.
+
+### CI on Pull Requests
+`.github/workflows/pr-check.yml` runs on every PR targeting `main` and:
+- **Blocks merge** if hardcoded hex colors are found in the JS/script block
+- **Blocks merge** if `sw.js` is missing a versioned cache name (`jfit-vN`)
+- **Blocks merge** if `manifest.json` is invalid JSON
+- **Warns** (non-blocking) if `AI_COLLAB.md` was not updated
+- Posts a pass/summary comment on the PR when all checks pass
+
+### One-Time GitHub Setup (repo owner must do this once)
+1. Go to **Settings → Pages** in `EyasuG/jfit-welness`
+2. Under **Source**, select **GitHub Actions**
+3. Save — the next push to `main` will deploy automatically
+
+### Service Worker Cache
+Bump `jfit-vN` in `sw.js` whenever any static asset changes.
+The PR check enforces that a cache version string is always present.
 
 ---
 
@@ -83,6 +148,7 @@ These are recorded so agents don't re-litigate settled decisions.
 | Decision | Rationale |
 |---|---|
 | Single `index.html` file | Keeps the PWA deployable as a static file with zero build tooling. Do not split without explicit user approval. |
+| GitHub Pages for hosting | Zero cost, zero infra, auto-deploys on push to main via Actions. |
 | CSS custom properties over Tailwind utilities for theming | Tailwind doesn't support dynamic theme switching without JS class toggling. CSS vars + `data-theme` on `<html>` is cleaner and faster. |
 | No JS framework | Keeps the bundle at zero. Vanilla JS is sufficient for the DOM complexity here. |
 | `localStorage` only (no backend) | User data stays local. No auth/privacy surface. If a sync feature is added, add it as an opt-in, not a default. |
@@ -175,4 +241,12 @@ DATE        | AGENT        | CHANGE SUMMARY
 2026-07-28  | Codex        | PWA hardening pass — upgraded SW to `jfit-v7`
             |              | with runtime CDN caching + update prompt, added
             |              | local app icons, documented `jfit_checkins`
+2026-07-28  | Codex        | Added phone-first utility layer: Today command
+            |              | center, quick recovery logging stored in
+            |              | `jfit_daily`, mobile action dock, and workout
+            |              | mode with built-in rest timer presets
+2026-07-28  | Claude 4.6   | Auto-deployment: enhanced deploy.yml with
+            |              | validate → deploy pipeline; added pr-check.yml
+            |              | for hex-token enforcement, sw.js version check,
+            |              | manifest validation, and PR summary comments
 ```

@@ -1,9 +1,9 @@
-name: Deploy JFit to GitHub Pages
+name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main]          # GitHub Pages protection only allows main to deploy
-  workflow_dispatch:          # manual trigger from GitHub Actions UI
+    branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -15,25 +15,55 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  validate:
+    name: Validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for hardcoded hex colors in new JS/CSS
+        run: |
+          # Warn if any hardcoded hex values appear outside the CSS token block
+          # (lines after the closing </style> tag, i.e. in the <script> block)
+          SCRIPT_START=$(grep -n "</style>" index.html | tail -1 | cut -d: -f1)
+          VIOLATIONS=$(tail -n +$SCRIPT_START index.html \
+            | grep -E "color\s*:\s*'#[0-9a-fA-F]{3,6}'|borderColor\s*:\s*'#|backgroundColor\s*:\s*'#[0-9a-fA-F]{6}'" \
+            | grep -v "rgba\|var(--" || true)
+          if [ -n "$VIOLATIONS" ]; then
+            echo "::warning::Possible hardcoded hex colors found in script block:"
+            echo "$VIOLATIONS"
+          fi
+
+      - name: Verify sw.js exists and has a cache version
+        run: |
+          if ! grep -qE "jfit-v[0-9]+" sw.js; then
+            echo "::error::sw.js is missing a versioned cache name (jfit-vN)"
+            exit 1
+          fi
+          echo "Cache version: $(grep -oE "jfit-v[0-9]+" sw.js | head -1)"
+
+      - name: Verify manifest.json is valid JSON
+        run: python3 -c "import json,sys; json.load(open('manifest.json'))" && echo "manifest.json OK"
+
   deploy:
-    name: Deploy to GitHub Pages
+    name: Deploy
+    needs: validate
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-      - name: Checkout main
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
-      - name: Upload site
+      - name: Upload site artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: .
 
-      - name: Deploy
+      - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
