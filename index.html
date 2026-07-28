@@ -9,6 +9,8 @@
     <meta name="apple-mobile-web-app-title" content="JFit">
     <meta name="theme-color" content="#7C3AED">
     <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://api.fontshare.com/v2/css?f[]=apfel-grotezk@400,500,600,700&display=swap" rel="stylesheet">
@@ -21,8 +23,10 @@
             --text: #1C1028;
             --text2: #4A3F6B;
             --text3: #9585B5;
+            --text-inverse: #FFFFFF;
             --shadow: 0 2px 16px -4px rgba(124,58,237,0.12);
             --shadow-lg: 0 8px 40px -12px rgba(124,58,237,0.2);
+            --shadow-accent: 0 4px 14px rgba(124,58,237,0.3);
             --radius: 20px;
             --violet: #7C3AED;
             --coral: #F43F5E;
@@ -47,8 +51,10 @@
             --text: #EDE8FF;
             --text2: #A89CC8;
             --text3: #6B5F8A;
+            --text-inverse: #FFFFFF;
             --shadow: 0 2px 16px -4px rgba(0,0,0,0.4);
             --shadow-lg: 0 8px 40px -12px rgba(0,0,0,0.5);
+            --shadow-accent: 0 4px 14px rgba(124,58,237,0.3);
         }
 
         * { box-sizing: border-box; }
@@ -301,6 +307,59 @@
             opacity: 1;
         }
 
+        .update-banner {
+            position: fixed;
+            left: 16px;
+            right: 16px;
+            bottom: 16px;
+            z-index: 250;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            box-shadow: var(--shadow-lg);
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            transform: translateY(130%);
+            opacity: 0;
+            pointer-events: none;
+            transition: transform 0.35s cubic-bezier(.4,0,.2,1), opacity 0.25s ease;
+        }
+        .update-banner.show {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .update-banner-text {
+            min-width: 0;
+        }
+        .update-banner-actions {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        .update-banner-btn {
+            border: none;
+            border-radius: 12px;
+            padding: 10px 14px;
+            font-size: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+        .update-banner-btn:hover { transform: translateY(-1px); }
+        .update-banner-btn.primary {
+            background: var(--violet);
+            color: var(--text-inverse);
+            box-shadow: var(--shadow-accent);
+        }
+        .update-banner-btn.secondary {
+            background: var(--surface2);
+            color: var(--text2);
+        }
+
         /* Modal */
         .modal-overlay {
             position:fixed;inset:0;z-index:300;
@@ -542,6 +601,22 @@
             #view-progress, #view-nutrition, #view-glossary { display: block !important; }
         }
 
+        @media (max-width: 640px) {
+            .update-banner {
+                left: 12px;
+                right: 12px;
+                bottom: 12px;
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .update-banner-actions {
+                width: 100%;
+            }
+            .update-banner-btn {
+                flex: 1;
+            }
+        }
+
         /* Tooltip */
         [data-tip] { position: relative; cursor: help; }
         [data-tip]:hover::after {
@@ -623,6 +698,17 @@
             </div>
         </div>
     </nav>
+
+    <div id="update-banner" class="update-banner no-print" aria-live="polite" aria-hidden="true">
+        <div class="update-banner-text">
+            <div class="text-[10px] uppercase tracking-widest font-bold mb-1" style="color:var(--text3)">PWA Update Ready</div>
+            <div class="text-sm font-bold" style="color:var(--text)">A newer version of JFit is ready to install.</div>
+        </div>
+        <div class="update-banner-actions">
+            <button class="update-banner-btn secondary" type="button" onclick="dismissUpdateBanner()" aria-label="Dismiss update notice">Later</button>
+            <button class="update-banner-btn primary" type="button" onclick="reloadForUpdate()" aria-label="Refresh app to install latest update">Refresh</button>
+        </div>
+    </div>
 
     <!-- ═══════════════════════ HERO ═══════════════════════ -->
     <section class="relative overflow-hidden no-print grad-hero">
@@ -1052,7 +1138,7 @@
         </div>
         <div style="display:flex;gap:10px">
           <button onclick="skipCheckin()" style="flex:1;padding:12px;border-radius:14px;background:var(--surface2);color:var(--text3);border:none;font-weight:700;font-size:14px;cursor:pointer">Skip</button>
-          <button onclick="saveCheckin()" style="flex:1;padding:12px;border-radius:14px;background:linear-gradient(135deg,#7C3AED,#06B6D4);color:white;border:none;font-weight:700;font-size:14px;cursor:pointer;box-shadow:0 4px 16px rgba(124,58,237,0.35)">Save ✓</button>
+          <button onclick="saveCheckin()" style="flex:1;padding:12px;border-radius:14px;background:linear-gradient(135deg,var(--violet),var(--cyan));color:var(--text-inverse);border:none;font-weight:700;font-size:14px;cursor:pointer;box-shadow:var(--shadow-accent)">Save ✓</button>
         </div>
       </div>
     </div>
@@ -1364,6 +1450,9 @@
     let selectedEnergy = 0;
     let selectedMood = null;
     let chartsInitialized = false;
+    let swRegistration = null;
+    let pendingWorker = null;
+    let isReloadingForUpdate = false;
 
     const TOTAL_SESSIONS = 70; // 10 weeks × 7 days
 
@@ -1420,6 +1509,7 @@
         renderWeekTabs();
         renderActiveWeekSchedule();
         updateProgressUI();
+        registerServiceWorker();
     };
 
     // ─── VIEW SWITCHING ──────────────────────────────────────────────────────
@@ -2388,8 +2478,58 @@
     }
 
     // ─── SERVICE WORKER ──────────────────────────────────────────────────────
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js').catch(() => {});
+    function showUpdateBanner() {
+        const banner = document.getElementById('update-banner');
+        banner.classList.add('show');
+        banner.setAttribute('aria-hidden', 'false');
+    }
+
+    function dismissUpdateBanner() {
+        const banner = document.getElementById('update-banner');
+        banner.classList.remove('show');
+        banner.setAttribute('aria-hidden', 'true');
+    }
+
+    function trackWaitingWorker(worker) {
+        if (!worker) return;
+        pendingWorker = worker;
+        showUpdateBanner();
+    }
+
+    function reloadForUpdate() {
+        if (!pendingWorker) {
+            window.location.reload();
+            return;
+        }
+        isReloadingForUpdate = true;
+        pendingWorker.postMessage({ type: 'SKIP_WAITING' });
+    }
+
+    function registerServiceWorker() {
+        if (!('serviceWorker' in navigator)) return;
+
+        navigator.serviceWorker.register('./sw.js').then(registration => {
+            swRegistration = registration;
+
+            if (registration.waiting) {
+                trackWaitingWorker(registration.waiting);
+            }
+
+            registration.addEventListener('updatefound', () => {
+                const installing = registration.installing;
+                if (!installing) return;
+                installing.addEventListener('statechange', () => {
+                    if (installing.state === 'installed' && navigator.serviceWorker.controller) {
+                        trackWaitingWorker(installing);
+                    }
+                });
+            });
+        }).catch(() => {});
+
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+            if (!isReloadingForUpdate) return;
+            window.location.reload();
+        });
     }
     </script>
 

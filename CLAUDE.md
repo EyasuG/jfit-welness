@@ -56,6 +56,7 @@ owns all architectural decisions. See `AI_COLLAB.md → Agent Roles` for full br
 | Key | Type | Purpose |
 |---|---|---|
 | `jfit_completed` | JSON object | `{ "w1_d0": true, … }` — session completion map |
+| `jfit_checkins` | JSON object | Per-session energy, mood, note, and ISO date history |
 | `jfit_dark` | `"true"` / `"false"` | Dark mode preference |
 
 Add new keys with `jfit_` prefix and document them here and in `AI_COLLAB.md`.
