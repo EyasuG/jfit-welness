@@ -23,7 +23,7 @@ and human collaborators stay in sync.
 
 ---
 
-## Current State (last updated: 2026-07-27)
+## Current State (last updated: 2026-07-28)
 
 The app is a single `index.html` PWA. The following features are **complete and stable**:
 
@@ -33,6 +33,7 @@ The app is a single `index.html` PWA. The following features are **complete and 
 | Phase 1 / Phase 2 toggle | ✅ Done | |
 | Week tab selector with completion count | ✅ Done | |
 | Per-session completion checkboxes | ✅ Done | Stored in `jfit_completed` |
+| Daily check-in modal + energy/mood notes | ✅ Done | Stored in `jfit_checkins` |
 | Overall + per-week SVG progress rings | ✅ Done | |
 | Streak counter | ✅ Done | Counts full weeks + partial days |
 | Confetti on session complete | ✅ Done | Canvas-based, 3s auto-stops |
@@ -47,7 +48,7 @@ The app is a single `index.html` PWA. The following features are **complete and 
 | App integration guide (sidebar) | ✅ Done | NRC, Gym, FitOn, BODi cards |
 | Scientific glossary section | ✅ Done | 6 cards at page bottom |
 | Print stylesheet | ✅ Done | `.no-print` class system |
-| PWA (manifest + service worker) | ✅ Done | Cache: `jfit-v6` |
+| PWA (manifest + service worker) | ✅ Done | Cache: `jfit-v7` |
 
 ---
 
@@ -147,4 +148,7 @@ DATE        | AGENT        | CHANGE SUMMARY
             |              | auto-detect today's day in meal tab strip
 2026-07-27  | Claude 4.6   | Created AGENTS.md, CLAUDE.md, AI_COLLAB.md,
             |              | .github/pull_request_template.md for Codex collab
+2026-07-28  | Codex        | PWA hardening pass — upgraded SW to `jfit-v7`
+            |              | with runtime CDN caching + update prompt, added
+            |              | local app icons, documented `jfit_checkins`
 ```

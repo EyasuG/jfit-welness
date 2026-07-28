@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">JFit Wellness App Icon</title>
+  <desc id="desc">A rounded violet square with the letters JF in white.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7C3AED" />
+      <stop offset="100%" stop-color="#3B82F6" />
+    </linearGradient>
+    <linearGradient id="glow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#EC4899" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#06B6D4" stop-opacity="0.75" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="116" fill="url(#bg)" />
+  <circle cx="390" cy="136" r="86" fill="url(#glow)" opacity="0.28" />
+  <circle cx="132" cy="404" r="96" fill="#FFFFFF" opacity="0.08" />
+  <path d="M176 134h62v162c0 39-8 68-24 86s-42 27-76 27c-14 0-28-2-42-7v-54c10 3 20 5 29 5 18 0 31-5 39-14 8-9 12-24 12-45V134z" fill="#FFFFFF" />
+  <path d="M286 134h144v54h-82v47h76v53h-76v120h-62V134z" fill="#FFFFFF" />
+</svg>

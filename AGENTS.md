@@ -18,8 +18,8 @@ using Tailwind CSS (CDN), Chart.js (CDN), and vanilla JavaScript. All state is s
 | Styling | Tailwind CSS via CDN + hand-written `<style>` block (CSS custom properties) |
 | Charts | Chart.js via CDN |
 | JS | Vanilla ES6+ — no bundler, no framework |
-| Fonts | Google Fonts: Inter + Playfair Display |
-| State | `localStorage` keys: `jfit_completed`, `jfit_dark` |
+| Fonts | Fontshare: Apfel Grotezk |
+| State | `localStorage` keys: `jfit_completed`, `jfit_checkins`, `jfit_dark` |
 | PWA | `manifest.json` + `sw.js` (cache-first service worker) |
 
 ## Repository Layout
@@ -44,7 +44,8 @@ using Tailwind CSS (CDN), Chart.js (CDN), and vanilla JavaScript. All state is s
   the existing three (Tailwind, Chart.js, Google Fonts).
 - **Data lives in JS objects**: `workoutDatabase`, `mealPlanDatabase`, `DAYS` are the single
   source of truth. Do not duplicate content in HTML.
-- **`localStorage` keys**: only `jfit_completed` (object) and `jfit_dark` (boolean string).
+- **`localStorage` keys**: `jfit_completed` (object), `jfit_checkins` (object), and
+  `jfit_dark` (boolean string).
   Add new keys with a `jfit_` prefix and document them in `AI_COLLAB.md`.
 - **PWA cache**: bump the cache name string in `sw.js` whenever static assets change
   (convention: `jfit-vN`).
