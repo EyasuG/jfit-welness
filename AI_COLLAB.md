@@ -89,35 +89,6 @@ The app is a single `index.html` PWA. The following features are **complete and 
 **https://eyasug.github.io/jfit-welness/**
 
 ### How It Works
-Every push to `main` triggers the GitHub Actions workflow at
-`.github/workflows/deploy.yml`, which validates the build and deploys the
-entire repo root to GitHub Pages. No build step — the files are served as-is.
-
-### CI on Pull Requests
-`.github/workflows/pr-check.yml` runs on every PR targeting `main` and:
-- Blocks merge if hardcoded hex colors are found in the JS/script block
-- Blocks merge if `sw.js` is missing a versioned cache name
-- Validates `manifest.json` is well-formed JSON
-- Warns (non-blocking) if `AI_COLLAB.md` was not updated
-- Posts a summary comment on the PR when all checks pass
-
-### One-Time GitHub Setup (owner must do this once)
-1. Go to **Settings → Pages** in the `EyasuG/jfit-welness` repo
-2. Under **Source**, select **GitHub Actions**
-3. Save — the next push to `main` will auto-deploy
-
-### Service Worker Cache
-Bump `jfit-vN` in `sw.js` whenever any static asset changes (images, JS, CSS).
-The PR check enforces that a cache version string is always present.
-
----
-
-## Deployment
-
-### Live URL
-**https://eyasug.github.io/jfit-welness/**
-
-### How It Works
 Every push to `main` triggers `.github/workflows/deploy.yml`, which runs a
 validate step first, then deploys the entire repo root to GitHub Pages.
 No build step — files are served as-is.
